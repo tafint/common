@@ -1,0 +1,41 @@
+{
+  "name": "chaos/common",
+  "type": "library",
+  "description": "The Chaos Library",
+  "keywords": ["ntd1712", "chaos"],
+  "homepage": "http://taingheso.com",
+  "license": "ntd1712",
+  "authors": [
+    {"name": "Dzung Nguyen", "email": "ntd1712@hotmail.com"}
+  ],
+  "require": {
+    "php": ">=5.4",
+    "hassankhan/config": "dev-develop",
+    "league/container": "dev-master",
+    "doctrine/orm": "dev-master",
+    "zendframework/zend-servicemanager": "dev-develop",
+    "zendframework/zend-db": "dev-develop",
+    "zendframework/zend-json": "dev-develop",
+    "zendframework/zend-filter": "dev-develop",
+    "zendframework/zend-validator": "dev-develop",
+    "zendframework/zend-i18n": "dev-develop"
+  },
+  "require-dev": {
+    "mockery/mockery": "dev-master",
+    "phpunit/phpunit": "dev-master"
+  },
+  "autoload": {
+    "files": [
+      "src/Chaos/constants.php",
+      "src/Chaos/functions.php"
+    ],
+    "psr-4": {
+      "Chaos\\": "src/Chaos/"
+    }
+  },
+  "archive": {
+    "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "build.xml", "build.properties", "composer.phar"]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

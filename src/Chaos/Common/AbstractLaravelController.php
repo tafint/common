@@ -30,7 +30,7 @@ abstract class AbstractLaravelController extends Controller
     }
 
     /**
-     * Handle a login request to the application
+     * The default "postLogin" action, you can override this in derived class
      *
      * @param   \Request $request
      * @return  \Symfony\Component\HttpFoundation\Response
@@ -51,12 +51,19 @@ abstract class AbstractLaravelController extends Controller
                 'email' => 'required|email|max:255', 'password' => 'required'
             ]);
 
-            if ($validator->fails() || !$token = JWTAuth::attempt($request::only('email', 'password')))
+            if (!$validator->fails())
             {
-                return response()->json(['error' => 'Invalid credentials'], 418);
+                $user = $this->getService('User')->getRepository()->findOneBy(['Email' => $request::get('email')]);
             }
 
-            $user = $this->getUser($token);
+            if (!isset($user) || !\Hash::check($request::get('password'), $user->getPassword()) ||
+               ($this->getConfig('superUserId') != $user->Id && $this->getConfig('appKey') !== $user->getApplicationKey()))
+            {
+                throw new JWTException('Invalid credentials', 418);
+            }
+
+            $token = JWTAuth::setIdentifier('Id')->fromUser($user);
+            \Session::put('user', clone $user);
 
             // prepare data for output
             $userRoles = clone $user->UserRoles;
@@ -194,12 +201,10 @@ abstract class AbstractLaravelController extends Controller
             $payload = JWTAuth::getPayload($token ?: JWTAuth::getToken());
             $user = $this->getService('User')->getRepository()->find($payload['sub']);
 
-            if (null === $user || (1 !== $payload['sub'] && $this->getConfig('appKey') !== $user->getApplicationKey()))
+            if (null === $user)
             {
                 throw new JWTException('User not found', 404);
             }
-
-            \Session::put('user', clone $user);
         }
 
         return $user;

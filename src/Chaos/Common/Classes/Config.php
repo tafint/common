@@ -45,7 +45,8 @@ class Config extends BaseConfig
             'imageMaxSize' => 2097152, // 2MB
             'itemsPerPage' => 10,
             'maxItemsPerPage' => 100,
-            'minSearchChars' => 4
+            'minSearchChars' => 4,
+            'superUserId' => 1
         ];
     }
 }

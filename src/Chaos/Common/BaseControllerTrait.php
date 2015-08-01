@@ -21,23 +21,16 @@ trait BaseControllerTrait
      * @return  IBaseService
      */
     abstract protected function getService($name = null);
-    /**
-     * Get the <tt>user</tt> instance
-     *
-     * @param   string $token JWT token; defaults to JWTAuth::getToken()
-     * @return  IBaseEntity
-     */
-    abstract protected function getUser($token = null);
 
     /**
      * Get the filter parameters
      *
      * Support the following parameters:
      * ?filter=[
-     *  {"predicate":"between|notBetween","identifier":"UpdatedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"and|or","nesting":"nest|unnest"},
+     *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
      *   "left":"Name","right":"ntd1712","leftType":"identifier","rightType":"value","combine":"and|or","nesting":"nest|unnest"},
-     *  {"predicate":"expression","expression":"DATEDIFF(?,?)>?","parameters":["CreatedAt","UpdatedAt",15],"combine":"and|or","nesting":"nest|unnest"}
+     *  {"predicate":"expression","expression":"DATEDIFF(?,?)>?","parameters":["AddedAt","ModifiedAt",15],"combine":"and|or","nesting":"nest|unnest"}
      *  {"predicate":"in|notIn","identifier":"Name","valueSet":["ntd1712","dzung",3],"combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"isNull|isNotNull","identifier":"Name","combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"like|notLike","identifier":"Name","like|notLike":"ntd1712","combine":"and|or","nesting":"nest|unnest"}

@@ -24,8 +24,8 @@ abstract class AbstractLaravelController extends Controller
      */
     public function __construct()
     {
-        $this->setConfig(Classes\Config::load(is_readable($path = MODULE_PATH . '/config.params.php') ? $path : []));
-        $this->setContainer(new Container(self::$cache['__aliases__'] = require_once __DIR__ . '/../aliases.php'))
+        $this->setConfig(Classes\Config::load(is_readable($path = MODULE_PATH . '/config.params.php') ? $path : []))
+             ->setContainer(new Container(self::$cache['__aliases__'] = require_once __DIR__ . '/../aliases.php'))
              ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
     }
 
@@ -52,27 +52,27 @@ abstract class AbstractLaravelController extends Controller
             ]);
 
             if (!$validator->fails())
-            {
-                $user = $this->getService('User')->getRepository()->findOneBy(['Email' => $request::get('email')]);
+            {   /** @var \Account\Entities\User $entity */
+                $entity = $this->getService('User')->getRepository()->findOneBy(['Email' => $request::get('email')]);
             }
 
-            if (!isset($user) || !\Hash::check($request::get('password'), $user->getPassword()) ||
-               ($this->getConfig('superUserId') != $user->Id && $this->getConfig('appKey') !== $user->getApplicationKey()))
+            if (!isset($entity) || !\Hash::check($request::get('password'), $entity->getPassword()) ||
+               ($this->getConfig('superUserId') != $entity->Id && $this->getConfig('appKey') !== $entity->getApplicationKey()))
             {
                 throw new JWTException('Invalid credentials', 418);
             }
 
-            $token = JWTAuth::setIdentifier('Id')->fromUser($user);
-            \Session::put('user', clone $user);
+            $token = JWTAuth::setIdentifier('Id')->fromUser($entity);
+            \Session::put('user', clone $entity);
 
             // prepare data for output
-            $userRoles = clone $user->UserRoles;
-            $user = $user->toSimpleArray();
+            $user = $entity->toSimpleArray();
             $user['Roles'] = $user['Permissions'] = [];
+            unset($user['UserRoles']);
 
-            if (0 !== count($userRoles))
+            if (0 !== count($entity->UserRoles))
             {
-                foreach ($userRoles as $userRole)
+                foreach ($entity->UserRoles as $userRole)
                 {
                     $user['Roles'][strtolower($userRole->Role->Name)] = $userRole->Role->Id;
 
@@ -177,7 +177,7 @@ abstract class AbstractLaravelController extends Controller
                 return self::$cache[$repositoryName];
             };
 
-            /** {@inheritdoc} */
+            /** {@inheritdoc} A service can call another service when appropriate */
             self::$cache[$serviceName]->getService = function($name = null)
             {
                 return $this->getService($name);
@@ -193,7 +193,13 @@ abstract class AbstractLaravelController extends Controller
         return self::$cache[$serviceName];
     }
 
-    /** {@inheritdoc} @return IBaseEntity */
+    /**
+     * Get the <tt>user</tt> instance
+     *
+     * @param   string $token JWT token; defaults to JWTAuth::getToken()
+     * @return  IBaseEntity
+     * @throws  JWTException
+     */
     protected function getUser($token = null)
     {
         if (null === ($user = \Session::get('user')))

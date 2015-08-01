@@ -71,7 +71,8 @@ trait BaseServiceTrait
                     case Enums\PredicateType::LT:
                     case Enums\PredicateType::GTE:
                     case Enums\PredicateType::LTE:
-                        if (!isset($v['left']) || !isset($v['right'])) {
+                        if (!isset($v['left']) || !isset($v['right']))
+                        {
                             continue;
                         }
 
@@ -235,23 +236,18 @@ trait BaseServiceTrait
         elseif (is_string($binds))
         {
             $searchable = $this->getConfig('minSearchChars') <= strlen($binds);
+            $binds = $this->filter($binds);
 
             foreach ($fields as $k => $v)
             {
-                if (Types\Type::STRING_TYPE === $v['type'] || Types\Type::TEXT_TYPE === $v['type'])
+                if ((Types\Type::STRING_TYPE === $v['type'] || Types\Type::TEXT_TYPE === $v['type']) &&
+                   (($isChar = isset($v['options']) && isset($v['options']['fixed'])) || $searchable))
                 {
-                    if (isset($v['options']) && isset($v['options']['fixed']))
-                    {
-                        $predicate = new Predicate;
-                        $predicate->equalTo($k, "'" . $this->filter($binds) . "'");
-                        $predicateSet->addPredicate($predicate, PredicateSet::OP_OR);
-                    }
-                    elseif ($searchable)
-                    {
-                        $predicate = new Predicate;
-                        $predicate->like($k, "'%" . str_replace('%', '%%', $this->filter($binds)) . "%'");
-                        $predicateSet->addPredicate($predicate, PredicateSet::OP_OR);
-                    }
+                    $predicate = new Predicate;
+                    isset($isChar) && $isChar ?
+                        $predicate->equalTo($k, "'" . $binds . "'") :
+                        $predicate->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
+                    $predicateSet->addPredicate($predicate, PredicateSet::OP_OR);
                 }
             }
         }

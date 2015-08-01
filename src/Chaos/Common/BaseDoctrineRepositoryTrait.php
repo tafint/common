@@ -298,7 +298,7 @@ trait BaseDoctrineRepositoryTrait
                                 continue;
                             }
 
-                            $predicate = $value[1]->getPredicates()[0][1];
+                            $predicate = $predicates[0][1];
                             $name = shorten(get_class($predicate));
                             $expr = $queryBuilder->expr();
 
@@ -317,9 +317,9 @@ trait BaseDoctrineRepositoryTrait
                                     $expr = sprintf($predicate->getSpecification(), $predicate->getIdentifier(),
                                         $predicate->getMinValue(), $predicate->getMaxValue());
                                     break;
-                                case 'Expression':
-                                    throw new Exceptions\InvalidArgumentException('Not implemented yet');
-                                    break;
+                                case 'Expression': // @TODO: Expression, Predicate NEST/UNNEST
+                                case 'Predicate':
+                                    throw new Exceptions\InvalidArgumentException($name . ' is not implemented yet');
                                 case 'In':
                                 case 'NotIn':
                                     /* @see Doctrine\ORM\Query\Expr::in

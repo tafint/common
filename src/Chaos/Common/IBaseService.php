@@ -10,6 +10,7 @@
  * @property-read array $fields Field mappings
  * @property-read array $pk Primary key(s)
  * @property-read \Doctrine\Common\Collections\Criteria $criteria <tt>Criteria</tt> instance
+ * @property-read \Doctrine\ORM\Query\Expr $expression <tt>Expr</tt> instance
  * @property-read \Doctrine\ORM\EntityManager $entityManager <tt>EntityManager</tt> instance
  * @property-read \Doctrine\ORM\Mapping\ClassMetadata $metadata <tt>ClassMetadata</tt> instance
  *

@@ -279,14 +279,22 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case Select::COMBINE:
                 case 'set':
-                    throw new Exceptions\InvalidArgumentException('Not implemented yet');
+                    throw new Exceptions\InvalidArgumentException('UNION is not supported in DQL');
                 case Select::WHERE:
                 case Select::HAVING:
-                    // e.g. ['where' => 'Id = 1']
-                    //      ['where' => ['Id' => 1]]
-                    //      ['where' => ['Id' => [1]]]
-                    //      ['where' => \Zend\Db\Sql\Predicate\PredicateSet]
-                    if ($v instanceof PredicateInterface)
+                    // e.g. $expr = $this->getRepository()->expression; // \Doctrine\ORM\Query\Expr
+                    //      $or = $expr->orx(
+                    //          $expr->eq('User.Id', 1),
+                    //          $expr->like('Role.Name', "'%user%'")
+                    //      );
+                    //      ['where' => $or]
+                    // e.g. ['where' => \Zend\Db\Sql\Predicate\PredicateSet]
+                    //      ['where' => "%1\$s.Id = 1 AND (%2\$s.Name = 'demo' OR %3\$s.Email LIKE 'demo%%')"]
+                    //      ['where' => "Id = 1 AND Name = 'demo'"]
+                    //      ['where' => ['Id' => 1, '%2$s.Name' => 'demo']]
+                    //      ['where' => ['Id' => [1], '%2$s.Name' => 'demo']] // if joins exist
+                    //
+                    if ($v instanceof PredicateInterface) // @TODO: double check
                     {
                         $predicateSet = $v->getPredicates();
 
@@ -373,9 +381,18 @@ trait BaseDoctrineRepositoryTrait
 
                         foreach ($v as $key => $value)
                         {
+                            if (!is_string($key) || is_empty($key))
+                            {
+                                continue;
+                            }
+
                             if (false === strpos($key, '.'))
                             {
                                 $key = $rootAlias . '.' . trim($key);
+                            }
+                            elseif (false !== ($format = @vsprintf($key, $aliases)))
+                            {
+                                $key = trim($format);
                             }
 
                             $queryBuilder->{'and' . ucfirst($k)}(is_array($value) ?
@@ -386,6 +403,11 @@ trait BaseDoctrineRepositoryTrait
                     }
                     else
                     {
+                        if (is_string($v) && false !== ($format = @vsprintf($v, $aliases)))
+                        {
+                            $v = $format;
+                        }
+
                         /* @see Doctrine\ORM\QueryBuilder::where
                          * @see Doctrine\ORM\QueryBuilder::having */
                         $queryBuilder->$k($v);
@@ -393,7 +415,8 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case Select::GROUP:
                 case 'groupBy':
-                    // e.g. ['group' => 'Id, Name']
+                    // e.g. ['group' => '%1$s.Id, %2$s.Name'] // if joins exist
+                    //      ['group' => 'Id, Name']
                     //      ['group' => ['Id', 'Name']]
                     if (is_string($v))
                     {
@@ -404,26 +427,32 @@ trait BaseDoctrineRepositoryTrait
                         throw new Exceptions\InvalidArgumentException(__METHOD__ . " expects '$k' in array format");
                     }
 
-                    foreach ($v as $groupBy)
+                    foreach ($v as $group)
                     {
-                        if (is_empty($groupBy))
+                        if (is_empty($group))
                         {
                             continue;
                         }
 
-                        if (false === strpos($groupBy, '.'))
+                        if (false === strpos($group, '.'))
                         {
-                            $groupBy = $rootAlias . '.' . $groupBy;
+                            $group = $rootAlias . '.' . $group;
+                        }
+                        elseif (false !== ($format = @vsprintf($group, $aliases)))
+                        {
+                            $group = $format;
                         }
 
-                        $queryBuilder->addGroupBy($groupBy);
+                        $queryBuilder->addGroupBy($group);
                     }
                     break;
                 case Select::ORDER:
                 case 'orderBy':
-                    // e.g. ['order' => 'Id DESC, Name']
+                    // e.g. ['order' => '%1$s.Id DESC, %2$s.Name']  // if joins exist
+                    //      ['order' => 'Id DESC, Name']            // equivalent to 'Id DESC, Name ASC'
+                    //      ['order' => 'Id DESC, Name ASC NULLS FIRST']
                     //      ['order' => ['Id DESC', 'Name ASC NULLS FIRST']]
-                    //      ['order' => ['Id' => 'DESC', 'Name ASC NULLS FIRST']]
+                    //      ['order' => ['Id' => 'DESC', 'Name' => 'ASC NULLS FIRST']]
                     if (is_string($v))
                     {
                         $v = preg_split(CHAOS_REPLACE_COMMA_SEPARATOR, $v, -1, PREG_SPLIT_NO_EMPTY);
@@ -456,24 +485,28 @@ trait BaseDoctrineRepositoryTrait
 
                         if (!empty($matches[1]))
                         {
-                            $order = Select::ORDER_ASCENDING;
+                            $option = Select::ORDER_ASCENDING;
 
                             if (isset($matches[2]) && Select::ORDER_DESCENDING === strtoupper($matches[2]))
                             {
-                                $order = Select::ORDER_DESCENDING;
+                                $option = Select::ORDER_DESCENDING;
                             }
 
-                            if (!is_empty($matches[3]))
+                            if (!is_empty($matches[3])) // NULLS FIRST
                             {
-                                $order .= ' ' . trim($matches[3]);
+                                $option .= ' ' . trim($matches[3]);
                             }
 
                             if (false === strpos($matches[1], '.'))
                             {
                                 $matches[1] = $rootAlias . '.' . $matches[1];
                             }
+                            elseif (false !== ($format = @vsprintf($matches[1], $aliases)))
+                            {
+                                $matches[1] = $format;
+                            }
 
-                            $queryBuilder->addOrderBy($matches[1], $order);
+                            $queryBuilder->addOrderBy($matches[1], $option);
                         }
                     }
                     break;

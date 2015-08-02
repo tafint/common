@@ -169,6 +169,8 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
             // specific
             case 'criteria':
                 return Criteria::create();
+            case 'expression':
+                return $this->_em->getExpressionBuilder();
             case 'entityManager':
                 return $this->_em;
             case 'metadata':

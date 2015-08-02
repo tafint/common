@@ -82,7 +82,8 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} */
     public function delete($criteria, $autoFlush = true)
     {
-        $entities = is_object($criteria) ? [$criteria] : $this->getQueryBuilder($criteria)->getQuery()->getResult();
+        $entities = $criteria instanceof IBaseEntity ? [$criteria] :
+            $this->getQueryBuilder($criteria)->getQuery()->getResult();
 
         if (!empty($entities))
         {

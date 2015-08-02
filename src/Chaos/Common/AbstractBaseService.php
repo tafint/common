@@ -171,7 +171,6 @@ abstract class AbstractBaseService implements IBaseService
 
         // exchange array
         $entity->exchangeArray($argv['post'], $entity);
-
         // fire "onValidate" event (if any)
         $this->fireEvent(static::ON_VALIDATE, $argv);
 

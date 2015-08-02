@@ -4,7 +4,7 @@
  * Class PredicateType
  * @author ntd1712
  */
-class PredicateType
+class PredicateType extends Enum
 {
     const BETWEEN = 'between';
     const NOT_BETWEEN = 'notBetween';
@@ -42,6 +42,34 @@ class PredicateType
     const ASC = 'ASC';
     const DESC = 'DESC';
 
-    /** Private constructor */
-    final private function __construct() {}
+    /** @var array */
+    protected static $map = [
+        self::BETWEEN => true,
+        self::NOT_BETWEEN => true,
+        self::EQUAL_TO => true,
+        self::NOT_EQUAL_TO => true,
+        self::LESS_THAN => true,
+        self::GREATER_THAN => true,
+        self::LESS_THAN_OR_EQUAL_TO => true,
+        self::GREATER_THAN_OR_EQUAL_TO => true,
+        self::EQ => true,
+        self::NEQ => true,
+        self::LT => true,
+        self::LTE => true,
+        self::GT => true,
+        self::GTE => true,
+        self::EXPR => true,
+        self::EXPRESSION => true,
+        self::IN => true,
+        self::NIN => true,
+        self::NOT_IN => true,
+        self::IS_NOT_NULL => true,
+        self::IS_NULL => true,
+        self::LIKE => true,
+        self::NOT_LIKE => true,
+        self::NEST => true,
+        self::UNNEST => true,
+        self::ASC => true,
+        self::DESC => true
+    ];
 }

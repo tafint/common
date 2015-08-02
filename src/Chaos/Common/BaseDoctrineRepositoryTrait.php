@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Predicate\PredicateInterface;
+use Chaos\Common\Enums\JoinType;
 
 /**
  * Class BaseDoctrineRepositoryTrait
@@ -45,7 +46,7 @@ trait BaseDoctrineRepositoryTrait
     /**
      * Get QueryBuilder instance
      *
-     * @param   array|Criteria|\Doctrine\ORM\QueryBuilder $criteria Query criteria
+     * @param   array|Criteria|QueryBuilder $criteria Query criteria
      * @param   QueryBuilder $queryBuilder
      * @return  QueryBuilder
      * @throws  Exceptions\InvalidArgumentException
@@ -53,6 +54,11 @@ trait BaseDoctrineRepositoryTrait
     protected function getQueryBuilder($criteria, QueryBuilder $queryBuilder = null)
     {
         // do some checks
+        if ($criteria instanceof QueryBuilder)
+        {
+            return $criteria;
+        }
+
         $rootAlias = $this->_class->reflClass->getShortName();
 
         if (null === $queryBuilder)
@@ -93,10 +99,9 @@ trait BaseDoctrineRepositoryTrait
                     //      ]]
                     if ($v instanceof IBaseRepository)
                     {
-                        $v = $v->getClassName();
+                        $v = [['from' => $v->getClassName()]];
                     }
-
-                    if (is_string($v))
+                    elseif (is_string($v))
                     {
                         $matches = preg_split(CHAOS_REPLACE_COMMA_SEPARATOR, $v, -1, PREG_SPLIT_NO_EMPTY);
                         $v = [];
@@ -112,7 +117,7 @@ trait BaseDoctrineRepositoryTrait
                         throw new Exceptions\InvalidArgumentException(__METHOD__ . " expects '$k' in array format");
                     }
 
-                    if (isset($v['from'])) // make sure we have a multidimensional array passed
+                    if (!isset($v[0])) // make sure we have a multidimensional array passed
                     {
                         $v = [$v];
                     }
@@ -166,10 +171,9 @@ trait BaseDoctrineRepositoryTrait
                     //      ]
                     if ($v instanceof IBaseRepository)
                     {
-                        $v = $v->className;
+                        $v = [$v->className];
                     }
-
-                    if (is_string($v))
+                    elseif (is_string($v))
                     {
                         $v = preg_split(CHAOS_REPLACE_COMMA_SEPARATOR, $v, -1, PREG_SPLIT_NO_EMPTY);
                     }
@@ -213,33 +217,34 @@ trait BaseDoctrineRepositoryTrait
                 case Select::JOINS:
                 case 'join':
                     // e.g. ['joins' => ['join' => $this->getRepository('UserRole')]]
-                    //      ['joins' => ['join' => $this->getRepository('User'), 'condition' => '%3$s = %2$s.%3$s']]
+                    //      ['joins' => ['innerJoin' => $this->getRepository('UserRole')]]
+                    //      ['joins' => ['leftJoin' => $this->getRepository('User'), 'condition' => '%3$s = %2$s.%3$s']]
                     if (!is_array($v))
                     {
                         throw new Exceptions\InvalidArgumentException(__METHOD__ . " expects '$k' in array format");
                     }
 
-                    if (isset($v['join']))
+                    if (!isset($v[0]))
                     {
                         $v = [$v];
                     }
 
                     foreach ($v as $join)
                     {
-                        if (!is_array($join) || empty($join['join']))
+                        if (!is_array($join) || !JoinType::has($type = key($join)))
                         {
                             throw new Exceptions\InvalidArgumentException(__METHOD__ . " expects '$k' in array format" .
                                 ' and its required key "join"');
                         }
 
-                        if ($join['join'] instanceof IBaseRepository)
+                        if ($join[$type] instanceof IBaseRepository)
                         {
-                            $join['join'] = $join['join']->getClassName();
+                            $join[$type] = $join[$type]->getClassName();
                         }
 
                         if (!isset($join['alias']))
                         {
-                            $join['alias'] = shorten($join['join']);
+                            $join['alias'] = shorten($join[$type]);
                         }
 
                         if (!isset($join['conditionType']) ||
@@ -265,15 +270,11 @@ trait BaseDoctrineRepositoryTrait
                             $join['indexBy'] = null;
                         }
 
-                        if (!isset($join['type']) || Join::LEFT_JOIN !== strtoupper($join['type']))
-                        {
-                            $join['type'] = Join::INNER_JOIN;
-                        }
-
-                        /* @see Doctrine\ORM\QueryBuilder::innerJoin
+                        /* @see Doctrine\ORM\QueryBuilder::join
+                         * @see Doctrine\ORM\QueryBuilder::innerJoin
                          * @see Doctrine\ORM\QueryBuilder::leftJoin */
-                        call_user_func([$queryBuilder, strtolower($join['type']) . 'Join'],
-                            $join['join'], $join['alias'], $join['conditionType'], $join['condition'], $join['indexBy']);
+                        call_user_func([$queryBuilder, $type],
+                            $join[$type], $join['alias'], $join['conditionType'], $join['condition'], $join['indexBy']);
                     }
                     break;
                 case Select::COMBINE:

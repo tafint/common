@@ -30,11 +30,11 @@ trait BaseControllerTrait
      *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
      *   "left":"Name","right":"ntd1712","leftType":"identifier","rightType":"value","combine":"and|or","nesting":"nest|unnest"},
-     *  {"predicate":"expression","expression":"DATEDIFF(?,?)>?","parameters":["AddedAt","ModifiedAt",15],"combine":"and|or","nesting":"nest|unnest"}
+     *  {"predicate":"expression","expression":"CONCAT(?0,?1) IS NOT NULL","parameters":["AddedAt","ModifiedAt"],"combine":"and|or","nesting":"nest|unnest"}
      *  {"predicate":"in|notIn","identifier":"Name","valueSet":["ntd1712","dzung",3],"combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"isNull|isNotNull","identifier":"Name","combine":"and|or","nesting":"nest|unnest"},
      *  {"predicate":"like|notLike","identifier":"Name","like|notLike":"ntd1712","combine":"and|or","nesting":"nest|unnest"}
-     *  {"predicate":"literal","literal":"Name='ntd1712'","combine":"and|or","nesting":"nest|unnest"}
+     *  {"predicate":"literal","literal":"IsDeleted=false","combine":"and|or","nesting":"nest|unnest"}
      * ]
      * &filter=ntd1712
      * &sort=[

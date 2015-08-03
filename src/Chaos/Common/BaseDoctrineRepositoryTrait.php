@@ -294,63 +294,77 @@ trait BaseDoctrineRepositoryTrait
                     //      ['where' => ['Id' => 1, '%2$s.Name' => 'demo']]
                     //      ['where' => ['Id' => [1], '%2$s.Name' => 'demo']] // if joins exist
                     //
-                    if ($v instanceof PredicateInterface) // @TODO: double check
+                    if ($v instanceof PredicateInterface)
                     {
-                        $predicateSet = $v->getPredicates();
-
-                        foreach ($predicateSet as $value)
+                        foreach ($v->getPredicates() as $value)
                         {
-                            $predicates = $value[1]->getPredicates();
-
-                            if (empty($predicates))
-                            {
-                                continue;
-                            }
-
-                            $predicate = $predicates[0][1];
-                            $name = shorten(get_class($predicate));
-                            $expr = $queryBuilder->expr();
+                            $predicate = $value[1]->getPredicates()[0][1];
+                            $type = shorten(get_class($predicate));
 
                             if (method_exists($predicate, 'getIdentifier'))
-                            {
+                            {   /** @var \Zend\Db\Sql\Predicate\Between $predicate */
                                 if (false === strpos($predicate->getIdentifier(), '.'))
                                 {
                                     $predicate->setIdentifier($rootAlias . '.' . $predicate->getIdentifier());
                                 }
+                                elseif (false !== ($format = @vsprintf($predicate->getIdentifier(), $aliases)))
+                                {
+                                    $predicate->setIdentifier($format);
+                                }
                             }
 
-                            switch ($name)
+                            switch ($type)
                             {
                                 case 'Between':
                                 case 'NotBetween':
+                                    /** @var \Zend\Db\Sql\Predicate\Between $predicate */
                                     $expr = sprintf($predicate->getSpecification(), $predicate->getIdentifier(),
                                         $predicate->getMinValue(), $predicate->getMaxValue());
                                     break;
-                                case 'Expression': // @TODO: Expression, Predicate NEST/UNNEST
-                                case 'Predicate':
-                                    throw new Exceptions\InvalidArgumentException($name . ' is not implemented yet');
+                                case 'Expression':
+                                    /** @var \Zend\Db\Sql\Predicate\Expression $predicate */
+                                    $expr = $predicate->getExpression();
+                                    $queryBuilder->setParameters($predicate->getParameters());
+                                    break;
+                                case 'Predicate': // @TODO: Predicate NEST/UNNEST
+                                    throw new Exceptions\InvalidArgumentException($type . ' is not supported yet');
                                 case 'In':
                                 case 'NotIn':
                                     /* @see Doctrine\ORM\Query\Expr::in
-                                     * @see Doctrine\ORM\Query\Expr::notIn */
-                                    $expr = $expr->{lcfirst($name)}($predicate->getIdentifier(), $predicate->getValueSet());
+                                     * @see Doctrine\ORM\Query\Expr::notIn
+                                     * @var \Zend\Db\Sql\Predicate\In $predicate */
+                                    $expr = $queryBuilder->expr()
+                                        ->{lcfirst($type)}($predicate->getIdentifier(), $predicate->getValueSet());
                                     break;
                                 case 'IsNotNull':
                                 case 'IsNull':
                                     /* @see Doctrine\ORM\Query\Expr::isNull
-                                     * @see Doctrine\ORM\Query\Expr::isNotNull */
-                                    $expr = $expr->{lcfirst($name)}($predicate->getIdentifier());
+                                     * @see Doctrine\ORM\Query\Expr::isNotNull
+                                     * @var \Zend\Db\Sql\Predicate\IsNull $predicate */
+                                    $expr = $queryBuilder->expr()
+                                        ->{lcfirst($type)}($predicate->getIdentifier());
                                     break;
                                 case 'Like':
                                 case 'NotLike':
                                     /* @see Doctrine\ORM\Query\Expr::like
-                                     * @see Doctrine\ORM\Query\Expr::notLike */
-                                    $expr = $expr->{lcfirst($name)}($predicate->getIdentifier(), $predicate->getLike());
+                                     * @see Doctrine\ORM\Query\Expr::notLike
+                                     * @var \Zend\Db\Sql\Predicate\Like $predicate */
+                                    $expr = $queryBuilder->expr()
+                                        ->{lcfirst($type)}($predicate->getIdentifier(), $predicate->getLike());
                                     break;
                                 case 'Literal':
-                                    $expr = $expr->literal($predicate->getLiteral());
+                                    /* @var \Zend\Db\Sql\Predicate\Literal $predicate */
+                                    $expr = trim($queryBuilder->expr()
+                                        ->literal($predicate->getLiteral())
+                                        ->getParts()[0], "'");
+
+                                    if (false !== ($format = @vsprintf($expr, $aliases)))
+                                    {
+                                        $expr = $format;
+                                    }
                                     break;
-                                default: // Operator
+                                default:
+                                    /* @var \Zend\Db\Sql\Predicate\Operator $predicate */
                                     if (PredicateInterface::TYPE_IDENTIFIER === $predicate->getLeftType())
                                     {
                                         $left = $predicate->getLeft();
@@ -366,12 +380,18 @@ trait BaseDoctrineRepositoryTrait
                                     {
                                         $left = $rootAlias . '.' . $left;
                                     }
+                                    elseif (false !== ($format = @vsprintf($left, $aliases)))
+                                    {
+                                        $left = $format;
+                                    }
 
                                     $expr = new Comparison($left, $predicate->getOperator(), $right);
                             }
 
                             /* @see Doctrine\ORM\QueryBuilder::andWhere
-                             * @see Doctrine\ORM\QueryBuilder::andHaving */
+                             * @see Doctrine\ORM\QueryBuilder::orWhere
+                             * @see Doctrine\ORM\QueryBuilder::andHaving
+                             * @see Doctrine\ORM\QueryBuilder::orHaving */
                             $queryBuilder->{strtolower($value[0]) . ucfirst($k)}($expr);
                         }
                     }

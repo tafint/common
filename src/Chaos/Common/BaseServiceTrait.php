@@ -40,8 +40,10 @@ trait BaseServiceTrait
                     $predicate = $predicate->{$v['nesting']}();
                 }
 
-                isset($v['combine']) && is_string($v['combine']) && Predicate::OP_OR === strtoupper($v['combine']) ?
-                    $predicate->or : $predicate->and;
+                if (isset($v['combine']) && is_string($v['combine']) && Predicate::OP_OR === strtoupper($v['combine']))
+                {
+                    $predicate->or;
+                }
 
                 switch ($v['predicate'])
                 {

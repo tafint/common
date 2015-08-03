@@ -24,6 +24,21 @@ trait BaseControllerTrait
 
     /**
      * Get the filter parameters
+     * e.g.
+     * ?filter=[
+     *  {"predicate":"equalTo","left":"Id","right":"1","leftType":"identifier","rightType":"value","combine":"and","nesting":"nest"},
+     *  {"predicate":"equalTo","left":"Id","right":"2","leftType":"identifier","rightType":"value","combine":"or"},
+     *  {"predicate":"like","identifier":"Name","like":"demo","combine":"and","nesting":"unnest"}
+     * ]
+     * // equivalent to
+     * $predicate = new Predicate;
+     * $predicate->nest()
+     *  ->equalTo('Id', 1)
+     *  ->or
+     *  ->equalTo('Id', 2)
+     *  ->unnest()
+     *  ->and
+     *  ->like('Name', '%demo%');
      *
      * Support the following parameters:
      * ?filter=[

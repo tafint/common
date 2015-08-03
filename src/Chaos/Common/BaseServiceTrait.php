@@ -1,7 +1,6 @@
 <?php namespace Chaos\Common;
 
 use Zend\Db\Sql\Predicate\Predicate;
-use Zend\Db\Sql\Predicate\PredicateSet;
 
 /**
  * Class BaseServiceTrait
@@ -18,13 +17,13 @@ trait BaseServiceTrait
      * Prepare filter parameters
      *
      * @param   array|string $binds A bind variable array
-     * @return  PredicateSet
+     * @return  Predicate
      * @see     BaseControllerTrait::getFilterParams
      */
     public function prepareFilterParams($binds = [])
     {
         $fields = $this->getRepository()->fields;
-        $predicateSet = new PredicateSet;
+        $predicate = new Predicate;
 
         if (is_array($binds))
         {
@@ -35,13 +34,14 @@ trait BaseServiceTrait
                     continue;
                 }
 
-                $predicate = new Predicate;
-
                 if (isset($v['nesting']) &&
                    (Enums\PredicateType::NEST === $v['nesting'] || Enums\PredicateType::UNNEST === $v['nesting']))
                 {
-                    $predicate->{$v['nesting']}();
+                    $predicate = $predicate->{$v['nesting']}();
                 }
+
+                isset($v['combine']) && is_string($v['combine']) && Predicate::OP_OR === strtoupper($v['combine']) ?
+                    $predicate->or : $predicate->and;
 
                 switch ($v['predicate'])
                 {
@@ -225,12 +225,6 @@ trait BaseServiceTrait
                         break;
                     default:
                 }
-
-                if (0 !== count($predicate))
-                {
-                    $predicateSet->addPredicate($predicate,
-                        isset($v['combine']) && is_string($v['combine']) ? strtoupper($v['combine']) : null);
-                }
             }
         }
         elseif (is_string($binds))
@@ -243,16 +237,15 @@ trait BaseServiceTrait
                 if ((Types\Type::STRING_TYPE === $v['type'] || Types\Type::TEXT_TYPE === $v['type']) &&
                    (($isChar = isset($v['options']) && isset($v['options']['fixed'])) || $searchable))
                 {
-                    $predicate = new Predicate;
+                    $predicate->or;
                     isset($isChar) && $isChar ?
                         $predicate->equalTo($k, "'" . $binds . "'") :
                         $predicate->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
-                    $predicateSet->addPredicate($predicate, PredicateSet::OP_OR);
                 }
             }
         }
 
-        return $predicateSet;
+        return $predicate;
     }
 
     /**

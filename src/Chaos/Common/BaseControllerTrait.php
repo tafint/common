@@ -71,18 +71,13 @@ trait BaseControllerTrait
      */
     protected function getFilterParams(array $binds = [], $key = 'filter')
     {
-        $filter = $this->getRequest($key);
+        $filter = trim(rawurldecode($this->getRequest($key)));
 
         if (!is_empty($filter))
         {
-            if (is_string($filter))
+            if (false !== ($decodedValue = is_json($filter, true)))
             {
-                $filter = trim(urldecode($filter));
-
-                if (false !== ($decodedValue = is_json($filter, true)))
-                {
-                    $filter = $decodedValue;
-                }
+                $filter = $decodedValue;
             }
 
             /** @see BaseServiceTrait::prepareFilterParams */
@@ -124,22 +119,17 @@ trait BaseControllerTrait
      */
     protected function getOrderParams(array $binds = [], $key = 'sort')
     {
-        $order = $this->getRequest($key);
+        $order = trim(rawurldecode($this->getRequest($key)));
 
         if (!is_empty($order))
         {
-            if (is_string($order))
+            if (false !== ($decodedValue = is_json($order, true)))
             {
-                $order = trim(urldecode($order));
-
-                if (false !== ($decodedValue = is_json($order, true)))
-                {
-                    $order = (array)$decodedValue;
-                }
-                else
-                {
-                    $order = [['property' => $order, 'direction' => $this->getRequest('direction')]];
-                }
+                $order = (array)$decodedValue;
+            }
+            else
+            {
+                $order = [['property' => $order, 'direction' => $this->getRequest('direction')]];
             }
 
             /** @see BaseServiceTrait::prepareOrderParams */

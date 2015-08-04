@@ -17,13 +17,18 @@ trait BaseServiceTrait
      * Prepare filter parameters
      *
      * @param   array|string $binds A bind variable array
+     * @param   \Zend\Db\Sql\Predicate\PredicateInterface $predicate
      * @return  Predicate
      * @see     BaseControllerTrait::getFilterParams
      */
-    public function prepareFilterParams($binds = [])
+    public function prepareFilterParams($binds = [], $predicate = null)
     {
+        if (null === $predicate)
+        {
+            $predicate = new Predicate;
+        }
+
         $fields = $this->getRepository()->fields;
-        $predicate = new Predicate;
 
         if (is_array($binds))
         {
@@ -259,8 +264,8 @@ trait BaseServiceTrait
      */
     public function prepareOrderParams(array $binds = [])
     {
-        $fields = $this->getRepository()->fields;
         $orderSet = [];
+        $fields = $this->getRepository()->fields;
 
         foreach ($binds as $v)
         {

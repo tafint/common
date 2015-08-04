@@ -19,7 +19,8 @@
  * @method IBaseService getService(string $name = null) Get the <tt>service</tt> instance
  * @method IBaseEntity getUser(string $token = null) Get the <tt>user</tt> instance
  *
- * @method \Zend\Db\Sql\Predicate\PredicateSet prepareFilterParams($binds = []) Prepare filter parameters
+ * @method \Zend\Db\Sql\Predicate\Predicate prepareFilterParams($binds = [], \Zend\Db\Sql\Predicate\PredicateInterface $predicate = null)
+ *   Prepare filter parameters
  * @method array prepareOrderParams(array $binds = []) Prepare order parameters
  * @method array preparePagerParams(array $binds = []) Prepare pager parameters
  * @method string filter(string $value, bool $checkDate = false) Return the string $value, converting characters to

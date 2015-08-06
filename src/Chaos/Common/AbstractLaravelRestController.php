@@ -10,7 +10,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      * The default "index" action, you can override this in derived class
      *
      * @return  array
-     * @link    GET /lookup?filter=&sort=&start=&length=
+     * @example GET /lookup?filter=&sort=&start=&length=
      */
     public function index()
     {
@@ -21,19 +21,19 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      * The default "create" action, you can override this in derived class
      *
      * @return  array
-     * @link    GET /lookup/create
      * @throws  Exceptions\BadMethodCallException
+     * @example GET /lookup/create
      */
     public function create()
     {
-        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s"', __METHOD__));
+        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s::%s"', get_called_class(), __FUNCTION__));
     }
 
     /**
      * The default "store" action, you can override this in derived class
      *
      * @return  array
-     * @link    POST /lookup
+     * @example POST /lookup
      */
     public function store()
     {
@@ -45,7 +45,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      *
      * @param   mixed $id
      * @return  array
-     * @link    GET /lookup/{lookup}
+     * @example GET /lookup/{lookup}
      */
     public function show($id)
     {
@@ -56,12 +56,12 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      * The default "edit" action, you can override this in derived class
      *
      * @return  array
-     * @link    GET /lookup/{lookup}/edit
      * @throws  Exceptions\BadMethodCallException
+     * @example GET /lookup/{lookup}/edit
      */
     public function edit()
     {
-        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s"', __METHOD__));
+        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s::%s"', get_called_class(), __FUNCTION__));
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      *
      * @param   mixed $id
      * @return  array
-     * @link    PUT /lookup/{lookup}
+     * @example PUT /lookup/{lookup}
      */
     public function update($id)
     {
@@ -81,7 +81,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      *
      * @param   mixed $id
      * @return  array
-     * @link    DELETE /lookup/{lookup}
+     * @example DELETE /lookup/{lookup}
      */
     public function destroy($id)
     {

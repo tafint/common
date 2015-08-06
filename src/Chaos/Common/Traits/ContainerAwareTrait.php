@@ -12,7 +12,7 @@ trait ContainerAwareTrait
     private static $container;
 
     /**
-     * Either resolve a given type from the <tt>container</tt> or get the <tt>container</tt> instance
+     * Either resolve a given type from the <tt>Container</tt> or get the <tt>Container</tt> instance
      *
      * @param   string $alias
      * @param   array $args
@@ -24,7 +24,7 @@ trait ContainerAwareTrait
     }
 
     /**
-     * Set a <tt>container</tt> instance
+     * Set a <tt>Container</tt> instance
      *
      * @param   ContainerInterface $container
      * @return  $this

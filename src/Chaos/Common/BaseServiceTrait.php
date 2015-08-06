@@ -6,7 +6,7 @@ use Zend\Db\Sql\Predicate\Predicate;
  * Class BaseServiceTrait
  * @author ntd1712
  *
- * @method \Noodlehaus\ConfigInterface|mixed getConfig(string $key = null, $default = null)
+ * @method \Noodlehaus\ConfigInterface|mixed getConfig(string $key = null, mixed $default = null)
  * @method IBaseRepository|\Doctrine\ORM\EntityRepository getRepository(string $name = null)
  * @method IBaseService getService(string $name = null)
  * @method IBaseEntity getUser(string $token = null)
@@ -19,7 +19,6 @@ trait BaseServiceTrait
      * @param   array|string $binds A bind variable array
      * @param   \Zend\Db\Sql\Predicate\PredicateInterface $predicate
      * @return  Predicate
-     * @see     BaseControllerTrait::getFilterParams
      */
     public function prepareFilterParams($binds = [], $predicate = null)
     {
@@ -227,7 +226,7 @@ trait BaseServiceTrait
                             continue;
                         }
 
-                        $predicate->literal(str_replace(['&lt;', '&gt;', '&#039;'], ['<', '>', "'"],
+                        $predicate->literal(str_replace(['&lt;', '&gt;', '&#39;', '&#039;'], ['<', '>', "'", "'"],
                             $this->filter($v['literal'])));
                         break;
                     default:
@@ -260,7 +259,6 @@ trait BaseServiceTrait
      *
      * @param   array $binds A bind variable array
      * @return  array
-     * @see     BaseControllerTrait::getOrderParams
      */
     public function prepareOrderParams(array $binds = [])
     {
@@ -277,6 +275,12 @@ trait BaseServiceTrait
             $orderSet[$v['property']] = empty($v['direction']) || !is_string($v['direction']) ||
                 Enums\PredicateType::DESC !== strtoupper($v['direction']) ?
                 Enums\PredicateType::ASC : Enums\PredicateType::DESC;
+
+            if (!empty($v['nulls']) && Enums\PredicateType::has($nulls = 'NULLS ' . strtoupper($v['nulls'])))
+            {
+                $orderSet[$v['property']] .= ' ' . (Enums\PredicateType::NULLS_FIRST === $nulls ?
+                    Enums\PredicateType::NULLS_FIRST : Enums\PredicateType::NULLS_LAST);
+            }
         }
 
         return $orderSet;
@@ -287,7 +291,6 @@ trait BaseServiceTrait
      *
      * @param   array $binds A bind variable array
      * @return  array
-     * @see     BaseControllerTrait::getPagerParams
      */
     public function preparePagerParams(array $binds = [])
     {
@@ -393,19 +396,18 @@ trait BaseServiceTrait
     /**
      * Fire a specified event
      *
-     * @param   string $name
-     * @param   array $argv
+     * @param   string $name The event name
+     * @param   array $parameter Zero or more parameters to be passed to the event
+     * @param   object $instance
      * @return  bool TRUE on success; FALSE otherwise
      */
-    private function fireEvent($name, &$argv)
+    public function fireEvent($name, &$parameter, $instance = null)
     {
-        if (method_exists($this, $name))
+        if (method_exists($instance ?: $this, $name))
         {
-            $result = call_user_func([$this, $name], $argv);
-
-            if (null !== $result)
+            if (null !== ($result = call_user_func([$instance ?: $this, $name], $parameter)))
             {
-                $argv = $result;
+                $parameter = $result;
             }
 
             return true;
@@ -415,9 +417,9 @@ trait BaseServiceTrait
     }
 
     /**
-     * Get model class name
+     * Get the model class name
      *
-     * @param   int $options Bitmask index, the default is DEBUG_BACKTRACE_IGNORE_ARGS
+     * @param   int $options The bitmask index; defaults to DEBUG_BACKTRACE_IGNORE_ARGS
      * @param   int $limit Limit the number of stack frames returned
      * @return  array
      */

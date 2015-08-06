@@ -9,15 +9,15 @@ trait BaseControllerTrait
     /**
      * Either get a parameter value or all of the input and files
      *
-     * @param   string $key Parameter key
-     * @param   mixed $default Default value
+     * @param   string $key
+     * @param   mixed $default
      * @return  array|mixed
      */
     abstract protected function getRequest($key = null, $default = null);
     /**
      * Get the <tt>service</tt> instance
      *
-     * @param   string $name Service name; defaults to get_called_class()
+     * @param   string $name The service name; defaults to get_called_class()
      * @return  IBaseService
      */
     abstract protected function getService($name = null);
@@ -66,7 +66,7 @@ trait BaseControllerTrait
      * ]
      *
      * @param   array $binds A bind variable array
-     * @param   string $key Request key
+     * @param   string $key The request key; defaults to "filter"
      * @return  array
      */
     protected function getFilterParams(array $binds = [], $key = 'filter')
@@ -107,19 +107,20 @@ trait BaseControllerTrait
      *
      * Support the following parameters:
      * ?sort=[
-     *  {"property":"Id","direction":"desc"},
-     *  {"property":"Name","direction":"asc"}
+     *  {"property":"Id","direction":"desc","nulls":"first"},
+     *  {"property":"Name","direction":"asc","nulls":"last"}
      * ]
-     * &sort=name&direction=desc
+     * &sort=name&direction=desc&nulls=first
      *
      * Support the following declarations: $binds = [
-     *  'order' => 'Id DESC, Name ASC',
-     *  'order' => ['Id', 'Name ASC'],
-     *  'order' => ['Id' => 'DESC', 'Name' => 'ASC']
+     *  'order' => 'Id DESC, Name',
+     *  'order' => 'Id DESC NULLS FIRST, Name ASC NULLS LAST',
+     *  'order' => ['Id DESC NULLS FIRST', 'Name ASC NULLS LAST'],
+     *  'order' => ['Id' => 'DESC NULLS FIRST', 'Name' => 'ASC NULLS LAST']
      * ]
      *
      * @param   array $binds A bind variable array
-     * @param   string $key Request key
+     * @param   string $key The request key; defaults to "sort"
      * @return  array
      */
     protected function getOrderParams(array $binds = [], $key = 'sort')
@@ -138,7 +139,8 @@ trait BaseControllerTrait
                 }
                 else
                 {
-                    $order = [['property' => $order, 'direction' => $this->getRequest('direction')]];
+                    $order = [['property' => $order,
+                        'direction' => $this->getRequest('direction'), 'nulls' => $this->getRequest('nulls')]];
                 }
             }
 
@@ -183,7 +185,7 @@ trait BaseControllerTrait
      * ]
      *
      * @param   array $binds A bind variable array
-     * @param   array $keys Request keys; defaults to ['page', 'length']
+     * @param   array $keys The request keys; defaults to ['page', 'length']
      * @return  array
      */
     protected function getPagerParams(array $binds = [], array $keys = ['page', 'length'])

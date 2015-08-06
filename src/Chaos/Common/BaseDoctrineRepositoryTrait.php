@@ -372,9 +372,9 @@ trait BaseDoctrineRepositoryTrait
                 case 'orderBy':
                     // e.g. ['order' => '%1$s.Id DESC, %2$s.Name']  // if joins exist
                     //      ['order' => 'Id DESC, Name']            // equivalent to 'Id DESC, Name ASC'
-                    //      ['order' => 'Id DESC, Name ASC NULLS FIRST']
-                    //      ['order' => ['Id DESC', 'Name ASC NULLS FIRST']]
-                    //      ['order' => ['Id' => 'DESC', 'Name' => 'ASC NULLS FIRST']]
+                    //      ['order' => 'Id DESC NULLS FIRST, Name ASC NULLS LAST']
+                    //      ['order' => ['Id DESC NULLS FIRST', 'Name ASC NULLS LAST']]
+                    //      ['order' => ['Id' => 'DESC NULLS FIRST', 'Name' => 'ASC NULLS LAST']]
                     if (is_string($v))
                     {
                         $v = preg_split(CHAOS_REPLACE_COMMA_SEPARATOR, $v, -1, PREG_SPLIT_NO_EMPTY);
@@ -414,7 +414,7 @@ trait BaseDoctrineRepositoryTrait
                                 $option = Select::ORDER_DESCENDING;
                             }
 
-                            if (!is_empty($matches[3])) // NULLS FIRST
+                            if (!is_empty($matches[3])) // NULLS FIRST, NULLS LAST
                             {
                                 $option .= ' ' . trim($matches[3]);
                             }

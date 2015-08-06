@@ -41,6 +41,8 @@ class PredicateType extends Enum
 
     const ASC = 'ASC';
     const DESC = 'DESC';
+    const NULLS_FIRST = 'NULLS FIRST';
+    const NULLS_LAST = 'NULLS LAST';
 
     /** @var array */
     protected static $map = [
@@ -70,6 +72,8 @@ class PredicateType extends Enum
         self::NEST => true,
         self::UNNEST => true,
         self::ASC => true,
-        self::DESC => true
+        self::DESC => true,
+        self::NULLS_FIRST => true,
+        self::NULLS_LAST => true
     ];
 }

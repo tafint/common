@@ -3,6 +3,6 @@
 /**
  * Class AbstractLaravelRepository
  * @author ntd1712
- * @TODO
+ * @todo
  */
 abstract class AbstractLaravelRepository implements ILaravelRepository {}

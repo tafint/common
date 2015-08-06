@@ -77,7 +77,7 @@ abstract class AbstractBaseService implements IBaseService
                 $criteria = $instance;
             }
             else
-            {   // entity without identity? you must be kidding me!
+            {   // entity without identity? r u kidding me?
                 $criteria = null;
             }
         }
@@ -160,19 +160,13 @@ abstract class AbstractBaseService implements IBaseService
             $entity = $response['data'];
         }
 
-        $argv = ['isNew' => $isNew, 'payload' => $post, 'post' => $post, 'entity' => $entity, 'master' => clone $entity];
-        $argv['post'] = array_intersect_key($argv['post'], $entity->getReflection()->getDefaultProperties());
+        $args = ['isNew' => $isNew, 'payload' => $post, 'post' => &$post, 'entity' => &$entity, 'master' => clone $entity];
+        $args['post'] = array_intersect_key($args['post'], $entity->getReflection()->getDefaultProperties());
 
-        // fire "onExchangeArray" (if any)
-        if ($this->fireEvent(static::ON_EXCHANGE_ARRAY, $argv) && !$entity instanceof $argv['entity'])
-        {
-            $entity = $argv['entity'];
-        }
-
-        // exchange array
-        $entity->exchangeArray($argv['post'], $entity);
-        // fire "onValidate" event (if any)
-        $this->fireEvent(static::ON_VALIDATE, $argv);
+        // exchange array & fire events if any
+        $this->fireEvent(static::ON_EXCHANGE_ARRAY, $args);
+        $entity->exchangeArray($args['post'], $entity);
+        $this->fireEvent(static::ON_VALIDATE, $args);
 
         // validate 'em
         if (false !== ($errors = $entity->validate()))
@@ -183,10 +177,9 @@ abstract class AbstractBaseService implements IBaseService
         // update db
         try
         {
-            // start a transaction
+            // start a transaction & fire "onBeforeSave" event if any
             $this->getRepository()->beginTransaction();
-            // fire "onBeforeSave" event (if any)
-            $this->fireEvent(static::ON_BEFORE_SAVE, $argv);
+            $this->fireEvent(static::ON_BEFORE_SAVE, $args);
 
             // create or update entity
             if ($isNew)
@@ -198,11 +191,10 @@ abstract class AbstractBaseService implements IBaseService
                 $affectedRows = $this->getRepository()->update($entity, $criteria);
             }
 
-            $argv['success'] = 0 !== $affectedRows;
+            $args['success'] = 0 != $affectedRows;
 
-            // fire "onAfterSave" event (if any)
-            $this->fireEvent(static::ON_AFTER_SAVE, $argv);
-            // commit current transaction & clear unit of work (if any)
+            // fire "onAfterSave" event if any & commit current transaction
+            $this->fireEvent(static::ON_AFTER_SAVE, $args);
             $this->getRepository()->commit()->refine();
 
             // bye!
@@ -214,7 +206,7 @@ abstract class AbstractBaseService implements IBaseService
             }
 
             $response = $this->read(['where' => $where]);
-            $response['success'] = $argv['success'];
+            $response['success'] = $args['success'];
 
             return $response;
         }
@@ -236,24 +228,22 @@ abstract class AbstractBaseService implements IBaseService
         // update db
         try
         {
-            $argv = ['post' => $criteria, 'entity' => $entity, 'master' => clone $entity];
+            $args = ['post' => $criteria, 'entity' => &$entity, 'master' => clone $entity];
 
-            // start a transaction
+            // start a transaction & fire "onBeforeDelete" event if any
             $this->getRepository()->beginTransaction();
-            // fire "onBeforeDelete" event (if any)
-            $this->fireEvent(static::ON_BEFORE_DELETE, $argv);
+            $this->fireEvent(static::ON_BEFORE_DELETE, $args);
 
             // delete entity
             $affectedRows = $this->getRepository()->delete($entity);
-            $argv['success'] = 0 !== $affectedRows;
+            $args['success'] = 0 != $affectedRows;
 
-            // fire "onAfterDelete" event (if any)
-            $this->fireEvent(static::ON_AFTER_DELETE, $argv);
-            // commit current transaction
+            // fire "onAfterDelete" event if any & commit current transaction
+            $this->fireEvent(static::ON_AFTER_DELETE, $args);
             $this->getRepository()->commit();
 
             // bye!
-            return ['success' => $argv['success']];
+            return ['success' => $args['success']];
         }
         catch (\Exception $ex)
         {

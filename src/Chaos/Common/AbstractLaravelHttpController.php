@@ -3,6 +3,6 @@
 /**
  * Class AbstractLaravelHttpController
  * @author ntd1712
- * @TODO
+ * @todo
  */
 abstract class AbstractLaravelHttpController extends AbstractLaravelController {}

@@ -5,10 +5,9 @@ use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 use League\Container\Container;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-define('MODULE_PATH', app()->basePath() . '/modules');
+define('MODULE_PATH', app()->basePath() . DIRECTORY_SEPARATOR . 'modules');
 
 /**
  * Class AbstractLaravelController
@@ -21,6 +20,7 @@ abstract class AbstractLaravelController extends Controller
 
     /**
      * Constructor
+     * @todo    Reorganize the aliases
      */
     public function __construct()
     {
@@ -43,7 +43,7 @@ abstract class AbstractLaravelController extends Controller
             if (true === (bool)$request::get('logout'))
             {
                 \Session::remove('user');
-                return ['success' => JWTAuth::invalidate(JWTAuth::getToken())];
+                return ['success' => \JWTAuth::invalidate(\JWTAuth::getToken())];
             }
 
             // hell no!
@@ -57,12 +57,13 @@ abstract class AbstractLaravelController extends Controller
             }
 
             if (!isset($entity) || !\Hash::check($request::get('password'), $entity->getPassword()) ||
-               ($this->getConfig('superUserId') != $entity->Id && $this->getConfig('appKey') !== $entity->getApplicationKey()))
+               ($this->getConfig('superUserId') != $entity->getId() &&
+                $this->getConfig('appKey') !== $entity->getApplicationKey()))
             {
                 throw new JWTException('Invalid credentials', 418);
             }
 
-            $token = JWTAuth::setIdentifier('Id')->fromUser($entity);
+            $token = \JWTAuth::setIdentifier('Id')->fromUser($entity);
             \Session::put('user', clone $entity);
 
             // prepare data for output
@@ -70,17 +71,17 @@ abstract class AbstractLaravelController extends Controller
             $user['Roles'] = $user['Permissions'] = [];
             unset($user['UserRoles']);
 
-            if (0 !== count($entity->UserRoles))
-            {
-                foreach ($entity->UserRoles as $userRole)
+            if (0 !== count($userRoles = $entity->getUserRoles()))
+            {   /** @var \Account\Entities\UserRole $userRole */
+                foreach ($userRoles as $userRole)
                 {
-                    $user['Roles'][strtolower($userRole->Role->Name)] = $userRole->Role->Id;
+                    $user['Roles'][strtolower($userRole->getRole()->getName())] = $userRole->getRole()->getId();
 
-                    if (0 !== count($userRole->Role->Permissions))
-                    {
-                        foreach ($userRole->Role->Permissions as $permission)
+                    if (0 !== count($permissions = $userRole->getRole()->getPermissions()))
+                    {   /** @var \Account\Entities\Permission $permission */
+                        foreach ($permissions as $permission)
                         {
-                            $user['Permissions'][strtolower($permission->Name)] = $permission->Id;
+                            $user['Permissions'][strtolower($permission->getName())] = $permission->getId();
                         }
                     }
                 }
@@ -103,7 +104,7 @@ abstract class AbstractLaravelController extends Controller
 
         return isset($key) ? $request->get($key, $default, $deep) : $request->all() + [
             'ModifiedAt' => 'now',
-            'ModifiedBy' => isset($user) ? $user->Username : null,
+            'ModifiedBy' => isset($user) ? $user->getUsername() : null,
             'IsDeleted' => false
         ];
     }
@@ -194,9 +195,9 @@ abstract class AbstractLaravelController extends Controller
     }
 
     /**
-     * Get the <tt>user</tt> instance
+     * Get the <tt>User</tt> instance
      *
-     * @param   string $token JWT token; defaults to JWTAuth::getToken()
+     * @param   string $token The JWT token; defaults to JWTAuth::getToken()
      * @return  IBaseEntity
      * @throws  JWTException
      */
@@ -204,7 +205,7 @@ abstract class AbstractLaravelController extends Controller
     {
         if (null === ($user = \Session::get('user')))
         {
-            $payload = JWTAuth::getPayload($token ?: JWTAuth::getToken());
+            $payload = \JWTAuth::getPayload($token ?: \JWTAuth::getToken());
             $user = $this->getService('User')->getRepository()->find($payload['sub']);
 
             if (null === $user)

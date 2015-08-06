@@ -12,10 +12,10 @@ trait ConfigAwareTrait
     private static $config;
 
     /**
-     * Either get a configuration setting or the <tt>config</tt> instance
+     * Either get a configuration setting or the <tt>Config</tt> instance
      *
-     * @param   string $key Configuration setting key
-     * @param   mixed $default Default value
+     * @param   string $key
+     * @param   mixed $default
      * @return  ConfigInterface|mixed
      */
     public function getConfig($key = null, $default = null)
@@ -24,7 +24,7 @@ trait ConfigAwareTrait
     }
 
     /**
-     * Set a <tt>config</tt> instance
+     * Set a <tt>Config</tt> instance
      *
      * @param   ConfigInterface $config
      * @return  $this

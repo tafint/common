@@ -1,6 +1,4 @@
-<?php // custom mapping types for Doctrine
-
-return [
+<?php return [
     'bool' => 'Chaos\Common\Types\Doctrine\BoolType',
     'double' => 'Chaos\Common\Types\Doctrine\DoubleType',
     'int' => 'Chaos\Common\Types\Doctrine\IntType',

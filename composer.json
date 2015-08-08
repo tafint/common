@@ -21,7 +21,6 @@
     "zendframework/zend-i18n": "dev-develop"
   },
   "require-dev": {
-    "mockery/mockery": "dev-master",
     "phpunit/phpunit": "dev-master"
   },
   "autoload": {

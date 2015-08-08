@@ -1,13 +1,11 @@
-<?php // path to entity/service classes
+<?php $aliases = [];
 
-$aliases = [];
-
-foreach (glob(MODULE_PATH . '/*/{Entities,Events,Models,Services}/*.php', GLOB_BRACE) as $v)
+foreach (glob(__DIR__ . '/*/{[!R]*}/*.php', GLOB_BRACE) as $v)
 {
-    $aliases[basename($v, '.php')] = str_replace([MODULE_PATH . '/', '.php', '/'], ['', '', '\\'], $v);
+    $aliases[basename($v, '.php')] = str_replace([__DIR__ . '/', '.php', '/'], ['', '', '\\'], $v);
 }
 
-return ['di' => $aliases];
+return $aliases;
 
 /*return [
     // account

@@ -7,8 +7,6 @@ use Illuminate\Routing\Controller;
 use League\Container\Container;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-define('MODULE_PATH', app()->basePath() . DIRECTORY_SEPARATOR . 'modules');
-
 /**
  * Class AbstractLaravelController
  * @author ntd1712
@@ -20,12 +18,15 @@ abstract class AbstractLaravelController extends Controller
 
     /**
      * Constructor
-     * @todo    Reorganize the aliases
+     *
+     * @param   string|array $config The path to the config file
+     * @param   array|\ArrayAccess $di
      */
-    public function __construct()
+    public function __construct($config = [], $di = [])
     {
-        $this->setConfig(Classes\Config::load(is_readable($path = MODULE_PATH . '/config.params.php') ? $path : []))
-             ->setContainer(new Container(self::$cache['__aliases__'] = require_once __DIR__ . '/../aliases.php'))
+        $this->setConfig(new Classes\Config($config))
+             ->getConfig()->set('configPath', $config);
+        $this->setContainer(new Container(['di' => self::$cache['__aliases__'] = $di]))
              ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
     }
 
@@ -42,7 +43,9 @@ abstract class AbstractLaravelController extends Controller
             // are we logging out?
             if (true === (bool)$request::get('logout'))
             {
-                \Session::remove('user');
+                \Session::remove('loggedName');
+                \Session::remove('loggedUser');
+
                 return ['success' => \JWTAuth::invalidate(\JWTAuth::getToken())];
             }
 
@@ -64,7 +67,8 @@ abstract class AbstractLaravelController extends Controller
             }
 
             $token = \JWTAuth::setIdentifier('Id')->fromUser($entity);
-            \Session::put('user', clone $entity);
+            \Session::set('loggedName', $entity->getName());
+            \Session::set('loggedUser', clone $entity);
 
             // prepare data for output
             $user = $entity->toSimpleArray();
@@ -100,11 +104,10 @@ abstract class AbstractLaravelController extends Controller
     protected function getRequest($key = null, $default = null, $deep = false)
     {
         $request = $this->getRouter()->getCurrentRequest();
-        $user = \Session::get('user');
 
         return isset($key) ? $request->get($key, $default, $deep) : $request->all() + [
             'ModifiedAt' => 'now',
-            'ModifiedBy' => isset($user) ? $user->getUsername() : null,
+            'ModifiedBy' => \Session::get('loggedName'),
             'IsDeleted' => false
         ];
     }
@@ -153,7 +156,7 @@ abstract class AbstractLaravelController extends Controller
                 if (!isset(self::$cache[$repositoryName]))
                 {
                     self::$cache[$repositoryName] = $this->getContainer(DOCTRINE_ENTITY_MANAGER)
-                        ->getRepository(@self::$cache['__aliases__']['di'][$name] ?: $name)
+                        ->getRepository(@self::$cache['__aliases__'][$name] ?: $name)
                         ->setContainer($this->getContainer())
                         ->setConfig($this->getConfig());
 
@@ -203,7 +206,7 @@ abstract class AbstractLaravelController extends Controller
      */
     protected function getUser($token = null)
     {
-        if (null === ($user = \Session::get('user')))
+        if (null === ($user = \Session::get('loggedUser')))
         {
             $payload = \JWTAuth::getPayload($token ?: \JWTAuth::getToken());
             $user = $this->getService('User')->getRepository()->find($payload['sub']);

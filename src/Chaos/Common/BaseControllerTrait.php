@@ -52,11 +52,6 @@ trait BaseControllerTrait
      *  {"predicate":"literal","literal":"IsDeleted=false","combine":"and|or","nesting":"nest|unnest"}
      * ]
      * &filter=ntd1712
-     * &sort=[
-     *  {"property":"Id","direction":"desc"},
-     *  {"property":"Name","direction":"asc"}
-     * ]
-     * &sort=name&direction=DESC
      *
      * Support the following declarations: $binds = [
      *  'where' => 'Id = 1 OR Name = "ntd1712"',
@@ -139,8 +134,8 @@ trait BaseControllerTrait
                 }
                 else
                 {
-                    $order = [['property' => $order,
-                        'direction' => $this->getRequest('direction'), 'nulls' => $this->getRequest('nulls')]];
+                    $order = [['property' => $order, 'direction' => $this->getRequest('direction'),
+                        'nulls' => $this->getRequest('nulls')]];
                 }
             }
 

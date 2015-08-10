@@ -25,8 +25,7 @@ abstract class AbstractLaravelController extends Controller
     public function __construct($config = [], $di = [])
     {
         $this->setConfig(new Classes\Config($config))
-             ->getConfig()->set('configPath', $config);
-        $this->setContainer(new Container(['di' => self::$cache['__aliases__'] = $di]))
+             ->setContainer(new Container(['di' => self::$cache['__aliases__'] = $di]))
              ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
     }
 
@@ -68,7 +67,7 @@ abstract class AbstractLaravelController extends Controller
 
             $token = \JWTAuth::setIdentifier('Id')->fromUser($entity);
             \Session::set('loggedName', $entity->getName());
-            \Session::set('loggedUser', clone $entity);
+            \Session::set('loggedUser', $entity);
 
             // prepare data for output
             $user = $entity->toSimpleArray();
@@ -108,7 +107,8 @@ abstract class AbstractLaravelController extends Controller
         return isset($key) ? $request->get($key, $default, $deep) : $request->all() + [
             'ModifiedAt' => 'now',
             'ModifiedBy' => \Session::get('loggedName'),
-            'IsDeleted' => false
+            'IsDeleted' => false,
+            'ApplicationKey' => $this->getConfig('appKey')
         ];
     }
 
@@ -198,7 +198,7 @@ abstract class AbstractLaravelController extends Controller
     }
 
     /**
-     * Get the <tt>User</tt> instance
+     * Get the <tt>user</tt> instance
      *
      * @param   string $token The JWT token; defaults to JWTAuth::getToken()
      * @return  IBaseEntity

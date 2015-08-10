@@ -9,7 +9,7 @@ use Chaos\Common\Types\Type;
 trait AuditEntityTrait
 {
     /**
-     * @Doctrine\ORM\Mapping\Column(name="added_at", type="datetime", nullable=true, options={"version":true})
+     * @Doctrine\ORM\Mapping\Column(name="added_at", type="datetime", nullable=true)
      * [IgnoreRules]
      */
     private $AddedAt;
@@ -19,7 +19,7 @@ trait AuditEntityTrait
      */
     private $AddedBy;
     /**
-     * @Doctrine\ORM\Mapping\Column(name="modified_at", type="datetime", nullable=true, options={"version":true})
+     * @Doctrine\ORM\Mapping\Column(name="modified_at", type="datetime", nullable=true)
      * [IgnoreRules]
      */
     private $ModifiedAt;
@@ -33,6 +33,12 @@ trait AuditEntityTrait
      * [IgnoreRules]
      */
     private $IsDeleted;
+    /**
+     * @Doctrine\ORM\Mapping\Column(name="version", type="integer", nullable=true)
+     * @Doctrine\ORM\Mapping\Version
+     * [IgnoreRules]
+     */
+    private $Version;
 
     /**
      * @return string
@@ -161,6 +167,32 @@ trait AuditEntityTrait
     public function setIsDeleted($IsDeleted)
     {
         $this->IsDeleted = $IsDeleted;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersionDataType()
+    {
+        return Type::INTEGER_TYPE;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->Version;
+    }
+
+    /**
+     * @param int $Version
+     * @return $this
+     */
+    public function setVersion($Version)
+    {
+        $this->Version = $Version;
         return $this;
     }
 }

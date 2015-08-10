@@ -9,9 +9,9 @@ use Chaos\Common\Types\Type;
 trait IdentityEntityTrait
 {
     /**
-     * @Doctrine\ORM\Mapping\Id
      * @Doctrine\ORM\Mapping\Column(name="id", type="integer", options={"unsigned"=true})
      * @Doctrine\ORM\Mapping\GeneratedValue
+     * @Doctrine\ORM\Mapping\Id
      * [IgnoreRules]
      */
     protected $Id;

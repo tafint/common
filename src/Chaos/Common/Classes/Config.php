@@ -1,13 +1,17 @@
 <?php namespace Chaos\Common\Classes;
 
-use Noodlehaus\Config as BaseConfig;
-
 /**
  * Class Config
  * @author ntd1712
  */
-class Config extends BaseConfig
+class Config extends \Noodlehaus\Config
 {
+    /** {@inheritdoc} */
+    public function __construct($path)
+    {
+        is_array($path) ? \Noodlehaus\AbstractConfig::__construct($path) : parent::__construct($path);
+    }
+
     /**
      * Get all of the configuration settings
      *

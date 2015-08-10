@@ -19,7 +19,7 @@
   'title' => 'Admin Panel',
   'theme' => 'homer', // homer, classic
   'defaultRoute' => 'setting.index',
-  'appKey' => 'rqDNnTB3lP0uT5sIMj9qakJkb1qjArCw',
+  'appKey' => 'SomeRandomString',
   'apiPath' => realpath(__DIR__ . '/../public/api'),
   'apiUrl' => 'http://localhost/chaos/api/',
   'uploadPath' => realpath(__DIR__ . '/../public/uploads'),

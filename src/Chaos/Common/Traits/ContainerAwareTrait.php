@@ -1,6 +1,7 @@
 <?php namespace Chaos\Common\Traits;
 
 use League\Container\ContainerInterface;
+use League\Container\Container;
 
 /**
  * Trait ContainerAwareTrait
@@ -26,11 +27,16 @@ trait ContainerAwareTrait
     /**
      * Set a <tt>Container</tt> instance
      *
-     * @param   ContainerInterface $container
+     * @param   ContainerInterface|array|\ArrayAccess $container
      * @return  $this
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer($container)
     {
+        if (!$container instanceof ContainerInterface)
+        {
+            $container = new Container($container);
+        }
+
         self::$container = $container;
         return $this;
     }

@@ -4,7 +4,6 @@ use Doctrine\ORM\Events;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
-use League\Container\Container;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 /**
@@ -19,84 +18,14 @@ abstract class AbstractLaravelController extends Controller
     /**
      * Constructor
      *
-     * @param   string|array $config The path to the config file
+     * @param   array|string $config The path to the config file
      * @param   array|\ArrayAccess $di
      */
     public function __construct($config = [], $di = [])
     {
-        $this->setConfig(new Classes\Config($config))
-             ->setContainer(new Container(['di' => self::$cache['__aliases__'] = $di]))
+        $this->setConfig($config)
+             ->setContainer(['di' => self::$cache['__aliases__'] = $di]) /** @example http://goo.gl/P3e7ct */
              ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
-    }
-
-    /**
-     * The default "postLogin" action, you can override this in derived class
-     *
-     * @param   \Request $request
-     * @return  \Symfony\Component\HttpFoundation\Response
-     */
-    public function postLogin(\Request $request)
-    {
-        try
-        {
-            // are we logging out?
-            if (true === (bool)$request::get('logout'))
-            {
-                \Session::remove('loggedName');
-                \Session::remove('loggedUser');
-
-                return ['success' => \JWTAuth::invalidate(\JWTAuth::getToken())];
-            }
-
-            // hell no!
-            $validator = $this->getValidationFactory()->make($request::all(), [
-                'email' => 'required|email|max:255', 'password' => 'required'
-            ]);
-
-            if (!$validator->fails())
-            {   /** @var \Account\Entities\User $entity */
-                $entity = $this->getService('User')->getRepository()->findOneBy(['Email' => $request::get('email')]);
-            }
-
-            if (!isset($entity) || !\Hash::check($request::get('password'), $entity->getPassword()) ||
-               ($this->getConfig('superUserId') != $entity->getId() &&
-                $this->getConfig('appKey') !== $entity->getApplicationKey()))
-            {
-                throw new JWTException('Invalid credentials', 418);
-            }
-
-            $token = \JWTAuth::setIdentifier('Id')->fromUser($entity);
-            \Session::set('loggedName', $entity->getName());
-            \Session::set('loggedUser', $entity);
-
-            // prepare data for output
-            $user = $entity->toSimpleArray();
-            $user['Roles'] = $user['Permissions'] = [];
-            unset($user['UserRoles']);
-
-            if (0 !== count($userRoles = $entity->getUserRoles()))
-            {   /** @var \Account\Entities\UserRole $userRole */
-                foreach ($userRoles as $userRole)
-                {
-                    $user['Roles'][strtolower($userRole->getRole()->getName())] = $userRole->getRole()->getId();
-
-                    if (0 !== count($permissions = $userRole->getRole()->getPermissions()))
-                    {   /** @var \Account\Entities\Permission $permission */
-                        foreach ($permissions as $permission)
-                        {
-                            $user['Permissions'][strtolower($permission->getName())] = $permission->getId();
-                        }
-                    }
-                }
-            }
-
-            // bye!
-            return compact('token', 'user');
-        }
-        catch (JWTException $e)
-        {
-            return response()->json(['error' => $e->getMessage()], $e->getStatusCode());
-        }
     }
 
     /** {@inheritdoc} @return array|mixed */
@@ -137,7 +66,7 @@ abstract class AbstractLaravelController extends Controller
 
             /**
              * {@inheritdoc} @return IBaseRepository
-             *  $this->getService()->getRepository()->...
+             *  $this->getService('User')->getRepository('User')->...
              *  $this->getService('User')->getRepository('Role')->...
              *  $this->getService('Account\Service\UserService')->getRepository('Account\Entities\Role')->...
              */
@@ -156,7 +85,7 @@ abstract class AbstractLaravelController extends Controller
                 if (!isset(self::$cache[$repositoryName]))
                 {
                     self::$cache[$repositoryName] = $this->getContainer(DOCTRINE_ENTITY_MANAGER)
-                        ->getRepository(@self::$cache['__aliases__'][$name] ?: $name)
+                        ->getRepository(@self::$cache['__aliases__'][$name]['definition'] ?: $name)
                         ->setContainer($this->getContainer())
                         ->setConfig($this->getConfig());
 

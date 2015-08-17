@@ -77,7 +77,7 @@ abstract class AbstractBaseEntity extends AbstractBaseObjectItem implements IBas
         {
             $value = $v['property']->getValue($this);
             $newValue = $value;
-            $hasValue = !is_empty($value);
+            $hasValue = !is_blank($value);
 
             foreach ($v['rules'] as $rule)
             {   // e.g. [full_special_chars('flags' => FILTER_FLAG_NO_ENCODE_QUOTES)]

@@ -146,13 +146,13 @@ if (!function_exists('is_defined'))
     }
 }
 
-if (!function_exists('is_empty'))
+if (!function_exists('is_blank'))
 {
     /**
      * @param   string $var
      * @return  bool
      */
-    function is_empty($var)
+    function is_blank($var)
     {
         return null === $var || '' === $var || (is_string($var) && ctype_space($var));
     }

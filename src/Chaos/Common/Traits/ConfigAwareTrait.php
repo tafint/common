@@ -1,6 +1,7 @@
 <?php namespace Chaos\Common\Traits;
 
 use Noodlehaus\ConfigInterface;
+use Chaos\Common\Classes\Config;
 
 /**
  * Trait ConfigAwareTrait
@@ -26,11 +27,16 @@ trait ConfigAwareTrait
     /**
      * Set a <tt>Config</tt> instance
      *
-     * @param   ConfigInterface $config
+     * @param   ConfigInterface|array|string $config
      * @return  $this
      */
-    public function setConfig(ConfigInterface $config)
+    public function setConfig($config)
     {
+        if (!$config instanceof ConfigInterface)
+        {
+            $config = new Config($config);
+        }
+
         self::$config = $config;
         return $this;
     }

@@ -10,7 +10,7 @@ trait IdentityEntityTrait
 {
     /**
      * @Doctrine\ORM\Mapping\Column(name="id", type="integer", options={"unsigned"=true})
-     * @Doctrine\ORM\Mapping\GeneratedValue
+     * @Doctrine\ORM\Mapping\GeneratedValue(strategy="AUTO")
      * @Doctrine\ORM\Mapping\Id
      * [IgnoreRules]
      */

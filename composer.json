@@ -13,12 +13,12 @@
     "hassankhan/config": "dev-develop",
     "league/container": "dev-master",
     "doctrine/orm": "dev-master",
-    "zendframework/zend-servicemanager": "dev-develop",
-    "zendframework/zend-db": "dev-develop",
-    "zendframework/zend-json": "dev-develop",
-    "zendframework/zend-filter": "dev-develop",
-    "zendframework/zend-validator": "dev-develop",
-    "zendframework/zend-i18n": "dev-develop"
+    "zendframework/zend-servicemanager": "dev-master",
+    "zendframework/zend-db": "dev-master",
+    "zendframework/zend-json": "dev-master",
+    "zendframework/zend-filter": "dev-master",
+    "zendframework/zend-validator": "dev-master",
+    "zendframework/zend-i18n": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "dev-master"

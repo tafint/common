@@ -303,7 +303,7 @@ trait BaseDoctrineRepositoryTrait
 
                         foreach ($v as $key => $value)
                         {
-                            if (!is_string($key) || is_empty($key))
+                            if (!is_string($key) || ctype_space($key))
                             {
                                 continue;
                             }
@@ -351,7 +351,7 @@ trait BaseDoctrineRepositoryTrait
 
                     foreach ($v as $group)
                     {
-                        if (is_empty($group))
+                        if (is_blank($group))
                         {
                             continue;
                         }
@@ -388,7 +388,7 @@ trait BaseDoctrineRepositoryTrait
                     {
                         if (is_string($key))
                         {
-                            if (is_empty($key))
+                            if (ctype_space($key))
                             {
                                 continue;
                             }
@@ -397,7 +397,7 @@ trait BaseDoctrineRepositoryTrait
                         }
                         else
                         {
-                            if (is_empty($value))
+                            if (is_blank($value))
                             {
                                 continue;
                             }
@@ -414,7 +414,7 @@ trait BaseDoctrineRepositoryTrait
                                 $option = Select::ORDER_DESCENDING;
                             }
 
-                            if (!is_empty($matches[3])) // NULLS FIRST, NULLS LAST
+                            if (!is_blank($matches[3])) // NULLS FIRST, NULLS LAST
                             {
                                 $option .= ' ' . trim($matches[3]);
                             }

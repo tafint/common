@@ -26,12 +26,12 @@ trait BaseControllerTrait
      * Get the filter parameters
      * e.g.
      * ?filter=[
-     *  {"predicate":"equalTo","left":"Id","right":"1","leftType":"identifier","rightType":"value","combine":"and","nesting":"nest"},
-     *  {"predicate":"equalTo","left":"Id","right":"2","leftType":"identifier","rightType":"value","combine":"or"},
+     *  {"predicate":"equalTo","left":"Id","right":"1","leftType":"identifier","rightType":"value","combine":"AND","nesting":"nest"},
+     *  {"predicate":"equalTo","left":"Id","right":"2","leftType":"identifier","rightType":"value","combine":"OR"},
      *  {"predicate":"like","identifier":"Name","like":"demo","combine":"and","nesting":"unnest"}
      * ]
      * // equivalent to
-     * $predicate = new Predicate;
+     * $predicate = new \Zend\Db\Sql\Predicate\Predicate;
      * $predicate->nest()
      *  ->equalTo('Id', 1)
      *  ->or
@@ -42,14 +42,14 @@ trait BaseControllerTrait
      *
      * Support the following parameters:
      * ?filter=[
-     *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"and|or","nesting":"nest|unnest"},
+     *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
-     *   "left":"Name","right":"ntd1712","leftType":"identifier","rightType":"value","combine":"and|or","nesting":"nest|unnest"},
-     *  {"predicate":"expression","expression":"CONCAT(?0,?1) IS NOT NULL","parameters":["AddedAt","ModifiedAt"],"combine":"and|or","nesting":"nest|unnest"}
-     *  {"predicate":"in|notIn","identifier":"Name","valueSet":["ntd1712","dzung",3],"combine":"and|or","nesting":"nest|unnest"},
-     *  {"predicate":"isNull|isNotNull","identifier":"Name","combine":"and|or","nesting":"nest|unnest"},
-     *  {"predicate":"like|notLike","identifier":"Name","like|notLike":"ntd1712","combine":"and|or","nesting":"nest|unnest"}
-     *  {"predicate":"literal","literal":"IsDeleted=false","combine":"and|or","nesting":"nest|unnest"}
+     *   "left":"Name","right":"ntd1712","leftType":"identifier","rightType":"value","combine":"AND|OR","nesting":"nest|unnest"},
+     *  {"predicate":"expression","expression":"CONCAT(?0,?1) IS NOT NULL","parameters":["AddedAt","ModifiedAt"],"combine":"AND|OR","nesting":"nest|unnest"}
+     *  {"predicate":"in|notIn","identifier":"Name","valueSet":["ntd1712","dzung",3],"combine":"AND|OR","nesting":"nest|unnest"},
+     *  {"predicate":"isNull|isNotNull","identifier":"Name","combine":"AND|OR","nesting":"nest|unnest"},
+     *  {"predicate":"like|notLike","identifier":"Name","like|notLike":"ntd1712","combine":"AND|OR","nesting":"nest|unnest"}
+     *  {"predicate":"literal","literal":"IsDeleted=false","combine":"AND|OR","nesting":"nest|unnest"}
      * ]
      * &filter=ntd1712
      *
@@ -57,7 +57,7 @@ trait BaseControllerTrait
      *  'where' => 'Id = 1 OR Name = "ntd1712"',
      *  'where' => ['Id' => 1, 'Name' => 'ntd1712'] // aka. 'Id = 1 AND Name = "ntd1712"'
      *  'where' => ['Id' => 1, 'Name = "ntd1712"']  // aka. 'Id = 1 AND Name = "ntd1712"'
-     *  'where' => new \Zend\Db\Sql\Predicate\PredicateSet
+     *  'where' => new \Zend\Db\Sql\Predicate\Predicate
      * ]
      *
      * @param   array $binds A bind variable array
@@ -68,7 +68,7 @@ trait BaseControllerTrait
     {
         $filter = $this->getRequest($key);
 
-        if (!is_empty($filter))
+        if (!is_blank($filter))
         {
             if (is_string($filter))
             {
@@ -122,7 +122,7 @@ trait BaseControllerTrait
     {
         $order = $this->getRequest($key);
 
-        if (!is_empty($order))
+        if (!is_blank($order))
         {
             if (is_string($order))
             {

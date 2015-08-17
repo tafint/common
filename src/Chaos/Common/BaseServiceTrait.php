@@ -1,6 +1,7 @@
 <?php namespace Chaos\Common;
 
 use Zend\Db\Sql\Predicate\Predicate;
+use Zend\Db\Sql\Predicate\PredicateInterface;
 
 /**
  * Class BaseServiceTrait
@@ -17,10 +18,10 @@ trait BaseServiceTrait
      * Prepare filter parameters
      *
      * @param   array|string $binds A bind variable array
-     * @param   \Zend\Db\Sql\Predicate\PredicateInterface $predicate
+     * @param   PredicateInterface $predicate
      * @return  Predicate
      */
-    public function prepareFilterParams($binds = [], $predicate = null)
+    public function prepareFilterParams($binds = [], PredicateInterface $predicate = null)
     {
         if (null === $predicate)
         {
@@ -44,7 +45,8 @@ trait BaseServiceTrait
                     $predicate = $predicate->{$v['nesting']}();
                 }
 
-                if (isset($v['combine']) && is_string($v['combine']) && Predicate::OP_OR === strtoupper($v['combine']))
+                if (isset($v['combine']) &&
+                   (Predicate::OP_OR === $v['combine'] || strtolower(Predicate::OP_OR) === $v['combine']))
                 {
                     $predicate->or;
                 }
@@ -92,7 +94,7 @@ trait BaseServiceTrait
                             $v['rightType'] = Predicate::TYPE_VALUE;
                         }
 
-                        if ($v['leftType'] == $v['rightType']) ;
+                        if ($v['leftType'] == $v['rightType'])
                         {
                             $v['leftType'] = Predicate::TYPE_IDENTIFIER;
                             $v['rightType'] = Predicate::TYPE_VALUE;
@@ -362,7 +364,7 @@ trait BaseServiceTrait
      */
     public function filter($value, $checkDate = false)
     {
-        if (is_empty($value) || !is_scalar($value))
+        if (is_blank($value) || !is_scalar($value))
         {
             return '';
         }

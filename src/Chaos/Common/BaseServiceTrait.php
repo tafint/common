@@ -1,7 +1,6 @@
 <?php namespace Chaos\Common;
 
 use Zend\Db\Sql\Predicate\Predicate;
-use Zend\Db\Sql\Predicate\PredicateInterface;
 
 /**
  * Class BaseServiceTrait
@@ -18,10 +17,10 @@ trait BaseServiceTrait
      * Prepare filter parameters
      *
      * @param   array|string $binds A bind variable array
-     * @param   PredicateInterface $predicate
+     * @param   \Zend\Db\Sql\Predicate\PredicateInterface $predicate
      * @return  Predicate
      */
-    public function prepareFilterParams($binds = [], PredicateInterface $predicate = null)
+    public function prepareFilterParams($binds = [], $predicate = null)
     {
         if (null === $predicate)
         {

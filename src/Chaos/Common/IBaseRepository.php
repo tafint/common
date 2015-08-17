@@ -54,10 +54,9 @@ interface IBaseRepository
      *
      * @param   array|IBaseEntity $entity Either an associative array of key values or an object
      * @param   array|string|\Closure $where The update condition
-     * @param   bool $isNew The flag indicates we are creating or updating a record
      * @return  int The affected rows
      */
-    function update($entity, $where = null, $isNew = false);
+    function update($entity, $where = null);
     /**
      * The default "delete" method, you can override this in derived class
      *

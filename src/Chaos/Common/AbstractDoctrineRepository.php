@@ -51,7 +51,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         return $this->update($entity, null, true);
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
     public function update($entity, $where = null, $isNew = false)
     {
         if (!is_array($entity))
@@ -65,7 +65,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         {
             $isNew ? $this->_em->persist($v) : $v = $this->_em->merge($v);
 
-            if (0 === (++$i % CHAOS_SQL_BATCH_SIZE))
+            if (0 === ++$i % CHAOS_SQL_BATCH_SIZE)
             {
                 $this->_em->flush();
             }
@@ -95,7 +95,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
                 {
                     $this->_em->remove($v);
 
-                    if ($autoFlush && 0 === (++$i % CHAOS_SQL_BATCH_SIZE))
+                    if ($autoFlush && 0 === ++$i % CHAOS_SQL_BATCH_SIZE)
                     {
                         $this->_em->flush();
                     }

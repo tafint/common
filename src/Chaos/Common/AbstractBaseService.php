@@ -57,7 +57,7 @@ abstract class AbstractBaseService implements IBaseService
             }
             else
             {
-                $criteria = $this->filter($criteria);
+                $criteria = $this->filter($criteria, true);
             }
 
             if (empty($criteria) || 1 > $criteria)
@@ -65,30 +65,17 @@ abstract class AbstractBaseService implements IBaseService
                 throw new Exceptions\ServiceException('Your request is invalid');
             }
 
-            if (0 !== count($pk = $this->getRepository()->pk))
-            {
-                $instance = $this->getRepository()->criteria;
-
-                foreach ($pk as $v)
-                {
-                    $instance->orWhere($instance->expr()->eq($v, $criteria));
-                }
-
-                $criteria = $instance;
-            }
-            else
-            {   // entity without identity? r u kidding me?
-                $criteria = null;
-            }
+            $entity = $this->getRepository()->find($criteria);
         }
-
-        if (empty($criteria))
+        else
         {
-            throw new Exceptions\InvalidArgumentException(__METHOD__ . ' expects "$criteria" in array format');
-        }
+            if (empty($criteria))
+            {
+                throw new Exceptions\InvalidArgumentException(__METHOD__ . ' expects "$criteria" in array format');
+            }
 
-        // get item
-        $entity = $this->getRepository()->read($criteria);
+            $entity = $this->getRepository()->read($criteria);
+        }
 
         if (!$entity)
         {
@@ -112,7 +99,7 @@ abstract class AbstractBaseService implements IBaseService
         return $this->update($post, null, true);
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
     public function update(array $post = [], $criteria = null, $isNew = false)
     {
         // do some checks
@@ -138,11 +125,11 @@ abstract class AbstractBaseService implements IBaseService
         }
         else
         {
-            if (null === $criteria && 0 !== count($pk = $this->getRepository()->pk))
+            if (null === $criteria)
             {
                 $where = [];
 
-                foreach ($pk as $v)
+                foreach ($this->getRepository()->pk as $v)
                 {
                     if (isset($post[$v]))
                     {
@@ -198,14 +185,19 @@ abstract class AbstractBaseService implements IBaseService
             $this->getRepository()->commit()->refine();
 
             // bye!
-            $where = [];
-
-            foreach ($this->getRepository()->pk as $v)
+            if ($isNew)
             {
-                $where[$v] = $entity->$v;
+                $where = [];
+
+                foreach ($this->getRepository()->pk as $v)
+                {
+                    $where[$v] = $entity->$v;
+                }
+
+                $criteria = ['where' => $where];
             }
 
-            $response = $this->read(['where' => $where]);
+            $response = $this->read($criteria);
             $response['success'] = $args['success'];
 
             return $response;

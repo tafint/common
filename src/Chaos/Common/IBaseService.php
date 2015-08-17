@@ -66,7 +66,6 @@ interface IBaseService
      * @param   array $post The _PUT variable
      * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder|mixed $criteria The update criteria
      * @return  array
-     * @throws  Exceptions\InvalidArgumentException
      * @throws  Exceptions\ServiceException
      * @throws  Exceptions\ValidateException
      */

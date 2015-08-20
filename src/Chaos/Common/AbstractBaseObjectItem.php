@@ -22,9 +22,9 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
     }
 
     /** {@inheritdoc} @override */
-    public function fromJson($json, $assoc = true, $options = 0)
+    public function fromJson($json, $assoc = false)
     {
-        return $this->exchangeArray((array)parent::fromJson($json, $assoc, $options));
+        return $this->exchangeArray((array)call_user_func_array(['parent', __FUNCTION__], func_get_args()));
     }
 
     /** {@inheritdoc} @override */
@@ -84,8 +84,8 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                     $this->addRules($property);
                 }
             }
-            elseif (null !== $instance && $types[0] === get_class($instance)) // check for circular object references
-            {
+            elseif (null !== $instance && is_object($instance) && $types[0] === get_class($instance))
+            {   // check for circular object references
                 if ($isCollection)
                 {
                     $value = $this->addToCollection($instance, $types[1]);

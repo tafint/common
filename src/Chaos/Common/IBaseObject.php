@@ -7,26 +7,25 @@
 interface IBaseObject
 {
     /**
-     * Cast JSON string to result set
+     * Cast a JSON string to a result set
      *
-     * @param   string $json <i>JSON</i> to be copied
+     * @param   string $json The <i>json</i> string being decoded
      * @param   bool $assoc When <b>TRUE</b>, returned objects will be converted into associative arrays
-     * @param   int $options Bitmask of <i>JSON</i> decode options
-     * @return  mixed Value encoded in <i>JSON</i> in appropriate PHP type
+     * @return  mixed The value encoded in <i>JSON</i> in appropriate PHP type
      * @throws  Exceptions\RuntimeException
+     * @see     json_decode
      */
-    function fromJson($json, $assoc = true, $options = 0);
+    function fromJson($json, $assoc = false);
     /**
-     * Cast result set to JSON string
+     * Cast a result set to a JSON string
      *
-     * @param   int $options Bitmask of <i>JSON</i> encode options,
-     *          the default is JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
-     * @return  string <i>JSON</i> encoded string on success or <b>FALSE</b> on failure
+     * @return  string A <i>JSON</i> encoded string on success or <b>FALSE</b> on failure
      * @throws  Exceptions\RuntimeException
+     * @see     json_encode
      */
-    function toJson($options = 15);
+    function toJson();
     /**
-     * Recursively cast result set to array
+     * Recursively cast a result set to an array
      *
      * @return  array
      */

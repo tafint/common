@@ -15,18 +15,18 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     }
 
     /** {@inheritdoc} */
-    public function fromJson($json, $assoc = true, $options = 0)
+    public function fromJson($json, $assoc = false)
     {
         $message = 'JSON decoding failed: ';
 
         if (function_exists('json_decode') && !CHAOS_USE_EXTERNAL_JSON)
         {
-            $decodedValue = @json_decode($json, $assoc, 512, $options);
+            $value = @call_user_func_array('json_decode', func_get_args());
 
             switch (json_last_error())
             {
                 case JSON_ERROR_NONE:
-                    return $decodedValue;
+                    return $value;
                 default:
                     $message .= json_last_error_msg();
             }
@@ -35,7 +35,7 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
         {
             try
             {   // to make errors meaningful
-                return forward_static_call([ZEND_JSON_DECODER, 'decode'], $json, (int)$assoc);
+                return forward_static_call_array([ZEND_JSON_DECODER, 'decode'], func_get_args());
             }
             catch (\RuntimeException $ex)
             {
@@ -51,31 +51,25 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     }
 
     /** {@inheritdoc} */
-    public function toJson($options = 15)
+    public function toJson()
     {
         $message = 'JSON encoding failed: ';
 
         if (function_exists('json_encode') && !CHAOS_USE_EXTERNAL_JSON)
         {
-            if (defined('JSON_PRETTY_PRINT'))
-            {
-                $options |= JSON_PRETTY_PRINT;
-            }
-
-            $encodedValue = @json_encode($this, $options);
+            $value = @call_user_func_array('json_encode', array_merge([$this], func_get_args()));
 
             switch (json_last_error())
             {
                 case JSON_ERROR_NONE:
-                    return $encodedValue;
+                    return $value;
                 default:
                     $message .= json_last_error_msg();
             }
         }
         elseif (class_exists(ZEND_JSON_ENCODER))
         {
-            return forward_static_call([ZEND_JSON_ENCODER, 'encode'], $this, true,
-                array_merge(['silenceCyclicalExceptions' => true], (array)$options));
+            return forward_static_call_array([ZEND_JSON_ENCODER, 'encode'], array_merge([$this], func_get_args()));
         }
         else
         {

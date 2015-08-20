@@ -162,7 +162,6 @@ if (!function_exists('is_json'))
 {
     /**
      * @return  bool|mixed
-     * @link    https://goo.gl/fmYXIR
      */
     function is_json()
     {

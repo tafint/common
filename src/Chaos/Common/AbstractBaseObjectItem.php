@@ -101,7 +101,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                 {
                     $obj = $isCollection ? $types[1] : null;
 
-                    if (!empty($value))
+                    if (!empty($value) && false === stripos($property->getDocComment(), CHAOS_ANNOTATION_IGNORE_DATA))
                     {
                         if ($isCollection)
                         {   /** @var IBaseObjectItem $cls */

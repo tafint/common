@@ -6,6 +6,7 @@ define('CHAOS_USE_EXTERNAL_JSON', false);
 define('CHAOS_RECURSION_MAX_DEPTH', 15);
 define('CHAOS_RECURSION_MIN_DEPTH', 4);
 define('CHAOS_ANNOTATION_IGNORE', '[Ignore]');
+define('CHAOS_ANNOTATION_IGNORE_DATA', '[IgnoreData]');
 define('CHAOS_ANNOTATION_IGNORE_RULES', '[IgnoreRules]');
 
 // common: regular expressions

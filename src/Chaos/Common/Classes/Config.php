@@ -7,17 +7,12 @@
 class Config extends \Noodlehaus\Config
 {
     /** {@inheritdoc} */
-    public function __construct($path)
+    public function __construct($path = [])
     {
         is_array($path) ? \Noodlehaus\AbstractConfig::__construct($path) : parent::__construct($path);
     }
 
-    /**
-     * Get all of the configuration settings
-     *
-     * @param   bool $strict
-     * @return  array
-     */
+    /** {@inheritdoc} */
     public function all($strict = false)
     {
         if ($strict)

@@ -7,23 +7,9 @@
 trait BaseObjectItemTrait
 {
     /** {@inheritdoc} */
-    public function getReflection($className = null)
+    public function getReflection()
     {
-        return new \ReflectionClass($className ?: $this);
-    }
-
-    /** {@inheritdoc} */
-    public function toReal($proxy = null)
-    {
-        $proxy = $proxy ?: $this;
-
-        if (is_subclass_of($proxy, DOCTRINE_PROXY))
-        {
-            $className = get_parent_class($proxy);
-            return new $className($proxy);
-        }
-
-        return $proxy;
+        return new \ReflectionClass($this);
     }
 
     /**
@@ -35,7 +21,6 @@ trait BaseObjectItemTrait
     private function getTypes(\ReflectionProperty $property)
     {
         $getter = 'get' . $property->name . 'DataType';
-        $scalars = Types\Type::getTypesMap();
 
         // check if getXyzDataType() method exists
         if (method_exists($this, $getter))
@@ -92,6 +77,8 @@ trait BaseObjectItemTrait
         }
 
         // parse the found "types[1]" if any
+        $scalars = Types\Type::getTypesMap();
+
         if (isset($types[1]))
         {   // e.g. ['Channel', 'Doctrine\Common\Collections\ArrayCollection'];
             $types = array_reverse($types);
@@ -113,9 +100,9 @@ trait BaseObjectItemTrait
                 {
                     $types[1] = new $types[1];
                 }
-                elseif (class_exists($types[1], false) && $this->getReflection($types[1])->isInstantiable())
-                {
-                    $types[1] = new $types[1]; // unknown object, we use a kind of default instance
+                elseif (class_exists($types[1], false))
+                {   // unknown object, we use a kind of default instance
+                    $types[1] = (new \ReflectionClass($types[1]))->newInstanceWithoutConstructor();
                 }
             }
 
@@ -225,12 +212,11 @@ trait BaseObjectItemTrait
                 gc_collect_cycles();
             }*/
 
-            $data = $this->toReal($data);
             $className = get_class($data);
             $hash = spl_object_hash($data);
 
             if (isset($visited[$hash]) || CHAOS_RECURSION_MAX_DEPTH <= $depth/* ||
-               (isset($visited[$className]) && CHAOS_RECURSION_MIN_DEPTH <= $depth) // @fixme */)
+               (isset($visited[$className]) && CHAOS_RECURSION_MIN_DEPTH <= $depth)*/) // @fixme
             {
                 return '*RECURSION(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
             }
@@ -240,30 +226,41 @@ trait BaseObjectItemTrait
             // cast object to array
             if ($data instanceof \Traversable)
             {
+                if (is_a($data, DOCTRINE_PERSISTENT_COLLECTION) && is_subclass_of($data->getOwner(), DOCTRINE_PROXY))
+                {
+                    return '*RECURSION(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
+                }
+
                 if ($data instanceof IBaseObjectCollection || method_exists($data, 'toArray'))
                 {   // IBaseObjectCollection, Doctrine\Common\Collections\Collection
-                    $data = $data->toArray();
+                    $vars = $data->toArray();
                 }
                 elseif (method_exists($data, 'getArrayCopy'))
                 {   // ArrayObject, ArrayIterator
-                    $data = $data->getArrayCopy();
+                    $vars = $data->getArrayCopy();
                 }
                 else
                 {
-                    $items = [];
+                    $vars = [];
 
                     foreach ($data as $v)
                     {
-                        $items[] = $v;
+                        $vars[] = $v;
                     }
-
-                    $data = $items;
                 }
+
             }
             else
             {
-                $data = get_object_vars($data);
+                $vars = get_object_vars($data);
+
+                if (is_subclass_of($data, DOCTRINE_PROXY))
+                {
+                    unset($vars['__initializer__'], $vars['__cloner__'], $vars['__isInitialized__']);
+                }
             }
+
+            $data = $vars;
         }
 
         if (is_array($data))

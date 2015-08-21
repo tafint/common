@@ -4,9 +4,7 @@
  * Interface IBaseObjectItem
  * @author ntd1712
  *
- * @method \ReflectionClass getReflection(string $className = null)
- *   Get the <tt>ReflectionClass</tt> instance; defaults to the "Late Static Binding" object
- * @method IBaseEntity|object toReal(object $proxy = null) Get "true" object from a proxy
+ * @method \ReflectionClass getReflection() Get the <tt>ReflectionClass</tt> instance of the object
  */
 interface IBaseObjectItem extends IBaseObject
 {

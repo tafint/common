@@ -188,7 +188,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
 
                     $value = $obj;
                 }
-                elseif ($this->getReflection($types[0])->isInstantiable())
+                else
                 {
                     try
                     {   // unknown object, we use a kind of default instance

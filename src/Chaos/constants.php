@@ -25,6 +25,7 @@ define('CHAOS_REPLACE_SPACE_SEPARATOR', '#\s+#');
 
 // common: namespaces
 define('DOCTRINE_ARRAY_COLLECTION', 'Doctrine\Common\Collections\ArrayCollection');
+define('DOCTRINE_PERSISTENT_COLLECTION', 'Doctrine\ORM\PersistentCollection');
 define('DOCTRINE_ENTITY_MANAGER', 'Doctrine\ORM\EntityManager');
 define('DOCTRINE_PROXY', 'Doctrine\ORM\Proxy\Proxy');
 define('ZEND_STATIC_FILTER', 'Zend\Filter\StaticFilter');

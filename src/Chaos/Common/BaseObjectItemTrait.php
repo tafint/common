@@ -228,7 +228,7 @@ trait BaseObjectItemTrait
             {
                 if (is_a($data, DOCTRINE_PERSISTENT_COLLECTION) && is_subclass_of($data->getOwner(), DOCTRINE_PROXY))
                 {
-                    return '*RECURSION(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
+                    return '*TRIM(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
                 }
 
                 if ($data instanceof IBaseObjectCollection || method_exists($data, 'toArray'))

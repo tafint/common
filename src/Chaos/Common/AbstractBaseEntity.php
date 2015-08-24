@@ -14,12 +14,6 @@ abstract class AbstractBaseEntity extends AbstractBaseObjectItem implements IBas
     private static $rules = [];
 
     /** {@inheritdoc} */
-    public function __destruct()
-    {
-        self::$identifier = self::$rules = [];
-    }
-
-    /** {@inheritdoc} */
     public function addRule($property, $rule)
     {
         $name = $property->name;
@@ -75,8 +69,7 @@ abstract class AbstractBaseEntity extends AbstractBaseObjectItem implements IBas
 
         foreach (self::$rules as $k => $v)
         {
-            $value = $v['property']->getValue($this);
-            $newValue = $value;
+            $newValue = $value = $v['property']->getValue($this);
             $hasValue = !is_blank($value);
 
             foreach ($v['rules'] as $rule)

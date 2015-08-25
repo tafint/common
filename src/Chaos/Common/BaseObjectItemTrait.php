@@ -219,12 +219,13 @@ trait BaseObjectItemTrait
                 return '*RECURSION(' . str_replace('\\', '\\\\', get_class($data)) . '#' . $depth . ')*';
             }
 
-            $visited[$hash] = true;
+            $visited[$hash] = $visited[get_class($data)] = true;
 
             // cast object to array
             if ($data instanceof \Traversable)
             {
-                if (is_a($data, DOCTRINE_PERSISTENT_COLLECTION) && is_subclass_of($data->getOwner(), DOCTRINE_PROXY))
+                if (is_a($data, DOCTRINE_PERSISTENT_COLLECTION) && null !== ($mapping = $data->getMapping()) &&
+                    isset($visited[$mapping['targetEntity']]) && 4 === $mapping['type']) // if ONE_TO_MANY is TRUE
                 {
                     return '*COLLECTION*';
                 }

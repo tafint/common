@@ -186,7 +186,7 @@ trait BaseObjectItemTrait
      * Convert object to array
      *
      * @param   mixed $data
-     * @param   int $depth Depth that we go into; defaults to 0
+     * @param   int $depth The depth that we go into; defaults to 0
      * @param   array $visited An array of visited objects; used to prevent cycling
      * @return  mixed
      * @tutorial Breadth-first search
@@ -212,23 +212,21 @@ trait BaseObjectItemTrait
                 gc_collect_cycles();
             }*/
 
-            $className = get_class($data);
             $hash = spl_object_hash($data);
 
-            if (isset($visited[$hash]) || CHAOS_RECURSION_MAX_DEPTH <= $depth/* ||
-               (isset($visited[$className]) && CHAOS_RECURSION_MIN_DEPTH <= $depth)*/) // @fixme
+            if (isset($visited[$hash]) || CHAOS_RECURSION_MAX_DEPTH < $depth)
             {
-                return '*RECURSION(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
+                return '*RECURSION(' . str_replace('\\', '\\\\', get_class($data)) . '#' . $depth . ')*';
             }
 
-            $visited[$className] = $visited[$hash] = true;
+            $visited[$hash] = true;
 
             // cast object to array
             if ($data instanceof \Traversable)
             {
                 if (is_a($data, DOCTRINE_PERSISTENT_COLLECTION) && is_subclass_of($data->getOwner(), DOCTRINE_PROXY))
                 {
-                    return '*TRIM(' . str_replace('\\', '\\\\', $className) . '#' . $depth . ')*';
+                    return '*COLLECTION*';
                 }
 
                 if ($data instanceof IBaseObjectCollection || method_exists($data, 'toArray'))
@@ -265,8 +263,8 @@ trait BaseObjectItemTrait
 
         if (is_array($data))
         {
-            return array_map(function($item) use($depth, $visited) {
-                return $this->objectToArray($item, $depth + 1, $visited);
+            return array_map(function($value) use($depth, $visited) {
+                return $this->objectToArray($value, $depth + 1, $visited);
             }, $data);
         }
 

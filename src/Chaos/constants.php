@@ -3,11 +3,11 @@
 // common: repository & entity
 define('CHAOS_SQL_BATCH_SIZE', 10);
 define('CHAOS_USE_EXTERNAL_JSON', false);
-define('CHAOS_RECURSION_MAX_DEPTH', 15);
-define('CHAOS_RECURSION_MIN_DEPTH', 4);
+define('CHAOS_RECURSION_MAX_DEPTH', 14);
 define('CHAOS_ANNOTATION_IGNORE', '[Ignore]');
-define('CHAOS_ANNOTATION_IGNORE_DATA', '[IgnoreData]');
+define('CHAOS_ANNOTATION_IGNORE_TYPE_JUGGLING', '[IgnoreTypeJuggling]');
 define('CHAOS_ANNOTATION_IGNORE_RULES', '[IgnoreRules]');
+define('CHAOS_ANNOTATION_IGNORE_DATA', '[IgnoreData]');
 
 // common: regular expressions
 define('CHAOS_MATCH_DATE', '#^[0-9]{1,4}[-/.][0-9]{1,2}[-/.][0-9]{1,4}$#');

@@ -47,10 +47,13 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
             return $this;
         }
 
-        foreach ($this->getReflection()->getProperties() as $property)
+        $properties = (new \ReflectionClass($this))->getProperties();
+
+        foreach ($properties as $property)
         {
             // do some checks
-            if ($property->isStatic() || false !== stripos($property->getDocComment(), CHAOS_ANNOTATION_IGNORE))
+            if ($property->isStatic() ||
+                false !== stripos($docComment = $property->getDocComment(), CHAOS_ANNOTATION_IGNORE))
             {
                 continue;
             }
@@ -76,15 +79,18 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
             if ($types['is_scalar'])
             {
                 // type juggling
-                $value = Types\Type::getType(strtolower($types[0]))->convertToPHPValue($value);
+                if (false === stripos($docComment, CHAOS_ANNOTATION_IGNORE_TYPE_JUGGLING))
+                {
+                    $value = Types\Type::getType(strtolower($types[0]))->convertToPHPValue($value);
+                }
 
                 // do we have any defined filters & validators?
-                if (false === stripos($property->getDocComment(), CHAOS_ANNOTATION_IGNORE_RULES))
+                if (false === stripos($docComment, CHAOS_ANNOTATION_IGNORE_RULES))
                 {
                     $this->addRules($property);
                 }
             }
-            elseif (null !== $instance && is_object($instance) && $types[0] === get_class($instance))
+            elseif (isset($instance) && is_object($instance) && $types[0] === get_class($instance))
             {   // check for circular object references
                 if ($isCollection)
                 {
@@ -101,8 +107,8 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                 {
                     $obj = $isCollection ? $types[1] : null;
 
-                    if (!empty($value) && false === stripos($property->getDocComment(), CHAOS_ANNOTATION_IGNORE_DATA))
-                    {
+                    if (!empty($value) && false === stripos($docComment, CHAOS_ANNOTATION_IGNORE_DATA))
+                    {   // @todo: need to optimize code
                         if ($isCollection)
                         {   /** @var IBaseObjectItem $cls */
                             $method = method_exists($obj, 'add') ? 'add' : 'append'; // guess supported method
@@ -213,7 +219,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
         return $this;
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc} @param bool $force */
     public function exchangeObject($data, $force = false)
     {
         if ($force)
@@ -222,11 +228,11 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
         }
         else
         {
-            foreach ($this as $k => $v)
+            foreach ($this as $key => $value)
             {
-                if (property_exists($data, $k))
+                if (property_exists($data, $key))
                 {
-                    $this->$k = $data->$k;
+                    $this->$key = $data->$key;
                 }
             }
         }
@@ -237,11 +243,11 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
     /** {@inheritdoc} */
     public function __clone()
     {
-        foreach ($this as $k => $v)
+        foreach ($this as $key => $value)
         {
-            if (is_object($v))
+            if (is_object($value))
             {
-                $this->$k = clone $v;
+                $this->$key = clone $value;
             }
         }
     }

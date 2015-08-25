@@ -26,8 +26,7 @@ interface IBaseObjectItem extends IBaseObject
      * Copy data from the passed in object to current object properties
      *
      * @param   object $data
-     * @param   bool $force
      * @return  $this
      */
-    function exchangeObject($data, $force = false);
+    function exchangeObject($data);
 }

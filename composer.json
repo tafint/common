@@ -12,7 +12,7 @@
     "php": ">=5.4",
     "hassankhan/config": "dev-develop",
     "league/container": "1.3.*",
-    "tombzombie/dice": "2.0.*",
+    "tombzombie/dice": "dev-v2.0-PHP5.4-5.5",
     "doctrine/orm": "dev-master",
     "zendframework/zend-servicemanager": "dev-master",
     "zendframework/zend-db": "dev-master",

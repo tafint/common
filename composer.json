@@ -16,6 +16,7 @@
     "doctrine/orm": "dev-master",
     "zendframework/zend-servicemanager": "dev-master",
     "zendframework/zend-db": "dev-master",
+    "zendframework/zend-http": "dev-master",
     "zendframework/zend-json": "dev-master",
     "zendframework/zend-filter": "dev-master",
     "zendframework/zend-validator": "dev-master",

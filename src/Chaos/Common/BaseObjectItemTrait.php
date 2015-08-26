@@ -231,7 +231,7 @@ trait BaseObjectItemTrait
                 }
 
                 if ($data instanceof IBaseObjectCollection || method_exists($data, 'toArray'))
-                {   // IBaseObjectCollection, Doctrine\Common\Collections\Collection
+                {   // IBaseObjectCollection
                     $vars = $data->toArray();
                 }
                 elseif (method_exists($data, 'getArrayCopy'))

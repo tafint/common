@@ -9,7 +9,8 @@ class Config extends \Noodlehaus\Config
     /** {@inheritdoc} */
     public function __construct($path = [])
     {
-        is_array($path) ? \Noodlehaus\AbstractConfig::__construct($path) : parent::__construct($path);
+        is_array($path) && !@is_string($path[0]) ?
+            \Noodlehaus\AbstractConfig::__construct($path) : parent::__construct($path);
     }
 
     /** {@inheritdoc} */

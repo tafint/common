@@ -14,13 +14,13 @@ class Config extends \Noodlehaus\Config
     }
 
     /** {@inheritdoc} */
-    public function all($strict = false)
+    public function all($except = [])
     {
-        if ($strict)
+        if (!empty($except))
         {
             foreach ($this->data as $k => $v)
             {
-                if (file_exists($v))
+                if (in_array($k, $except))
                 {
                     unset($this->data[$k]);
                 }

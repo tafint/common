@@ -19,6 +19,7 @@
   'title' => 'Admin Panel',
   'theme' => 'homer', // homer, classic
   'defaultRoute' => 'setting.index',
+  'appId' => 'chaos',
   'appKey' => 'SomeRandomString',
   'apiPath' => realpath(__DIR__ . '/../public/api'),
   'apiUrl' => 'http://localhost/chaos/api/',

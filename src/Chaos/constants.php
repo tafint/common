@@ -2,6 +2,7 @@
 
 // common: repository & entity
 define('CHAOS_SQL_BATCH_SIZE', 10);
+define('CHAOS_SQL_LIKE_LIMIT', 5);
 define('CHAOS_USE_EXTERNAL_JSON', false);
 define('CHAOS_RECURSION_MAX_DEPTH', 14);
 define('CHAOS_ANNOTATION_IGNORE', '[Ignore]');

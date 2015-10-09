@@ -236,20 +236,37 @@ trait BaseServiceTrait
         }
         elseif (is_string($binds))
         {
+            if (property_exists($predicate, 'excludes'))
+            {
+                foreach ($predicate->excludes as $v)
+                {
+                    unset($fields[$v]);
+                }
+            }
+
+            $predicateSet = new Predicate;
             $searchable = $this->getConfig('minSearchChars') <= strlen($binds);
             $binds = $this->filter($binds);
+            $count = 0;
 
             foreach ($fields as $k => $v)
             {
                 if ((Types\Type::STRING_TYPE === $v['type'] || Types\Type::TEXT_TYPE === $v['type']) &&
                    (($isChar = isset($v['options']) && isset($v['options']['fixed'])) || $searchable))
                 {
-                    $predicate->or;
+                    $predicateSet->or;
                     isset($isChar) && $isChar ?
-                        $predicate->equalTo($k, "'" . $binds . "'") :
-                        $predicate->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
+                        $predicateSet->equalTo($k, "'" . $binds . "'") :
+                        $predicateSet->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
+
+                    if (CHAOS_SQL_LIKE_LIMIT <= ++$count)
+                    {
+                        break;
+                    }
                 }
             }
+
+            $predicate->predicate($predicateSet);
         }
 
         return $predicate;

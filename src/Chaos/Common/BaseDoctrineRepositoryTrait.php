@@ -465,6 +465,15 @@ trait BaseDoctrineRepositoryTrait
      * @param   string $rootAlias
      * @param   array $aliases
      * @return  QueryBuilder
+     * @todo    fix bug
+     * SELECT   VisitSeries FROM Orthopedic\Entities\VisitSeries VisitSeries
+     * WHERE    (VisitSeries.UserId = 4 OR
+     *  VisitSeries.CaseName LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
+     *  VisitSeries.SeriesId LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
+     *  VisitSeries.SeriesInstanceUId LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
+     *  VisitSeries.ProtocolName LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
+     *  VisitSeries.StationName LIKE '%COR_subsec_timing_SUB_MIP_COR%'
+     * ) AND VisitSeries.UserId = 4 ORDER BY VisitSeries.Id DESC
      */
     private function transformPredicate(PredicateSet $predicateSet, QueryBuilder $queryBuilder, $rootAlias, $aliases)
     {

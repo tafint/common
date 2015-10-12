@@ -236,7 +236,7 @@ trait BaseServiceTrait
         }
         elseif (is_string($binds))
         {
-            if (property_exists($predicate, 'excludes'))
+            if (property_exists($predicate, 'excludes') && !empty($predicate->excludes))
             {
                 foreach ($predicate->excludes as $v)
                 {
@@ -259,7 +259,7 @@ trait BaseServiceTrait
                         $predicateSet->equalTo($k, "'" . $binds . "'") :
                         $predicateSet->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
 
-                    if (CHAOS_SQL_LIKE_LIMIT <= ++$count)
+                    if (CHAOS_SQL_MAX_COND <= ++$count)
                     {
                         break;
                     }

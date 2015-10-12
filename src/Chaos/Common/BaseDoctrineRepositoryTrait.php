@@ -498,7 +498,9 @@ trait BaseDoctrineRepositoryTrait
             {
                 case 'Predicate': // NEST/UNNEST
                     /** @var \Zend\Db\Sql\Predicate\Predicate $predicate */
-                    $this->transformPredicate($predicate, $queryBuilder, $rootAlias, $aliases);
+                    $expr = null;
+                    $queryBuilder->andWhere($this->transformPredicate($predicate,
+                        $this->createQueryBuilder($rootAlias), $rootAlias, $aliases)->getDQLPart('where'));
                     break;
                 case 'Between':
                 case 'NotBetween':

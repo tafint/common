@@ -266,7 +266,10 @@ trait BaseServiceTrait
                 }
             }
 
-            $predicate->predicate($predicateSet);
+            if (0 !== count($predicateSet))
+            {
+                $predicate->predicate($predicateSet);
+            }
         }
 
         return $predicate;

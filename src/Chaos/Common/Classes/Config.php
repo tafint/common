@@ -18,12 +18,9 @@ class Config extends \Noodlehaus\Config
     {
         if (!empty($except))
         {
-            foreach ($this->data as $k => $v)
+            foreach ($except as $v)
             {
-                if (in_array($k, $except))
-                {
-                    unset($this->data[$k]);
-                }
+                unset($this->data[$v]);
             }
         }
 
@@ -38,7 +35,7 @@ class Config extends \Noodlehaus\Config
             'dateFormat' => 'Y-m-d',
             'timeFormat' => 'H:i:s',
             'timezone' => 'Asia/Saigon',
-            'locale' => 'en_US.UTF-8',
+            'locale' => 'en_US',
             'charset' => 'UTF-8',
             'defaultPassword' => '******',
             'imageAllowedExt' => 'gif,jpeg,jpg,png',

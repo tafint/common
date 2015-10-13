@@ -24,7 +24,7 @@ abstract class AbstractLaravelController extends Controller
     public function __construct($config = [], $di = [])
     {
         $this->setConfig($config)
-             ->setContainer(['di' => self::$cache['__aliases__'] = $di]) /** @example http://goo.gl/P3e7ct */
+             ->setContainer(['di' => self::$cache['__aliases__'] = $di])
              ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
     }
 
@@ -33,12 +33,13 @@ abstract class AbstractLaravelController extends Controller
     {
         $request = $this->getRouter()->getCurrentRequest();
 
-        return isset($key) ? $request->get($key, $default, $deep) : $request->all() + [
+        return isset($key) ? $request->get($key, $default, $deep) : (
+               false === $default ? $request->all() : $request->all() + [
             'ModifiedAt' => 'now',
             'ModifiedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
             'ApplicationKey' => $this->getConfig('appKey')
-        ];
+        ]);
     }
 
     /**

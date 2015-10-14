@@ -11,6 +11,7 @@
   "require": {
     "php": ">=5.4",
     "hassankhan/config": "dev-develop",
+    "league/container": "dev-master",
     "doctrine/orm": "dev-master",
     "zendframework/zend-servicemanager": "dev-master",
     "zendframework/zend-db": "dev-master",

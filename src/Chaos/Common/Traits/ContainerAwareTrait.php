@@ -2,6 +2,8 @@
 
 use League\Container\ContainerInterface;
 use League\Container\Container;
+use Chaos\Common\Exceptions\InvalidArgumentException;
+use Chaos\Common\Exceptions\RuntimeException;
 
 /**
  * Trait ContainerAwareTrait
@@ -34,7 +36,27 @@ trait ContainerAwareTrait
     {
         if (!$container instanceof ContainerInterface)
         {
-            $container = new Container($container);
+            if (empty($container) || !is_array($container) && !$container instanceof \ArrayAccess)
+            {
+                throw new InvalidArgumentException(
+                    'You can only load definitions from an array or an object that implements ArrayAccess.'
+                );
+            }
+            elseif (!isset($container['di']) || !is_array($container['di']))
+            {
+                throw new RuntimeException(
+                    'Could not process configuration, either the top level key [di] is missing or the configuration is not an array.'
+                );
+            }
+
+            $definitions = $container['di'];
+            $container = new Container;
+
+            foreach ($definitions as $k => $v)
+            {
+                $container->add($v['definition']);
+                $container->add($k, $v['definition']);
+            }
         }
 
         self::$container = $container;

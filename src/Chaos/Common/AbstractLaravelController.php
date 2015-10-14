@@ -25,7 +25,7 @@ abstract class AbstractLaravelController extends Controller
     {
         $this->setConfig($config)
              ->setContainer(['di' => self::$cache['__aliases__'] = $di])
-             ->getContainer()->singleton(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
+             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
     }
 
     /** {@inheritdoc} @return array|mixed */

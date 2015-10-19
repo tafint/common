@@ -4,7 +4,7 @@
   'dateFormat' => 'Y-m-d',
   'timeFormat' => 'H:i:s',
   'timezone' => 'Asia/Singapore',
-  'locale' => 'en_SG.UTF-8',
+  'locale' => 'en_SG',
   'charset' => 'UTF-8',
   'defaultPassword' => '******',
   'imageAllowedExt' => 'gif,jpeg,jpg,png',
@@ -25,4 +25,5 @@
   'apiUrl' => 'http://localhost/chaos/api/',
   'uploadPath' => realpath(__DIR__ . '/../public/uploads'),
   'uploadUrl' => 'http://localhost/chaos/uploads/',
+  // vendor
 ];

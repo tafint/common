@@ -17,7 +17,7 @@ trait ConfigAwareTrait
      *
      * @param   string $key
      * @param   mixed $default
-     * @return  ConfigInterface|mixed
+     * @return  mixed|ConfigInterface
      */
     public function getConfig($key = null, $default = null)
     {
@@ -27,7 +27,7 @@ trait ConfigAwareTrait
     /**
      * Set a <tt>Config</tt> instance
      *
-     * @param   ConfigInterface|array|string $config
+     * @param   array|string|ConfigInterface $config
      * @return  $this
      */
     public function setConfig($config)

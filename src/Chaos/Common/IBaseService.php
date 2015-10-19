@@ -13,17 +13,6 @@
  * @property-read \Doctrine\ORM\Query\Expr $expression The <tt>Expr</tt> instance
  * @property-read \Doctrine\ORM\EntityManager $entityManager The <tt>EntityManager</tt> instance
  * @property-read \Doctrine\ORM\Mapping\ClassMetadata $metadata The <tt>ClassMetadata</tt> instance
- *
- * @method IBaseRepository|\Doctrine\ORM\EntityRepository getRepository(string $name = null)
- *   Get the <tt>repository</tt> instance
- * @method IBaseService getService(string $name = null) Get the <tt>service</tt> instance
- * @method IBaseEntity getUser(string $token = null) Get the <tt>user</tt> instance
- *
- * @method \Zend\Db\Sql\Predicate\Predicate prepareFilterParams($binds = [], \Zend\Db\Sql\Predicate\PredicateInterface $predicate = null)
- * @method array prepareOrderParams(array $binds = [])
- * @method array preparePagerParams(array $binds = [])
- * @method string filter(string $value, bool $checkDate = false)
- * @method bool fireEvent(string $name, array &$parameter, object $instance = null)
  */
 interface IBaseService
 {
@@ -37,7 +26,7 @@ interface IBaseService
     /**
      * The default "readAll" method, you can override this in derived class
      *
-     * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder $criteria The query criteria
+     * @param   \Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The query criteria
      * @param   bool|array $paging The paging criteria, default boolean false
      * @return  array
      */
@@ -45,7 +34,7 @@ interface IBaseService
     /**
      * The default "read" method, you can override this in derived class
      *
-     * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder|mixed $criteria The query criteria
+     * @param   mixed|\Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The query criteria
      * @return  array
      * @throws  Exceptions\InvalidArgumentException
      * @throws  Exceptions\ServiceException
@@ -64,7 +53,7 @@ interface IBaseService
      * The default "update" method, you can override this in derived class
      *
      * @param   array $post The _PUT variable
-     * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder|mixed $criteria The update criteria
+     * @param   mixed|\Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The update criteria
      * @return  array
      * @throws  Exceptions\ServiceException
      * @throws  Exceptions\ValidateException
@@ -73,7 +62,7 @@ interface IBaseService
     /**
      * The default "delete" method, you can override this in derived class
      *
-     * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder|mixed $criteria The delete criteria
+     * @param   mixed|\Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The delete criteria
      * @return  array
      * @throws  Exceptions\ServiceException
      */

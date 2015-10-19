@@ -1,6 +1,6 @@
 <?php return glob(__DIR__ . '/*/Entities', GLOB_ONLYDIR);
 
 /*return [
-    realpath(__DIR__ . '/Account/Entities'),
-    realpath(__DIR__ . '/System/Entities')
+  __DIR__ . '/Account/Entities',
+  __DIR__ . '/System/Entities'
 ];*/

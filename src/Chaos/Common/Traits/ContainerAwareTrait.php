@@ -2,8 +2,6 @@
 
 use League\Container\ContainerInterface;
 use League\Container\Container;
-use Chaos\Common\Exceptions\InvalidArgumentException;
-use Chaos\Common\Exceptions\RuntimeException;
 
 /**
  * Trait ContainerAwareTrait
@@ -11,15 +9,15 @@ use Chaos\Common\Exceptions\RuntimeException;
  */
 trait ContainerAwareTrait
 {
-    /** @var ContainerInterface */
+    /** @var Container|ContainerInterface */
     private static $container;
 
     /**
-     * Either resolve a given type from the <tt>Container</tt> or get the <tt>Container</tt> instance
+     * Resolve a given type from / or get the <tt>Container</tt> instance
      *
      * @param   string $alias
      * @param   array $args
-     * @return  ContainerInterface|mixed
+     * @return  mixed|ContainerInterface
      */
     public function getContainer($alias = null, array $args = [])
     {
@@ -29,33 +27,19 @@ trait ContainerAwareTrait
     /**
      * Set a <tt>Container</tt> instance
      *
-     * @param   ContainerInterface|array|\ArrayAccess $container
+     * @param   array|\ArrayAccess|ContainerInterface $container
      * @return  $this
      */
     public function setContainer($container)
     {
         if (!$container instanceof ContainerInterface)
         {
-            if (empty($container) || !is_array($container) && !$container instanceof \ArrayAccess)
-            {
-                throw new InvalidArgumentException(
-                    'You can only load definitions from an array or an object that implements ArrayAccess.'
-                );
-            }
-            elseif (!isset($container['di']) || !is_array($container['di']))
-            {
-                throw new RuntimeException(
-                    'Could not process configuration, either the top level key [di] is missing or the configuration is not an array.'
-                );
-            }
-
-            $definitions = $container['di'];
+            $definitions = $container;
             $container = new Container;
 
-            foreach ($definitions as $k => $v)
+            if (is_array($definitions) || $definitions instanceof \ArrayAccess)
             {
-                $container->add($v['definition']);
-                $container->add($k, $v['definition']);
+                array_walk($definitions, [$container, 'addServiceProvider']);
             }
         }
 

@@ -3,6 +3,8 @@
 /**
  * Trait BaseControllerTrait
  * @author ntd1712
+ *
+ * @method AbstractBaseService|IBaseService getService(string $name = null, bool $cache = true)
  */
 trait BaseControllerTrait
 {
@@ -14,13 +16,6 @@ trait BaseControllerTrait
      * @return  array|mixed
      */
     abstract protected function getRequest($key = null, $default = null);
-    /**
-     * Get the <tt>service</tt> instance
-     *
-     * @param   string $name The service name; defaults to get_called_class()
-     * @return  IBaseService
-     */
-    abstract protected function getService($name = null);
 
     /**
      * Get the filter parameters
@@ -80,7 +75,6 @@ trait BaseControllerTrait
                 }
             }
 
-            /** @see BaseServiceTrait::prepareFilterParams */
             $filterSet = $this->getService()->prepareFilterParams($filter);
 
             if (0 !== count($filterSet))
@@ -139,7 +133,6 @@ trait BaseControllerTrait
                 }
             }
 
-            /** @see BaseServiceTrait::prepareOrderParams */
             $orderSet = $this->getService()->prepareOrderParams($order);
 
             if (!empty($orderSet))
@@ -185,7 +178,6 @@ trait BaseControllerTrait
      */
     protected function getPagerParams(array $binds = [], array $keys = ['page', 'length'])
     {
-        /** @see BaseServiceTrait::preparePagerParams */
         return $this->getService()->preparePagerParams($binds + [
             'CurrentPageStart' => $this->getRequest('start'),
             'CurrentPageNumber' => $this->getRequest(@$keys[0]),

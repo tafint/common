@@ -19,7 +19,8 @@
     "zendframework/zend-json": "dev-master",
     "zendframework/zend-filter": "dev-master",
     "zendframework/zend-validator": "dev-master",
-    "zendframework/zend-i18n": "dev-master"
+    "zendframework/zend-i18n": "dev-master",
+    "zendframework/zend-mail": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "dev-master"

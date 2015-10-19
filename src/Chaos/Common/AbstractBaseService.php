@@ -6,7 +6,8 @@
  */
 abstract class AbstractBaseService implements IBaseService
 {
-    use BaseServiceTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait;
+    use BaseServiceTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait,
+        Traits\ServiceAwareTrait, Traits\RepositoryAwareTrait;
 
     /** {@inheritdoc} */
     public function readAll($criteria = [], $paging = false)
@@ -54,15 +55,20 @@ abstract class AbstractBaseService implements IBaseService
             if (is_numeric($criteria))
             {
                 $criteria = (int)$criteria;
+
+                if (1 > $criteria)
+                {
+                    throw new Exceptions\ServiceException('Your request is invalid');
+                }
             }
             else
             {
                 $criteria = $this->filter($criteria, true);
-            }
 
-            if (empty($criteria) || 1 > $criteria)
-            {
-                throw new Exceptions\ServiceException('Your request is invalid');
+                if (empty($criteria))
+                {
+                    throw new Exceptions\ServiceException('Your request is invalid');
+                }
             }
 
             $entity = $this->getRepository()->find($criteria);
@@ -242,20 +248,6 @@ abstract class AbstractBaseService implements IBaseService
             // roll back current transaction
             $this->getRepository()->rollBack();
             throw $ex;
-        }
-    }
-
-    /** {@inheritdoc} */
-    public function __call($name, $arguments)
-    {
-        switch ($name)
-        {
-            case 'getRepository':
-            case 'getService':
-            case 'getUser':
-                return call_user_func_array($this->$name, $arguments);
-            default:
-                throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s::%s"', get_called_class(), $name));
         }
     }
 

@@ -6,10 +6,8 @@ use Zend\Db\Sql\Predicate\Predicate;
  * Class BaseServiceTrait
  * @author ntd1712
  *
- * @method \Noodlehaus\ConfigInterface|mixed getConfig(string $key = null, mixed $default = null)
- * @method IBaseRepository|\Doctrine\ORM\EntityRepository getRepository(string $name = null)
- * @method IBaseService getService(string $name = null)
- * @method IBaseEntity getUser(string $token = null)
+ * @method mixed getConfig(string $key = null, $default = null)
+ * @method IBaseRepository getRepository(string $name = null, bool $cache = true)
  */
 trait BaseServiceTrait
 {
@@ -236,8 +234,8 @@ trait BaseServiceTrait
         }
         elseif (is_string($binds))
         {
-            if (property_exists($predicate, 'excludes') && !empty($predicate->excludes))
-            {
+            if (property_exists($predicate, 'excludes'))
+            {   // just a hack!
                 foreach ($predicate->excludes as $v)
                 {
                     unset($fields[$v]);
@@ -252,7 +250,7 @@ trait BaseServiceTrait
             foreach ($fields as $k => $v)
             {
                 if ((Types\Type::STRING_TYPE === $v['type'] || Types\Type::TEXT_TYPE === $v['type']) &&
-                   (($isChar = isset($v['options']) && isset($v['options']['fixed'])) || $searchable))
+                   ($searchable || ($isChar = isset($v['options']) && isset($v['options']['fixed']))))
                 {
                     $predicateSet->or;
                     isset($isChar) && $isChar ?

@@ -46,7 +46,7 @@ trait BaseDoctrineRepositoryTrait
     /**
      * Get QueryBuilder instance
      *
-     * @param   array|Criteria|QueryBuilder $criteria Query criteria
+     * @param   QueryBuilder|Criteria|array $criteria Query criteria
      * @param   QueryBuilder $queryBuilder
      * @return  QueryBuilder
      * @throws  Exceptions\InvalidArgumentException
@@ -197,7 +197,7 @@ trait BaseDoctrineRepositoryTrait
                         $queryBuilder->addSelect($select);
                     }
 
-                    // check if an array has duplicates
+                    // check if "select" array has duplicates
                     $dqlPart = array_unique($queryBuilder->getDQLPart('select'));
                     $queryBuilder->resetDQLPart('select');
 
@@ -465,15 +465,6 @@ trait BaseDoctrineRepositoryTrait
      * @param   string $rootAlias
      * @param   array $aliases
      * @return  QueryBuilder
-     * @todo    fix bug
-     * SELECT   VisitSeries FROM Orthopedic\Entities\VisitSeries VisitSeries
-     * WHERE    (VisitSeries.UserId = 4 OR
-     *  VisitSeries.CaseName LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
-     *  VisitSeries.SeriesId LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
-     *  VisitSeries.SeriesInstanceUId LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
-     *  VisitSeries.ProtocolName LIKE '%COR_subsec_timing_SUB_MIP_COR%' OR
-     *  VisitSeries.StationName LIKE '%COR_subsec_timing_SUB_MIP_COR%'
-     * ) AND VisitSeries.UserId = 4 ORDER BY VisitSeries.Id DESC
      */
     private function transformPredicate(PredicateSet $predicateSet, QueryBuilder $queryBuilder, $rootAlias, $aliases)
     {
@@ -496,7 +487,7 @@ trait BaseDoctrineRepositoryTrait
 
             switch ($type)
             {
-                case 'Predicate': // NEST/UNNEST
+                case 'Predicate': // eg. nest/unnest
                     /** @var \Zend\Db\Sql\Predicate\Predicate $predicate */
                     $expr = null;
                     $queryBuilder->andWhere($this->transformPredicate($predicate,

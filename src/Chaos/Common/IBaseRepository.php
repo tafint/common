@@ -53,10 +53,10 @@ interface IBaseRepository
      * The default "update" method, you can override this in derived class
      *
      * @param   array|IBaseEntity $entity Either an associative array of key values or an object
-     * @param   array|string|\Closure $where The update condition
+     * @param   array|\Doctrine\Common\Collections\Criteria|\Doctrine\ORM\QueryBuilder $criteria The update $criteria
      * @return  int The affected rows
      */
-    function update($entity, $where = null);
+    function update($entity, $criteria = null);
     /**
      * The default "delete" method, you can override this in derived class
      *

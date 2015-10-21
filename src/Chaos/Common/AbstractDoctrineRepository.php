@@ -52,8 +52,13 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     }
 
     /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
-    public function update($entity, $where = null, $isNew = false)
+    public function update($entity, $criteria = null, $isNew = false)
     {
+        if (isset($criteria) && !is_object($entity))
+        {
+            $entity = $this->read($criteria);
+        }
+
         if (!is_array($entity))
         {
             $entity = [$entity];
@@ -84,11 +89,10 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     {
         $entities = $criteria instanceof IBaseEntity ? [$criteria] :
             $this->getQueryBuilder($criteria)->getQuery()->getResult();
+        $i = 0;
 
         if (!empty($entities))
         {
-            $i = 0;
-
             foreach ($entities as $v)
             {
                 if ($this->_em->contains($v))
@@ -106,11 +110,9 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
             {
                 $this->_em->flush();
             }
-
-            return $i;
         }
 
-        return 0;
+        return $i;
     }
 
     /** {@inheritdoc} */

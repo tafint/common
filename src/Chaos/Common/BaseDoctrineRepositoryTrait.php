@@ -317,7 +317,21 @@ trait BaseDoctrineRepositoryTrait
                                 $key = trim($format);
                             }
 
-                            $queryBuilder->{'and' . ucfirst($k)}(is_array($value) ?
+                            $isArray = is_array($value);
+
+                            if ($isArray && isset($value['array']) && isset($value['column_key']))
+                            {
+                                $tmp = [];
+
+                                foreach ($value['array'] as $val)
+                                {
+                                    $tmp[] = $val->{$value['column_key']};
+                                }
+
+                                $value = $tmp;
+                            }
+
+                            $queryBuilder->{'and' . ucfirst($k)}($isArray ?
                                 $queryBuilder->expr()->in($key, '?' . $count) :
                                 $queryBuilder->expr()->eq($key, '?' . $count)
                             )->setParameter($count++, $value);

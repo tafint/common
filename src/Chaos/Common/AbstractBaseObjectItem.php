@@ -11,7 +11,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
     /**
      * Constructor
      *
-     * @param   array|IBaseObjectItem $data
+     * @param   object|array $data
      */
     public function __construct($data = [])
     {

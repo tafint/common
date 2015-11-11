@@ -22,7 +22,7 @@ trait RepositoryAwareTrait
      *
      * @param   string $name The repository name; defaults to get_called_class()
      * @param   bool $cache; defaults to TRUE
-     * @return  \Chaos\Common\AbstractDoctrineRepository|\Chaos\Common\IBaseRepository
+     * @return  mixed|\Chaos\Common\AbstractDoctrineRepository|\Chaos\Common\IBaseRepository
      */
     public function getRepository($name = null, $cache = true)
     {

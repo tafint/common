@@ -12,7 +12,6 @@
   'itemsPerPage' => 10,
   'maxItemsPerPage' => 100,
   'minSearchChars' => 4,
-  'superUserId' => 1,
   // application
   'adminEmail' => 'webmaster@example.com',
   'copyright' => 'Copyright 2015 by My Company. All Rights Reserved.',

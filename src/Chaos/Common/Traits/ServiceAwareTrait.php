@@ -20,7 +20,7 @@ trait ServiceAwareTrait
      *
      * @param   string $name The service name; defaults to get_called_class()
      * @param   bool $cache; defaults to TRUE
-     * @return  \Chaos\Common\AbstractBaseService|\Chaos\Common\IBaseService
+     * @return  mixed|\Chaos\Common\AbstractBaseService|\Chaos\Common\IBaseService
      */
     public function getService($name = null, $cache = true)
     {

@@ -11,8 +11,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
  */
 abstract class AbstractLaravelController extends Controller
 {
-    use BaseControllerTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait,
-        DispatchesCommands, ValidatesRequests;
+    use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait,
+        BaseControllerTrait, DispatchesCommands, ValidatesRequests;
 
     /**
      * Constructor
@@ -33,7 +33,7 @@ abstract class AbstractLaravelController extends Controller
         $request = $this->getRouter()->getCurrentRequest();
 
         return isset($key) ? $request->get($key, $default, $deep) : (
-               false === $default ? $request->all() : $request->all() + [
+        false === $default ? $request->all() : $request->all() + [
             'ModifiedAt' => 'now',
             'ModifiedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,

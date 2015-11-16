@@ -25,7 +25,7 @@ trait ContainerAwareTrait
     }
 
     /**
-     * Set a <tt>Container</tt> instance
+     * Set the <tt>Container</tt> instance
      *
      * @param   array|\ArrayAccess|ContainerInterface $container
      * @return  $this

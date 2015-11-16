@@ -25,7 +25,7 @@ trait ConfigAwareTrait
     }
 
     /**
-     * Set a <tt>Config</tt> instance
+     * Set the <tt>Config</tt> instance
      *
      * @param   array|string|ConfigInterface $config
      * @return  $this

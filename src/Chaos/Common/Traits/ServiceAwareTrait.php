@@ -4,8 +4,8 @@
  * Trait ServiceAwareTrait
  * @author ntd1712
  *
- * @method mixed|\Noodlehaus\ConfigInterface getConfig(string $key = null, $default = null)
- * @method mixed|\League\Container\ContainerInterface getContainer(string $alias = null, array $args = [])
+ * @method mixed|\Noodlehaus\ConfigInterface getConfig($key = null, $default = null)
+ * @method mixed|\League\Container\ContainerInterface getContainer($alias = null, array $args = [])
  */
 trait ServiceAwareTrait
 {

@@ -4,12 +4,12 @@
  * Trait BaseControllerTrait
  * @author ntd1712
  *
- * @method AbstractBaseService|IBaseService getService(string $name = null, bool $cache = true)
+ * @method AbstractBaseService|IBaseService getService($name = null, $cache = true)
  */
 trait BaseControllerTrait
 {
     /**
-     * Either get a parameter value or all of the input and files
+     * Either get the query value or all of the input and files
      *
      * @param   string $key
      * @param   mixed $default

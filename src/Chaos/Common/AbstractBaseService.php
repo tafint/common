@@ -6,8 +6,8 @@
  */
 abstract class AbstractBaseService implements IBaseService
 {
-    use BaseServiceTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait,
-        Traits\ServiceAwareTrait, Traits\RepositoryAwareTrait;
+    use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait, Traits\RepositoryAwareTrait,
+        BaseServiceTrait;
 
     /** {@inheritdoc} */
     public function readAll($criteria = [], $paging = false)

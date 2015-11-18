@@ -7,19 +7,19 @@
 interface IBaseObject
 {
     /**
-     * Cast a JSON string to a result set
+     * Decode a JSON string
      *
-     * @param   string $json <p>The <i>json</i> string being decoded</p>
+     * @param   string $json <p>The <i>JSON</i> string being decoded</p>
      * @param   bool $assoc [optional] <p>When <b>TRUE</b>, returned objects will be converted into associative arrays</p>
-     * @return  mixed The value encoded in <i>json</i> in appropriate PHP type
+     * @return  mixed The value encoded in <i>JSON</i> in appropriate PHP type
      * @throws  Exceptions\RuntimeException
      * @see     json_decode
      */
     function fromJson($json, $assoc = false);
     /**
-     * Cast a result set to a JSON string
+     * Return the JSON representation of a value
      *
-     * @return  string A <i>json</i> encoded string on success or <b>FALSE</b> on failure
+     * @return  string A <i>JSON</i> encoded string on success or <b>FALSE</b> on failure
      * @throws  Exceptions\RuntimeException
      * @see     json_encode
      */

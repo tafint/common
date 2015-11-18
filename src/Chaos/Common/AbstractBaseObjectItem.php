@@ -264,7 +264,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
 
         if (is_callable([$this, $getter]))
         {
-            return $this->{$getter}();
+            return $this->$getter();
         }
 
         throw new Exceptions\BadMethodCallException(sprintf(
@@ -302,8 +302,13 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
     /** {@inheritdoc} */
     public function __isset($key)
     {
-        $getter = 'get' . str_replace('_', '', $key);
-        return (property_exists($this, $key) || method_exists($this, $getter)) && null !== $this->__get($key);
+        try
+        {
+            return null !== $this->__get($key);
+        }
+        catch (Exceptions\BadMethodCallException $e) {}
+
+        return false;
     }
 
     /** {@inheritdoc} */

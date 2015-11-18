@@ -36,7 +36,14 @@ trait BaseObjectItemTrait
         {
             $docComment = $property->getDocComment();
 
-            if (false !== stripos($docComment, 'orm\\') || false !== stripos($docComment, 'customcolumn'))
+            if (false !== stripos($docComment, '@var'))
+            {   // e.g. @var int
+                //  return ['int']
+                // e.g. @var \Doctrine\Common\Collections\ArrayCollection(Channel)
+                //  return ['Doctrine\Common\Collections\ArrayCollection', 'Channel'];
+                preg_match(CHAOS_MATCH_VAR, $docComment, $types);
+            }
+            elseif (false !== stripos($docComment, 'orm\\') || false !== stripos($docComment, 'customcolumn'))
             {   // e.g. @Doctrine\ORM\Mapping\Column(type="integer")
                 //  return ['integer']
                 if (0 === preg_match(CHAOS_MATCH_COLUMN_TYPE, $docComment, $types))
@@ -56,13 +63,6 @@ trait BaseObjectItemTrait
                         }
                     }
                 }
-            }
-            elseif (false !== stripos($docComment, '@var'))
-            {   // e.g. @var int
-                //  return ['int']
-                // e.g. @var \Doctrine\Common\Collections\ArrayCollection(Channel)
-                //  return ['Doctrine\Common\Collections\ArrayCollection', 'Channel'];
-                preg_match(CHAOS_MATCH_VAR, $docComment, $types);
             }
 
             if (!empty($types))
@@ -91,7 +91,7 @@ trait BaseObjectItemTrait
             }
             elseif (!isset($scalars[strtolower($types[1])])) // ...and not a scalar type
             {
-                if (false === strpos($types[1], '\\')) // use default namespace for secondary type (if any)
+                if (false === strpos($types[1], '\\')) // use default namespace for the secondary type if any
                 {
                     $types[1] = $property->getDeclaringClass()->getNamespaceName() . '\\' . $types[1];
                 }
@@ -113,7 +113,7 @@ trait BaseObjectItemTrait
             }
         }
 
-        // define default namespace for primary type if any
+        // define default namespace for the primary type if any
         $types['is_scalar'] = isset($scalars[strtolower($types[0])]);
 
         if (!$types['is_scalar'] && false === strpos($types[0], '\\'))
@@ -172,7 +172,7 @@ trait BaseObjectItemTrait
      */
     private function addToCollection($item, \Traversable $collection, $method = null)
     {
-        if (null === $method) // guess supported collection method
+        if (null === $method) // guess supported method
         {
             $method = method_exists($collection, 'add') ? 'add' : 'append';
         }

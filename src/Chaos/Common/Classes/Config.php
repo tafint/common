@@ -31,17 +31,18 @@ class Config extends \Noodlehaus\Config
     protected function getDefaults()
     {
         return [
-            'datetimeFormat' => 'Y-m-d H:i:s',
-            'dateFormat' => 'Y-m-d',
-            'timeFormat' => 'H:i:s',
-            'timezone' => 'Asia/Saigon',
-            'charset' => 'UTF-8',
-            'defaultPassword' => '******',
-            'imageAllowedExt' => 'gif,jpeg,jpg,png',
-            'imageMaxSize' => 2097152, // 2MB
-            'itemsPerPage' => 10,
-            'maxItemsPerPage' => 100,
-            'minSearchChars' => 4
+            'app' => [
+                'datetimeFormat' => 'Y-m-d H:i:s',
+                'dateFormat' => 'Y-m-d',
+                'timeFormat' => 'H:i:s',
+                'charset' => 'UTF-8',
+                'defaultPassword' => '******',
+                'imageAllowedExt' => 'gif,jpeg,jpg,png',
+                'imageMaxSize' => 2097152, // 2MB
+                'itemsPerPage' => 10,
+                'maxItemsPerPage' => 100,
+                'minSearchChars' => 4
+            ]
         ];
     }
 }

@@ -243,7 +243,7 @@ trait BaseServiceTrait
             }
 
             $predicateSet = new Predicate;
-            $searchable = $this->getConfig('minSearchChars') <= strlen($binds);
+            $searchable = $this->getConfig('app.minSearchChars') <= strlen($binds);
             $binds = $this->filter($binds);
             $count = 0;
 
@@ -320,7 +320,7 @@ trait BaseServiceTrait
 
         if (isset($binds['ItemCountPerPage']))
         {
-            $maxItemsPerPage = $this->getConfig('maxItemsPerPage');
+            $maxItemsPerPage = $this->getConfig('app.maxItemsPerPage');
             $binds['ItemCountPerPage'] = (int)$binds['ItemCountPerPage'];
 
             if (1 > $binds['ItemCountPerPage'])
@@ -334,7 +334,7 @@ trait BaseServiceTrait
         }
         else
         {
-            $binds['ItemCountPerPage'] = $this->getConfig('itemsPerPage');
+            $binds['ItemCountPerPage'] = $this->getConfig('app.itemsPerPage');
         }
 
         if (isset($binds['CurrentPageNumber']))
@@ -390,7 +390,7 @@ trait BaseServiceTrait
 
         if (false !== $checkDate && 0 !== preg_match(CHAOS_MATCH_DATE, $value, $matches))
         {
-            $filtered = date($this->getConfig('dateFormat'),
+            $filtered = date($this->getConfig('app.dateFormat'),
                 is_bool($checkDate) ? strtotime($matches[0]) : strtotime($matches[0]) + $checkDate);
         }
         else
@@ -399,7 +399,7 @@ trait BaseServiceTrait
 
             if (strlen($value) && !strlen($filtered) && function_exists('iconv'))
             {
-                $value = iconv('', $this->getConfig('charset') . '//IGNORE', $value);
+                $value = iconv('', $this->getConfig('app.charset') . '//IGNORE', $value);
                 $filtered = htmlentities($value, ENT_QUOTES);
 
                 if (!strlen($filtered))

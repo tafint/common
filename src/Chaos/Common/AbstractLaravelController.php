@@ -37,7 +37,7 @@ abstract class AbstractLaravelController extends Controller
             'ModifiedAt' => 'now',
             'ModifiedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
-            'ApplicationKey' => $this->getConfig('appKey')
+            'ApplicationKey' => $this->getConfig('app.key')
         ]);
     }
 

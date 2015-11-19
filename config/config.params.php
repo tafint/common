@@ -4,7 +4,6 @@
   'dateFormat' => 'Y-m-d',
   'timeFormat' => 'H:i:s',
   'timezone' => 'Asia/Singapore',
-  'locale' => 'en_SG',
   'charset' => 'UTF-8',
   'defaultPassword' => '******',
   'imageAllowedExt' => 'gif,jpeg,jpg,png',

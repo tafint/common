@@ -55,6 +55,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
             if ($property->isStatic() ||
                 false !== stripos($docComment = $property->getDocComment(), CHAOS_ANNOTATION_IGNORE))
             {
+                unset($data[$property->name]);
                 continue;
             }
 
@@ -90,7 +91,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                     $this->addRules($property);
                 }
             }
-            elseif (isset($instance) && is_object($instance) && $types[0] === get_class($instance))
+            elseif (isset($instance) && $types[0] === @get_class($instance))
             {   // check for circular object references
                 if ($isCollection)
                 {
@@ -108,13 +109,12 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                     $obj = $isCollection ? $types[1] : null;
 
                     if (!empty($value) && false === stripos($docComment, CHAOS_ANNOTATION_IGNORE_DATA))
-                    {   // @todo: need to optimize code
+                    {
                         if ($isCollection)
                         {   /** @var IBaseObjectItem $cls */
                             $method = method_exists($obj, 'add') ? 'add' : 'append'; // guess supported method
                             $firstKey = key($value);
-                            $isMulti = isset($value[$firstKey]) &&
-                                (is_array($value[$firstKey]) || is_object($value[$firstKey]));
+                            $isMulti = is_array($value[$firstKey]) || is_object($value[$firstKey]);
 
                             if (!$isMulti)
                             {

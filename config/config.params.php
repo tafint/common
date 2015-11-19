@@ -23,6 +23,5 @@
     'paths' => [
         'apiPath' => realpath(__DIR__ . '/../public/api'),
         'uploadPath' => realpath(__DIR__ . '/../public/uploads'),
-    ],
-    'hosts' => []
+    ]
 ];

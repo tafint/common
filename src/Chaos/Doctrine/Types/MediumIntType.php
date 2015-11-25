@@ -1,4 +1,4 @@
-<?php namespace Chaos\Common\Types\Doctrine;
+<?php namespace Chaos\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
@@ -6,10 +6,10 @@ use Doctrine\DBAL\Types\Type;
 use Chaos\Common\Types\Type as DataType;
 
 /**
- * Class TinyIntType
+ * Class MediumIntType
  * @author ntd1712
  */
-class TinyIntType extends Type
+class MediumIntType extends Type
 {
     /** {@inheritdoc} */
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -28,16 +28,16 @@ class TinyIntType extends Type
         switch ($platform->getName())
         {
             case 'mysql':
-                return 'TINYINT' . (isset($fieldDeclaration['unsigned']) && $fieldDeclaration['unsigned'] ? ' UNSIGNED' : '');
+                return 'MEDIUMINT' . (isset($fieldDeclaration['unsigned']) && $fieldDeclaration['unsigned'] ? ' UNSIGNED' : '');
             default:
-                return $platform->getSmallIntTypeDeclarationSQL($fieldDeclaration);
+                return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
         }
     }
 
     /** {@inheritdoc} */
     public function getName()
     {
-        return DataType::TINYINT_TYPE;
+        return DataType::MEDIUMINT_TYPE;
     }
 
     /** {@inheritdoc} */

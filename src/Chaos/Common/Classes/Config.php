@@ -9,8 +9,9 @@ class Config extends \Noodlehaus\Config
     /** {@inheritdoc} */
     public function __construct($path = [])
     {
-        is_array($path) && !@is_string($path[0]) ?
-            \Noodlehaus\AbstractConfig::__construct($path) : parent::__construct($path);
+        is_array($path) && is_string(key($path)) ?
+            $this->data = array_replace_recursive($this->getDefaults(), $path) :
+            parent::__construct($path);
     }
 
     /** {@inheritdoc} */
@@ -38,10 +39,15 @@ class Config extends \Noodlehaus\Config
                 'charset' => 'UTF-8',
                 'defaultPassword' => '******',
                 'imageAllowedExt' => 'gif,jpeg,jpg,png',
-                'imageMaxSize' => 2097152, // 2MB
+                'imageMaxSize' => 2097152,
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
                 'minSearchChars' => 4
+            ],
+            'orm' => [
+                'walkers' => [
+                    'doctrine.customOutputWalker' => 'Chaos\Doctrine\Walkers\CustomOutputWalker'
+                ]
             ]
         ];
     }

@@ -1,8 +1,8 @@
 <?php return [
-    'bool' => 'Chaos\Common\Types\Doctrine\BoolType',
-    'double' => 'Chaos\Common\Types\Doctrine\DoubleType',
-    'int' => 'Chaos\Common\Types\Doctrine\IntType',
-    'mediumint' => 'Chaos\Common\Types\Doctrine\MediumIntType',
-    'timestamp' => 'Chaos\Common\Types\Doctrine\TimestampType',
-    'tinyint' => 'Chaos\Common\Types\Doctrine\TinyIntType'
+    'bool' => 'Chaos\Doctrine\Types\BoolType',
+    'double' => 'Chaos\Doctrine\Types\DoubleType',
+    'int' => 'Chaos\Doctrine\Types\IntType',
+    'mediumint' => 'Chaos\Doctrine\Types\MediumIntType',
+    'timestamp' => 'Chaos\Doctrine\Types\TimestampType',
+    'tinyint' => 'Chaos\Doctrine\Types\TinyIntType'
 ];

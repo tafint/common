@@ -21,7 +21,7 @@
         'uploadUrl' => 'http://localhost/chaos/uploads/',
     ],
     'paths' => [
-        'apiPath' => realpath(__DIR__ . '/../public/api'),
-        'uploadPath' => realpath(__DIR__ . '/../public/uploads'),
+        'apiPath' => __DIR__ . '/../public/api',
+        'uploadPath' => __DIR__ . '/../public/uploads'
     ]
 ];

@@ -24,7 +24,16 @@ abstract class AbstractLaravelController extends Controller
     {
         $this->setConfig($config)
              ->setContainer($container)
-             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, app(DOCTRINE_ENTITY_MANAGER));
+             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, $entityManager = app(DOCTRINE_ENTITY_MANAGER));
+
+        /** @var \Doctrine\ORM\Configuration $configuration */
+        $configuration = $entityManager->getConfiguration();
+        $configuration->setDefaultQueryHint('config', $this->getConfig());
+
+        foreach ($this->getConfig('orm.walkers') as $k => $v)
+        {
+            $configuration->setDefaultQueryHint($k, $v);
+        }
     }
 
     /** {@inheritdoc} @return array|mixed */

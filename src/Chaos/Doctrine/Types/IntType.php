@@ -1,4 +1,4 @@
-<?php namespace Chaos\Common\Types\Doctrine;
+<?php namespace Chaos\Doctrine\Types;
 
 use Doctrine\DBAL\Types\IntegerType;
 

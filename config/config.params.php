@@ -16,8 +16,6 @@
         'title' => 'Admin Panel',
         'theme' => 'homer', // homer, classic
         'defaultRoute' => 'setting.index',
-        'name' => 'chaos',
-        'uploadUrl' => 'http://localhost/chaos/uploads',
     ],
     'paths' => [
         'apiPath' => __DIR__ . '/../public/api',

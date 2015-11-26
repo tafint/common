@@ -104,6 +104,39 @@ if (!function_exists('array_column'))
     }
 }
 
+if (!function_exists('array_unset'))
+{
+    /**
+     * @param   array $array
+     * @param   string $path
+     * @return  array
+     * @link    http://goo.gl/wUJLoR
+     */
+    function array_unset(&$array, $path)
+    {
+        $pieces = explode('.', $path);
+        $i = 0;
+
+        while ($i < count($pieces) - 1)
+        {
+            $piece = $pieces[$i];
+
+            if (!is_array($array) || !array_key_exists($piece, $array))
+            {
+                return null;
+            }
+
+            $array = &$array[$piece];
+            $i++;
+        }
+
+        $piece = end($pieces);
+        unset($array[$piece]);
+
+        return $array;
+    }
+}
+
 if (!function_exists('json_last_error_msg'))
 {
     /**

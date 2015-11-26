@@ -21,7 +21,7 @@ class Config extends \Noodlehaus\Config
         {
             foreach ($except as $v)
             {
-                unset($this->data[$v]);
+                array_unset($this->data, $v);
             }
         }
 

@@ -17,8 +17,7 @@
         'theme' => 'homer', // homer, classic
         'defaultRoute' => 'setting.index',
         'name' => 'chaos',
-        'baseUrl' => 'http://localhost/chaos/',
-        'uploadUrl' => 'http://localhost/chaos/uploads/',
+        'uploadUrl' => 'http://localhost/chaos/uploads',
     ],
     'paths' => [
         'apiPath' => __DIR__ . '/../public/api',

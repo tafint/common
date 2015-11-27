@@ -12,12 +12,26 @@ class CustomOutputWalker extends SqlWalker
     public function walkWhereClause($whereClause)
     {
         $sql = parent::walkWhereClause($whereClause);
-        $parts = explode(' ', $this->getQuery()->getAST()->fromClause->dispatch($this));
+        $fromClause = $this->getQuery()->getAST()->fromClause;
+        $from = $fromClause->identificationVariableDeclarations;
 
-        return ($sql ? $sql . ' AND ' : ' WHERE ') . strtr(":table.:column = ':value'", [
-            ':table' => end($parts),
-            ':column' => 'application_key',
-            ':value' => $this->getQuery()->getHint('config')->get('app.key')
-        ]);
+        if (1 === count($from))
+        {
+            /** @var \Doctrine\ORM\Mapping\ClassMetadata $metadata */
+            $metadata = $this->getQueryComponent($from[0]->rangeVariableDeclaration->aliasIdentificationVariable)['metadata'];
+
+            if (isset($metadata->fieldMappings['ApplicationKey']))
+            {
+                $parts = explode(' ', $fromClause->dispatch($this));
+
+                return ($sql ? $sql . ' AND ' : ' WHERE ') . strtr(":table.:column = ':value'", [
+                    ':table' => end($parts),
+                    ':column' => 'application_key',
+                    ':value' => $this->getQuery()->getHint('config')->get('app.key')
+                ]);
+            }
+        }
+
+        return $sql;
     }
 }

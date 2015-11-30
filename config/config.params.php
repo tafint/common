@@ -5,8 +5,6 @@
         'dateFormat' => 'Y-m-d',
         'timeFormat' => 'H:i:s',
         'charset' => 'UTF-8',
-        'imageAllowedExt' => 'gif,jpeg,jpg,png',
-        'imageMaxSize' => 2097152, // 2MB
         'itemsPerPage' => 10,
         'maxItemsPerPage' => 100,
         'minSearchChars' => 4,
@@ -14,11 +12,15 @@
         'copyright' => 'Copyright 2015 by My Company. All Rights Reserved.',
         'title' => 'Admin Panel',
         'theme' => 'homer', // homer, classic
-        'defaultRoute' => 'setting.index'
+        'defaultRoute' => 'setting.index',
+        'imageAllowedExt' => 'gif,jpeg,jpg,png',
+        'imageMaxSize' => 2097152 // 2MB
     ],
     'paths' => [
         'apiPath' => __DIR__ . '/../public/api',
         'uploadPath' => __DIR__ . '/../public/uploads'
     ],
-    'urls' => []
+    'urls' => [
+        // some URLs
+    ]
 ];

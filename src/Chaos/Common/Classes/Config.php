@@ -38,8 +38,7 @@ class Config extends \Noodlehaus\Config
                 'timeFormat' => 'H:i:s',
                 'charset' => 'UTF-8',
                 'defaultPassword' => '******',
-                'imageAllowedExt' => 'gif,jpeg,jpg,png',
-                'imageMaxSize' => 2097152,
+                'key' => '',
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
                 'minSearchChars' => 4

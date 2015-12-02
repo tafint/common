@@ -46,15 +46,15 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     }
 
     /** {@inheritdoc} */
-    public function create($entity)
+    public function create($entity, $autoFlush = true)
     {
-        return $this->update($entity, null, true);
+        return $this->update($entity, null, $autoFlush, true);
     }
 
     /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
-    public function update($entity, $criteria = null, $isNew = false)
+    public function update($entity, $criteria = null, $autoFlush = true, $isNew = false)
     {
-        if (isset($criteria) && !is_object($entity))
+        if (isset($criteria))
         {
             $entity = $this->read($criteria);
         }
@@ -70,13 +70,13 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         {
             $isNew ? $this->_em->persist($v) : $v = $this->_em->merge($v);
 
-            if (0 === ++$i % CHAOS_SQL_BATCH_SIZE)
+            if ($autoFlush && 0 === ++$i % CHAOS_SQL_BATCH_SIZE)
             {
                 $this->_em->flush();
             }
         }
 
-        if (0 !== $i)
+        if ($autoFlush && 0 !== $i)
         {
             $this->_em->flush();
         }
@@ -87,8 +87,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} */
     public function delete($criteria, $autoFlush = true)
     {
-        $entities = $criteria instanceof IBaseEntity ? [$criteria] :
-            $this->getQueryBuilder($criteria)->getQuery()->getResult();
+        $entities = is_object($criteria) ? [$criteria] : $this->getQueryBuilder($criteria)->getQuery()->getResult();
         $i = 0;
 
         if (!empty($entities))
@@ -146,18 +145,11 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     }
 
     /** {@inheritdoc} */
-    public function refine()
-    {
-        $this->_em->clear();
-        return $this;
-    }
-
-    /** {@inheritdoc} */
     public function __get($key)
     {
         switch ($key)
         {
-            // general
+            // common
             case 'className':
                 return $this->_class->reflClass->getShortName();
             case 'entityName':

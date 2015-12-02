@@ -177,18 +177,18 @@ abstract class AbstractBaseService implements IBaseService
             // create or update entity
             if ($isNew)
             {
-                $affectedRows = $this->getRepository()->create($entity);
+                $affectedRows = $this->getRepository()->create($entity, false);
             }
             else
             {
-                $affectedRows = $this->getRepository()->update($entity, $criteria);
+                $affectedRows = $this->getRepository()->update($entity, $criteria, false);
             }
 
             $args['success'] = 0 != $affectedRows;
 
             // fire "onAfterSave" event if any & commit current transaction
             $this->fireEvent(static::ON_AFTER_SAVE, $args);
-            $this->getRepository()->commit()->refine();
+            $this->getRepository()->flush()->commit();
 
             // bye!
             if ($isNew)
@@ -211,7 +211,7 @@ abstract class AbstractBaseService implements IBaseService
         catch (\Exception $ex)
         {
             // roll back current transaction
-            $this->getRepository()->rollBack();
+            $this->getRepository()->close()->rollBack();
             throw $ex;
         }
     }
@@ -233,12 +233,12 @@ abstract class AbstractBaseService implements IBaseService
             $this->fireEvent(static::ON_BEFORE_DELETE, $args);
 
             // delete entity
-            $affectedRows = $this->getRepository()->delete($entity);
+            $affectedRows = $this->getRepository()->delete($entity, false);
             $args['success'] = 0 != $affectedRows;
 
             // fire "onAfterDelete" event if any & commit current transaction
             $this->fireEvent(static::ON_AFTER_DELETE, $args);
-            $this->getRepository()->commit();
+            $this->getRepository()->flush()->commit();
 
             // bye!
             return ['success' => $args['success']];
@@ -246,7 +246,7 @@ abstract class AbstractBaseService implements IBaseService
         catch (\Exception $ex)
         {
             // roll back current transaction
-            $this->getRepository()->rollBack();
+            $this->getRepository()->close()->rollBack();
             throw $ex;
         }
     }

@@ -4,19 +4,17 @@
  * Interface IBaseRepository
  * @author ntd1712
  *
- * @property-read string $className The entity short name
- * @property-read string $entityName The entity name
+ * @property-read string $className The short class name of the entity
+ * @property-read string $entityName The qualified class name of the entity
  * @property-read IBaseEntity $entity The <tt>entity</tt> instance
  * @property-read array $fields The field mappings of the <tt>entity</tt>
  * @property-read array $pk The field names that are part of the identifier/primary key of the <tt>entity</tt>
- * @property-read \Doctrine\Common\Collections\Criteria $criteria The <tt>Criteria</tt> instance
- * @property-read \Doctrine\ORM\Query\Expr $expression The <tt>Expr</tt> instance
- * @property-read \Doctrine\ORM\EntityManager $entityManager The <tt>EntityManager</tt> instance
- * @property-read \Doctrine\ORM\Mapping\ClassMetadata $metadata The <tt>ClassMetadata</tt> instance
  *
  * @method IBaseRepository beginTransaction() Start a transaction by suspending auto-commit mode
  * @method IBaseRepository commit() Commit the current transaction
  * @method IBaseRepository rollBack() Cancel any database changes done during the current transaction
+ * @method IBaseRepository flush() Flush all changes to objects
+ * @method IBaseRepository close() Close the EntityManager (if any)
  */
 interface IBaseRepository
 {
@@ -72,10 +70,4 @@ interface IBaseRepository
      * @return  bool
      */
     function exist($criteria, $fieldName = null);
-    /**
-     * The default "refine" method, you can override this in derived class
-     *
-     * @return  $this
-     */
-    function refine();
 }

@@ -38,10 +38,14 @@ class Config extends \Noodlehaus\Config
                 'timeFormat' => 'H:i:s',
                 'charset' => 'UTF-8',
                 'defaultPassword' => '******',
-                'key' => '',
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
-                'minSearchChars' => 4
+                'minSearchChars' => 4,
+                'key' => ''
+            ],
+            'multitenant' => [
+                'enabled' => false,
+                'keymap' => 'ApplicationKey'
             ],
             'orm' => [
                 'walkers' => [

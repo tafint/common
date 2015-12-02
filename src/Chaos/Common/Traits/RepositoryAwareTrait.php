@@ -22,7 +22,7 @@ trait RepositoryAwareTrait
      *
      * @param   string $name The repository name; defaults to get_called_class()
      * @param   bool $cache; defaults to TRUE
-     * @return  mixed|\Chaos\Common\AbstractDoctrineRepository|\Chaos\Common\IBaseRepository
+     * @return  mixed|\Chaos\Common\AbstractDoctrineRepository|\Chaos\Common\IDoctrineRepository|\Chaos\Common\IBaseRepository
      */
     public function getRepository($name = null, $cache = true)
     {
@@ -50,7 +50,7 @@ trait RepositoryAwareTrait
         // inject some stuffs into the entity
         foreach (self::$repositories[$repositoryName]->metadata->entityListeners as $k => $v)
         {
-            if (Events::postLoad === $k)
+            if (Events::postLoad === $k) // to ensure this runs only once when called
             {
                 foreach ($v as $listener)
                 {

@@ -14,14 +14,14 @@ use Chaos\Common\Enums\JoinType;
  */
 trait BaseDoctrineRepositoryTrait
 {
-    /** {@inheritdoc} @return $this */
+    /** {@inheritdoc} */
     public function beginTransaction()
     {
         $this->_em->getConnection()->beginTransaction();
         return $this;
     }
 
-    /** {@inheritdoc} @return $this */
+    /** {@inheritdoc} */
     public function commit()
     {
         if ($this->_em->getConnection()->isTransactionActive() && !$this->_em->getConnection()->isRollbackOnly())
@@ -32,7 +32,7 @@ trait BaseDoctrineRepositoryTrait
         return $this;
     }
 
-    /** {@inheritdoc} @return $this */
+    /** {@inheritdoc} */
     public function rollBack()
     {
         if ($this->_em->getConnection()->isTransactionActive())
@@ -40,6 +40,24 @@ trait BaseDoctrineRepositoryTrait
             $this->_em->getConnection()->rollBack();
         }
 
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function flush()
+    {
+        if ($this->_em->isOpen())
+        {
+            $this->_em->flush();
+        }
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function close()
+    {
+        $this->_em->close();
         return $this;
     }
 
@@ -458,17 +476,6 @@ trait BaseDoctrineRepositoryTrait
 
         // bye!
         return $queryBuilder;
-    }
-
-    /**
-     * Get SQL string for statement
-     *
-     * @param  QueryBuilder $queryBuilder
-     * @return string
-     */
-    private function getSqlString(QueryBuilder $queryBuilder)
-    {
-        return $queryBuilder->getQuery()->getSQL();
     }
 
     /**

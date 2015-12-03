@@ -20,7 +20,5 @@
         'apiPath' => __DIR__ . '/../public/api',
         'uploadPath' => __DIR__ . '/../public/uploads'
     ],
-    'urls' => [
-        // some URLs
-    ]
+    'urls' => null // an array of URLs
 ];

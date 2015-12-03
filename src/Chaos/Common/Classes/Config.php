@@ -15,11 +15,11 @@ class Config extends \Noodlehaus\Config
     }
 
     /** {@inheritdoc} */
-    public function all($except = [])
+    public function all($excludes = [])
     {
-        if (!empty($except))
+        if (!empty($excludes))
         {
-            foreach ($except as $v)
+            foreach ($excludes as $v)
             {
                 array_unset($this->data, $v);
             }
@@ -37,11 +37,30 @@ class Config extends \Noodlehaus\Config
                 'dateFormat' => 'Y-m-d',
                 'timeFormat' => 'H:i:s',
                 'charset' => 'UTF-8',
-                'defaultPassword' => '******',
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
                 'minSearchChars' => 4,
+                'defaultPassword' => '******',
                 'key' => ''
+            ],
+            'auth' => [
+                'default' => 'eloquent',
+                'drivers' => [
+                    'oauth2' => [
+                        'clientId' => 'demoapp',
+                        'clientSecret' => 'demopass',
+                        'redirectUri' => 'http://example.com/your-redirect-url',
+                        'urlAuthorize' => 'http://brentertainment.com/oauth2/lockdin/authorize',
+                        'urlAccessToken' => 'http://brentertainment.com/oauth2/lockdin/token',
+                        'urlResourceOwnerDetails' => 'http://brentertainment.com/oauth2/lockdin/resource',
+                    ]
+                ],
+            ],
+            'cookie' => [
+                'path' => '/',
+                'domain' => null,
+                'expires' => 120,
+                'secure' => false
             ],
             'multitenant' => [
                 'enabled' => false,

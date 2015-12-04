@@ -44,7 +44,7 @@ class Config extends \Noodlehaus\Config
                 'key' => ''
             ],
             'auth' => [
-                'default' => 'eloquent',
+                'default' => 'database', // or oauth2, etc
                 'drivers' => [
                     'oauth2' => [
                         'clientId' => 'demoapp',

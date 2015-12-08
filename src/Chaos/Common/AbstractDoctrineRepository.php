@@ -144,6 +144,53 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         return null !== $this->findOneBy($criteria);
     }
 
+    /** {@inheritdoc} @override */
+    public function find($id, $lockMode = null, $lockVersion = null)
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        if ($this->getConfig('multitenant.enabled') &&
+            $this->getConfig('app.key') != @call_user_func([$entity, 'get' . $this->getConfig('multitenant.keymap')]))
+        {
+            $entity = null;
+        }
+
+        return $entity;
+    }
+
+    /** {@inheritdoc} @override */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        if ($this->getConfig('multitenant.enabled') && !isset($criteria[$keymap = $this->getConfig('multitenant.keymap')]))
+        {
+            $criteria[$keymap] = $this->getConfig('app.key');
+        }
+
+        return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /** {@inheritdoc} @override */
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        if ($this->getConfig('multitenant.enabled') && !isset($criteria[$keymap = $this->getConfig('multitenant.keymap')]))
+        {
+            $criteria[$keymap] = $this->getConfig('app.key');
+        }
+
+        return parent::findOneBy($criteria, $orderBy);
+    }
+
+    /** {@inheritdoc} @override */
+    public function matching(Criteria $criteria)
+    {
+        if ($this->getConfig('multitenant.enabled'))
+        {
+            $criteria->andWhere($criteria->expr()->eq($this->getConfig('multitenant.keymap'), $this->getConfig('app.key')));
+        }
+
+        return parent::matching($criteria);
+    }
+
     /** {@inheritdoc} */
     public function __get($key)
     {

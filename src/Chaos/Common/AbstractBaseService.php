@@ -83,7 +83,7 @@ abstract class AbstractBaseService implements IBaseService
             $entity = $this->getRepository()->read($criteria);
         }
 
-        if (!$entity)
+        if (null === $entity)
         {
             throw new Exceptions\ServiceException('Your request is invalid');
         }

@@ -70,7 +70,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         {
             $isNew ? $this->_em->persist($v) : $v = $this->_em->merge($v);
 
-            if ($autoFlush && 0 === ++$i % CHAOS_SQL_BATCH_SIZE)
+            if (0 === ++$i % CHAOS_SQL_BATCH_SIZE && $autoFlush)
             {
                 $this->_em->flush();
             }
@@ -98,7 +98,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
                 {
                     $this->_em->remove($v);
 
-                    if ($autoFlush && 0 === ++$i % CHAOS_SQL_BATCH_SIZE)
+                    if (0 === ++$i % CHAOS_SQL_BATCH_SIZE && $autoFlush)
                     {
                         $this->_em->flush();
                     }

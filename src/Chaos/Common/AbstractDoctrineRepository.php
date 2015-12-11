@@ -141,7 +141,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
             return 0 !== count($this->matching($criteria));
         }
 
-        return isset($criteria) && null !== $this->findOneBy($criteria);
+        return null !== $this->findOneBy($criteria);
     }
 
     /** {@inheritdoc} @override */

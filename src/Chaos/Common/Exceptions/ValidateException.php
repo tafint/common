@@ -4,4 +4,7 @@
  * Class ValidateException
  * @author ntd1712
  */
-class ValidateException extends RuntimeException {}
+class ValidateException extends RuntimeException
+{
+    protected $code = 418;
+}

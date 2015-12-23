@@ -1,10 +1,8 @@
 <?php return [
     'app' => [
-        // common
         'datetimeFormat' => 'Y-m-d H:i:s',
         'dateFormat' => 'Y-m-d',
         'timeFormat' => 'H:i:s',
-        'charset' => 'UTF-8',
         'itemsPerPage' => 10,
         'maxItemsPerPage' => 100,
         'minSearchChars' => 4,

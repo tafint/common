@@ -7,7 +7,7 @@ if (!function_exists('array_column'))
      * @param   mixed $columnKey
      * @param   mixed $indexKey
      * @return  array
-     * @link    https://goo.gl/xov2uO
+     * @see     https://goo.gl/xov2uO
      */
     function array_column($input = null, $columnKey = null, $indexKey = null)
     {
@@ -110,7 +110,7 @@ if (!function_exists('array_unset'))
      * @param   array $array
      * @param   string $path
      * @return  array
-     * @link    http://goo.gl/wUJLoR
+     * @see     http://goo.gl/wUJLoR
      */
     function array_unset(&$array, $path)
     {
@@ -141,7 +141,7 @@ if (!function_exists('json_last_error_msg'))
 {
     /**
      * @return  string
-     * @link    https://goo.gl/MK9HSY
+     * @see     https://goo.gl/MK9HSY
      */
     function json_last_error_msg()
     {
@@ -219,9 +219,10 @@ if (!function_exists('shorten'))
 if (!function_exists('uuid'))
 {
     /**
+     * @internal
      * @param   array $matches
      * @return  array
-     * @link    https://goo.gl/KguDuz
+     * @see     https://goo.gl/KguDuz
      */
     function _unicode_caseflip($matches)
     {
@@ -230,7 +231,7 @@ if (!function_exists('uuid'))
 
     /**
      * @return  array
-     * @link    https://goo.gl/remn9g
+     * @see     https://goo.gl/remn9g
      */
     function uuid()
     {
@@ -246,20 +247,18 @@ if (!function_exists('uuid'))
         }
         else
         {
-            $uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            $uuid = sprintf('%04x%04x-%04x-4%03x-%04x-%04x%04x%04x',
                 // 32 bits for "time_low"
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                mt_rand(0, 65535), mt_rand(0, 65535),
                 // 16 bits for "time_mid"
-                mt_rand(0, 0xffff),
-                // 16 bits for "time_hi_and_version",
-                // four most significant bits holds version number 4
-                mt_rand(0, 0x0fff) | 0x4000,
-                // 16 bits, 8 bits for "clk_seq_hi_res",
-                // 8 bits for "clk_seq_low",
-                // two most significant bits holds zero and one for variant DCE1.1
-                mt_rand(0, 0x3fff) | 0x8000,
-                // 48 bits for "node"
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+                mt_rand(0, 65535),
+                // 12 bits after the 0100 of (version) 4 for "time_hi_and_version"
+                mt_rand(0, 4095),
+                bindec(substr_replace(sprintf('%016b', mt_rand(0, 65535)), '10', 0, 2)),
+                // 8 bits, the last two of which (positions 6 and 7) are 01, for "clk_seq_hi_res"
+                // (hence, the 2nd hex digit after the 3rd hyphen can only be 1, 5, 9 or d)
+                // 8 bits for "clk_seq_low" 48 bits for "node".
+                mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)
             );
         }
 

@@ -7,15 +7,15 @@
 class Config extends \Noodlehaus\Config
 {
     /** {@inheritdoc} */
-    public function __construct($path = [])
+    public function __construct($paths = [])
     {
-        is_array($path) && is_string(key($path)) ?
-            $this->data = array_replace_recursive($this->getDefaults(), $path) :
-            parent::__construct($path);
+        is_array($paths) && is_string(key($paths)) ?
+            $this->data = array_replace_recursive($this->getDefaults(), $paths) :
+            parent::__construct($paths);
     }
 
     /** {@inheritdoc} */
-    public function all($excludes = [])
+    public function all(array $excludes = [])
     {
         if (!empty($excludes))
         {

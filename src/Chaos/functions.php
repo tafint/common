@@ -114,14 +114,24 @@ if (!function_exists('array_unset'))
      */
     function array_unset(&$array, $path)
     {
+        if (!is_array($array))
+        {
+            trigger_error(
+                'array_unset() expects parameter 1 to be array, ' . gettype($array) . ' given',
+                E_USER_WARNING
+            );
+            return null;
+        }
+
         $pieces = explode('.', $path);
+        $count = count($pieces) - 1;
         $i = 0;
 
-        while ($i < count($pieces) - 1)
+        while ($i < $count)
         {
             $piece = $pieces[$i];
 
-            if (!is_array($array) || !array_key_exists($piece, $array))
+            if (!array_key_exists($piece, $array))
             {
                 return null;
             }

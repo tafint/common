@@ -12,7 +12,7 @@
     "php": ">=5.4",
     "hassankhan/config": "dev-develop",
     "league/container": "dev-master",
-    "doctrine/orm": "dev-master",
+    "doctrine/orm": "2.5.x",
     "zendframework/zend-servicemanager": "dev-master",
     "zendframework/zend-db": "dev-master",
     "zendframework/zend-http": "dev-master",

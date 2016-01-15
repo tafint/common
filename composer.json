@@ -13,7 +13,7 @@
     "hassankhan/config": "dev-develop",
     "league/container": "dev-master",
     "doctrine/orm": "2.5.2",
-    "zendframework/zend-servicemanager": "~2.5",
+    "zendframework/zend-servicemanager": "2.5.1",
     "zendframework/zend-db": "dev-master",
     "zendframework/zend-http": "dev-master",
     "zendframework/zend-json": "dev-master",

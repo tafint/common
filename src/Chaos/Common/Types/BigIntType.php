@@ -15,7 +15,7 @@ class BigIntType extends Type
     {
         if (is_object($value) || is_array($value))
         {
-            throw ConversionException::conversionFailed($value, $this);
+            throw ConversionException::conversionFailed(gettype($value), $this);
         }
 
         return null === $value ? null : (string)$value;

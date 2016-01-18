@@ -17,13 +17,15 @@ class JsonArrayType extends Type
         {
             return [];
         }
-
-        if (is_object($value) || is_array($value))
+        elseif (is_object($value) || is_array($value))
         {
-            throw ConversionException::conversionFailed($value, $this);
+            return $value;
         }
 
-        $value = is_resource($value) ? stream_get_contents($value) : $value;
+        if (is_resource($value))
+        {
+            $value = stream_get_contents($value);
+        }
 
         return json_decode($value, true);
     }

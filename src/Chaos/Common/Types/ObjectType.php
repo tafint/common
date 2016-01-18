@@ -18,7 +18,11 @@ class ObjectType extends Type
             return $value;
         }
 
-        $value = is_resource($value) ? stream_get_contents($value) : $value;
+        if (is_resource($value))
+        {
+            $value = stream_get_contents($value);
+        }
+
         $val = @unserialize($value);
 
         if (false === $val && 'b:0;' !== $value)

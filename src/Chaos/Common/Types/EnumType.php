@@ -15,13 +15,16 @@ class EnumType extends Type
         {
             return null;
         }
-
-        if (is_string($value) && class_exists($value, false))
+        elseif (is_string($value) && class_exists($value, false))
         {
             return (new \ReflectionClass($value))->newInstanceWithoutConstructor();
         }
 
-        $value = is_resource($value) ? stream_get_contents($value) : $value;
+        if (is_resource($value))
+        {
+            $value = stream_get_contents($value);
+        }
+
         $val = @unserialize($value);
 
         if (false === $val && 'b:0;' !== $value)

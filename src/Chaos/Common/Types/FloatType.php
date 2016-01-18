@@ -15,7 +15,7 @@ class FloatType extends Type
     {
         if (is_object($value))
         {
-            throw ConversionException::conversionFailed($value, $this);
+            throw ConversionException::conversionFailed(gettype($value), $this);
         }
 
         return null === $value ? null : (float)$value;

@@ -15,7 +15,7 @@ class IntegerType extends Type
     {
         if (is_object($value))
         {
-            throw ConversionException::conversionFailed($value, $this);
+            throw ConversionException::conversionFailed(gettype($value), $this);
         }
 
         return null === $value ? null : (int)$value;

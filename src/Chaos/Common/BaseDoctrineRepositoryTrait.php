@@ -216,10 +216,10 @@ trait BaseDoctrineRepositoryTrait
                     }
 
                     // check if "select" array has duplicates
-                    $dqlPart = array_unique($queryBuilder->getDQLPart('select'));
+                    $parts = array_unique($queryBuilder->getDQLPart('select'));
                     $queryBuilder->resetDQLPart('select');
 
-                    foreach ($dqlPart as $select)
+                    foreach ($parts as $select)
                     {
                         $queryBuilder->add('select', $select, true);
                     }
@@ -242,7 +242,7 @@ trait BaseDoctrineRepositoryTrait
                         throw new Exceptions\InvalidArgumentException(__METHOD__ . " expects '$k' in array format");
                     }
 
-                    if (!isset($v[0]))
+                    if (!isset($v[0])) // must be a multidimensional array!
                     {
                         $v = [$v];
                     }

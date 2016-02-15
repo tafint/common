@@ -14,13 +14,13 @@
     "league/container": "dev-master",
     "doctrine/orm": "2.5.2",
     "zendframework/zend-servicemanager": "2.5.1",
-    "zendframework/zend-db": "dev-master",
-    "zendframework/zend-http": "dev-master",
-    "zendframework/zend-json": "dev-master",
-    "zendframework/zend-filter": "dev-master",
-    "zendframework/zend-validator": "dev-master",
-    "zendframework/zend-i18n": "dev-master",
-    "zendframework/zend-mail": "dev-master"
+    "zendframework/zend-db": "2.5.1",
+    "zendframework/zend-http": "2.5.1",
+    "zendframework/zend-json": "2.5.1",
+    "zendframework/zend-filter": "2.5.1",
+    "zendframework/zend-validator": "2.5.1",
+    "zendframework/zend-i18n": "2.5.1",
+    "zendframework/zend-mail": "2.5.1"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.8"

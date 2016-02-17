@@ -6,8 +6,8 @@ use Zend\Db\Sql\Predicate\Predicate;
  * Class BaseServiceTrait
  * @author ntd1712
  *
- * @method mixed getConfig(string $key = null, $default = null)
- * @method IBaseRepository getRepository(string $name = null, bool $cache = true)
+ * @method \Noodlehaus\ConfigInterface getConfig()
+ * @method IBaseRepository getRepository(string $name = null, boolean $cache = true)
  */
 trait BaseServiceTrait
 {
@@ -243,7 +243,7 @@ trait BaseServiceTrait
             }
 
             $predicateSet = new Predicate;
-            $searchable = $this->getConfig('app.minSearchChars') <= strlen($binds);
+            $searchable = $this->getConfig()->get('app.minSearchChars') <= strlen($binds);
             $binds = $this->filter($binds);
             $count = 0;
 
@@ -320,21 +320,20 @@ trait BaseServiceTrait
 
         if (isset($binds['ItemCountPerPage']))
         {
-            $maxItemsPerPage = $this->getConfig('app.maxItemsPerPage');
             $binds['ItemCountPerPage'] = (int)$binds['ItemCountPerPage'];
 
             if (1 > $binds['ItemCountPerPage'])
             {
                 $binds['ItemCountPerPage'] = 1;
             }
-            elseif ($maxItemsPerPage < $binds['ItemCountPerPage'])
+            elseif (($maxItemsPerPage = $this->getConfig()->get('app.maxItemsPerPage')) < $binds['ItemCountPerPage'])
             {
                 $binds['ItemCountPerPage'] = $maxItemsPerPage;
             }
         }
         else
         {
-            $binds['ItemCountPerPage'] = $this->getConfig('app.itemsPerPage');
+            $binds['ItemCountPerPage'] = $this->getConfig()->get('app.itemsPerPage');
         }
 
         if (isset($binds['CurrentPageNumber']))
@@ -375,7 +374,7 @@ trait BaseServiceTrait
      * their corresponding HTML entity equivalents where they exist
      *
      * @param   string $value
-     * @param   bool $checkDate
+     * @param   boolean $checkDate
      * @return  string
      * @throws  Exceptions\LengthException
      */
@@ -390,7 +389,7 @@ trait BaseServiceTrait
 
         if (false !== $checkDate && 0 !== preg_match(CHAOS_MATCH_DATE, $value, $matches))
         {
-            $filtered = date($this->getConfig('app.dateFormat'),
+            $filtered = date($this->getConfig()->get('app.dateFormat'),
                 is_bool($checkDate) ? strtotime($matches[0]) : strtotime($matches[0]) + $checkDate);
         }
         else
@@ -399,7 +398,7 @@ trait BaseServiceTrait
 
             if (strlen($value) && !strlen($filtered) && function_exists('iconv'))
             {
-                $value = iconv('', $this->getConfig('app.charset') . '//IGNORE', $value);
+                $value = iconv('', $this->getConfig()->get('app.charset') . '//IGNORE', $value);
                 $filtered = htmlentities($value, ENT_QUOTES);
 
                 if (!strlen($filtered))
@@ -416,17 +415,17 @@ trait BaseServiceTrait
      * Fire a specified event
      *
      * @param   string $name The event name
-     * @param   array $parameter Zero or more parameters to be passed to the event
+     * @param   Events\EventArgs $eventArgs The event arguments
      * @param   object $instance
-     * @return  bool TRUE on success; FALSE otherwise
+     * @return  boolean TRUE on success; FALSE otherwise
      */
-    public function fireEvent($name, &$parameter, $instance = null)
+    public function fireEvent($name, Events\EventArgs $eventArgs, $instance = null)
     {
         if (method_exists($instance ?: $this, $name))
         {
-            if (null !== ($result = call_user_func([$instance ?: $this, $name], $parameter)))
+            if (null !== $eventArgs && null !== ($result = call_user_func([$instance ?: $this, $name], $eventArgs)))
             {
-                $parameter = $result;
+                $eventArgs->addResult($name, $result);
             }
 
             return true;

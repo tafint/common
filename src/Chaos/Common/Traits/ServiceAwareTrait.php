@@ -4,22 +4,22 @@
  * Trait ServiceAwareTrait
  * @author ntd1712
  *
- * @method mixed|\Noodlehaus\ConfigInterface getConfig($key = null, $default = null)
- * @method mixed|\League\Container\ContainerInterface getContainer($alias = null, array $args = [])
+ * @method \Noodlehaus\ConfigInterface getConfig()
+ * @method \League\Container\ContainerInterface getContainer()
  */
 trait ServiceAwareTrait
 {
     /** @var array */
-    private static $services = [];
+    private static $__services__ = [];
 
     /**
-     * Get the <tt>service</tt> instance
+     * Get a reference to the global service object. The object returned will be of type <tt>IBaseService</tt>
      *  $this->getService()->...
      *  $this->getService('User')->...
      *  $this->getService('Account\Services\UserService')->...
      *
      * @param   string $name The service name; defaults to get_called_class()
-     * @param   bool $cache; defaults to TRUE
+     * @param   boolean $cache; defaults to TRUE
      * @return  mixed|\Chaos\Common\AbstractBaseService|\Chaos\Common\IBaseService
      */
     public function getService($name = null, $cache = true)
@@ -33,13 +33,12 @@ trait ServiceAwareTrait
             $serviceName = $name;
         }
 
-        if (isset(self::$services[$serviceName]) && $cache)
+        if (isset(self::$__services__[$serviceName]) && $cache)
         {
-            return self::$services[$serviceName];
+            return self::$__services__[$serviceName];
         }
 
-        return self::$services[$serviceName] = $this
-            ->getContainer($serviceName)
+        return self::$__services__[$serviceName] = $this->getContainer()->get($serviceName)
             ->setContainer($this->getContainer())
             ->setConfig($this->getConfig());
     }

@@ -34,14 +34,14 @@ interface IBaseObjectCollection extends IBaseObject
      * Check whether an item is contained in the collection
      *
      * @param   mixed $item The item to search for
-     * @return  bool TRUE if the collection contains the item, FALSE otherwise
+     * @return  boolean TRUE if the collection contains the item, FALSE otherwise
      */
     function contains($item);
     /**
      * Check whether the collection contains an item with the specified key/index
      *
      * @param   string|int $key The key/index to check for
-     * @return  bool TRUE if the collection contains an item with the specified key/index, FALSE otherwise
+     * @return  boolean TRUE if the collection contains an item with the specified key/index, FALSE otherwise
      */
     public function containsKey($key);
     /**
@@ -72,7 +72,7 @@ interface IBaseObjectCollection extends IBaseObject
      * Test for the existence of an item that satisfies the given predicate
      *
      * @param   \Closure $closure The predicate
-     * @return  bool TRUE if the predicate is TRUE for at least one item, FALSE otherwise
+     * @return  boolean TRUE if the predicate is TRUE for at least one item, FALSE otherwise
      */
     function exists(\Closure $closure);
     /**
@@ -87,7 +87,7 @@ interface IBaseObjectCollection extends IBaseObject
      * Test whether the given predicate holds for all items of this collection.
      *
      * @param   \Closure $closure The predicate
-     * @return  bool TRUE, if the predicate yields TRUE for all items, FALSE otherwise
+     * @return  boolean TRUE, if the predicate yields TRUE for all items, FALSE otherwise
      */
     function forAll(\Closure $closure);
     /**
@@ -121,7 +121,7 @@ interface IBaseObjectCollection extends IBaseObject
      * For objects this means reference equality.
      *
      * @param   mixed $item The item to search for
-     * @return  int|string|bool The key/index of the item or FALSE if the item was not found
+     * @return  int|string|boolean The key/index of the item or FALSE if the item was not found
      */
     function indexOf($item);
     /**
@@ -165,7 +165,7 @@ interface IBaseObjectCollection extends IBaseObject
      * Remove the specified item from the collection, if it is found
      *
      * @param   mixed $item The item to remove
-     * @return  bool TRUE if this collection contained the specified item, FALSE otherwise
+     * @return  boolean TRUE if this collection contained the specified item, FALSE otherwise
      */
     function removeItem($item);
     /**

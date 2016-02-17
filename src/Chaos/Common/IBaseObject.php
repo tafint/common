@@ -10,7 +10,7 @@ interface IBaseObject
      * Decode a JSON string
      *
      * @param   string $json <p>The <i>JSON</i> string being decoded</p>
-     * @param   bool $assoc [optional] <p>When <b>TRUE</b>, returned objects will be converted into associative arrays</p>
+     * @param   boolean $assoc [optional] <p>When <b>TRUE</b>, returned objects will be converted into associative arrays</p>
      * @return  mixed The value encoded in <i>JSON</i> in appropriate PHP type
      * @throws  Exceptions\RuntimeException
      * @see     json_decode

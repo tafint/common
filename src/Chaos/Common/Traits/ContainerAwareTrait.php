@@ -9,23 +9,21 @@ use League\Container\Container;
  */
 trait ContainerAwareTrait
 {
-    /** @var Container|ContainerInterface */
-    private static $container;
+    /** @var ContainerInterface */
+    private static $__container__;
 
     /**
-     * Resolve a given type from / or get the <tt>Container</tt> instance
+     * Get a reference to the global container object. The object returned will be of type <tt>ContainerInterface</tt>
      *
-     * @param   string $alias
-     * @param   array $args
-     * @return  mixed|ContainerInterface
+     * @return  ContainerInterface
      */
-    public function getContainer($alias = null, array $args = [])
+    public function getContainer()
     {
-        return isset($alias) ? self::$container->get($alias, $args) : self::$container;
+        return self::$__container__;
     }
 
     /**
-     * Set the <tt>Container</tt> instance
+     * Set a reference to the global container object if it does not exist
      *
      * @param   array|\ArrayAccess|ContainerInterface $container
      * @return  $this
@@ -43,7 +41,7 @@ trait ContainerAwareTrait
             }
         }
 
-        self::$container = $container;
+        self::$__container__ = $container;
         return $this;
     }
 }

@@ -105,7 +105,7 @@ abstract class AbstractBaseService implements IBaseService
         return $this->update($post, null, true);
     }
 
-    /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
+    /** {@inheritdoc} @param boolean $isNew The flag indicates we are creating or updating a record */
     public function update(array $post = [], $criteria = null, $isNew = false)
     {
         // do some checks
@@ -153,13 +153,13 @@ abstract class AbstractBaseService implements IBaseService
             $entity = $response['data'];
         }
 
-        $args = ['isNew' => $isNew, 'payload' => $post, 'post' => &$post, 'entity' => &$entity, 'master' => clone $entity];
-        $args['post'] = array_intersect_key($args['post'], $entity->getReflection()->getDefaultProperties());
+        $eventArgs = new Events\UpdateEventArgs($post, $entity, $isNew);
+        $eventArgs->setPost(array_intersect_key($post, $entity->getReflection()->getDefaultProperties()));
 
         // exchange array & fire events if any
-        $this->fireEvent(static::ON_EXCHANGE_ARRAY, $args);
-        $entity->exchangeArray($args['post']);
-        $this->fireEvent(static::ON_VALIDATE, $args);
+        $this->fireEvent(static::ON_EXCHANGE_ARRAY, $eventArgs);
+        $eventArgs->setEntity($entity->exchangeArray($eventArgs->getPost()));
+        $this->fireEvent(static::ON_VALIDATE, $eventArgs);
 
         // validate 'em
         if (false !== ($errors = $entity->validate()))
@@ -172,7 +172,7 @@ abstract class AbstractBaseService implements IBaseService
         {
             // start a transaction & fire "onBeforeSave" event if any
             $this->getRepository()->beginTransaction();
-            $this->fireEvent(static::ON_BEFORE_SAVE, $args);
+            $this->fireEvent(static::ON_BEFORE_SAVE, $eventArgs);
 
             // create or update entity
             if ($isNew)
@@ -184,10 +184,13 @@ abstract class AbstractBaseService implements IBaseService
                 $affectedRows = $this->getRepository()->update($entity, $criteria, false);
             }
 
-            $args['success'] = 0 != $affectedRows;
+            if (1 > $affectedRows)
+            {
+                throw new Exceptions\ServiceException('Error saving data');
+            }
 
             // fire "onAfterSave" event if any & commit current transaction
-            $this->fireEvent(static::ON_AFTER_SAVE, $args);
+            $this->fireEvent(static::ON_AFTER_SAVE, $eventArgs);
             $this->getRepository()->flush()->commit();
 
             // bye!
@@ -203,10 +206,7 @@ abstract class AbstractBaseService implements IBaseService
                 $criteria = ['where' => $where];
             }
 
-            $response = $this->read($criteria);
-            $response['success'] = $args['success'];
-
-            return $response;
+            return $this->read($criteria);
         }
         catch (\Exception $ex)
         {
@@ -226,22 +226,26 @@ abstract class AbstractBaseService implements IBaseService
         // update db
         try
         {
-            $args = ['post' => $criteria, 'entity' => &$entity, 'master' => clone $entity];
+            $eventArgs = new Events\UpdateEventArgs($criteria, $entity, false);
 
             // start a transaction & fire "onBeforeDelete" event if any
             $this->getRepository()->beginTransaction();
-            $this->fireEvent(static::ON_BEFORE_DELETE, $args);
+            $this->fireEvent(static::ON_BEFORE_DELETE, $eventArgs);
 
             // delete entity
             $affectedRows = $this->getRepository()->delete($entity, false);
-            $args['success'] = 0 != $affectedRows;
+
+            if (1 > $affectedRows)
+            {
+                throw new Exceptions\ServiceException('Error deleting data');
+            }
 
             // fire "onAfterDelete" event if any & commit current transaction
-            $this->fireEvent(static::ON_AFTER_DELETE, $args);
+            $this->fireEvent(static::ON_AFTER_DELETE, $eventArgs);
             $this->getRepository()->flush()->commit();
 
             // bye!
-            return ['success' => $args['success']];
+            return ['success' => true];
         }
         catch (\Exception $ex)
         {

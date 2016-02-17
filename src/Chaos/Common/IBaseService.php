@@ -27,7 +27,7 @@ interface IBaseService
      * The default "readAll" method, you can override this in derived class
      *
      * @param   \Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The query criteria
-     * @param   bool|array $paging The paging criteria, default boolean false
+     * @param   boolean|array $paging The paging criteria, default boolean false
      * @return  array
      */
     function readAll($criteria = [], $paging = false);

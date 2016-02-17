@@ -12,7 +12,7 @@ abstract class AbstractBaseEntityListener implements IBaseEntityListener
     public function postLoad($entity, $eventArgs)
     {
         $entity->setIdentifier($eventArgs->getEntityManager()->getUnitOfWork()->getEntityIdentifier($entity))
-               ->setConfig($this->getConfig())
-               ->setContainer($this->getContainer());
+               ->setContainer($this->getContainer())
+               ->setConfig($this->getConfig());
     }
 }

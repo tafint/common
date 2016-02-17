@@ -173,7 +173,7 @@ if (!function_exists('is_defined'))
 {
     /**
      * @param   string $var
-     * @return  bool
+     * @return  boolean
      */
     function is_defined($var)
     {
@@ -193,7 +193,7 @@ if (!function_exists('is_blank'))
 {
     /**
      * @param   string $var
-     * @return  bool
+     * @return  boolean
      */
     function is_blank($var)
     {
@@ -204,7 +204,7 @@ if (!function_exists('is_blank'))
 if (!function_exists('is_json'))
 {
     /**
-     * @return  bool|mixed
+     * @return  boolean|mixed
      */
     function is_json()
     {

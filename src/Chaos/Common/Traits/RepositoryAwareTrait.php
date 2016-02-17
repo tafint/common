@@ -6,22 +6,22 @@ use Doctrine\ORM\Events;
  * Trait RepositoryAwareTrait
  * @author ntd1712
  *
- * @method mixed|\Noodlehaus\ConfigInterface getConfig($key = null, $default = null)
- * @method mixed getContainer($alias = null, array $args = [])
+ * @method \Noodlehaus\ConfigInterface getConfig()
+ * @method \League\Container\ContainerInterface getContainer()
  */
 trait RepositoryAwareTrait
 {
     /** @var array */
-    private static $repositories = [];
+    private static $__repositories__ = [];
 
     /**
-     * Get the <tt>repository</tt> instance
+     * Get a reference to the global repository object. The object returned will be of type <tt>IBaseRepository</tt>
      *  $this->getService()->getRepository('User')->...
      *  $this->getService('User')->getRepository('Role')->...
      *  $this->getService('Account\Services\UserService')->getRepository('Account\Entities\Role')->...
      *
      * @param   string $name The repository name; defaults to get_called_class()
-     * @param   bool $cache; defaults to TRUE
+     * @param   boolean $cache; defaults to TRUE
      * @return  mixed|\Chaos\Common\AbstractDoctrineRepository|\Chaos\Common\IDoctrineRepository|\Chaos\Common\IBaseRepository
      */
     public function getRepository($name = null, $cache = true)
@@ -36,34 +36,32 @@ trait RepositoryAwareTrait
             $repositoryName = $name;
         }
 
-        if (isset(self::$repositories[$repositoryName]) && $cache)
+        if (isset(self::$__repositories__[$repositoryName]) && $cache)
         {
-            return self::$repositories[$repositoryName];
+            return self::$__repositories__[$repositoryName];
         }
 
-        self::$repositories[$repositoryName] = $this
-            ->getContainer(DOCTRINE_ENTITY_MANAGER)
-            ->getRepository(get_class($this->getContainer($name)))
-            ->setContainer($this->getContainer())
-            ->setConfig($this->getConfig());
+        self::$__repositories__[$repositoryName] = $this->getContainer()->get(DOCTRINE_ENTITY_MANAGER)
+            ->getRepository(get_class($this->getContainer()->get($name)))
+            ->setContainer($container = $this->getContainer())
+            ->setConfig($config = $this->getConfig());
 
         // inject some stuffs into the entity
-        foreach (self::$repositories[$repositoryName]->metadata->entityListeners as $k => $v)
+        foreach (self::$__repositories__[$repositoryName]->metadata->entityListeners as $k => $v)
         {
             if (Events::postLoad === $k) // to ensure this runs only once when called
             {
                 foreach ($v as $listener)
                 {
-                    self::$repositories[$repositoryName]->entityManager->getConfiguration()->getEntityListenerResolver()
-                    ->register($this
-                        ->getContainer($listener['class'])
-                        ->setContainer($this->getContainer())
-                        ->setConfig($this->getConfig())
+                    self::$__repositories__[$repositoryName]->entityManager->getConfiguration()->getEntityListenerResolver()
+                    ->register($container->get($listener['class'])
+                        ->setContainer($container)
+                        ->setConfig($config)
                     );
                 }
             }
         }
 
-        return self::$repositories[$repositoryName];
+        return self::$__repositories__[$repositoryName];
     }
 }

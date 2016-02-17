@@ -31,7 +31,7 @@ interface IBaseEntity extends IBaseObjectItem
      * Whether the entity is in valid status
      * and should continue its normal method execution cycles
      *
-     * @return  bool|array An array of errors, FALSE otherwise
+     * @return  boolean|array An array of errors, FALSE otherwise
      */
     function validate();
 }

@@ -9,7 +9,7 @@
 trait BaseControllerTrait
 {
     /**
-     * Either get the query value or all of the input and files
+     * Either get a query value or all of the input and files
      *
      * @param   string $key
      * @param   mixed $default
@@ -18,7 +18,7 @@ trait BaseControllerTrait
     abstract protected function getRequest($key = null, $default = null);
 
     /**
-     * Get the filter parameters
+     * Get filter parameters
      * e.g.
      * ?filter=[
      *  {"predicate":"equalTo","left":"Id","right":"1","leftType":"identifier","rightType":"value","combine":"AND","nesting":"nest"},
@@ -35,7 +35,7 @@ trait BaseControllerTrait
      *  ->and
      *  ->like('Name', '%demo%');
      *
-     * Support the following parameters:
+     * Support parameters:
      * ?filter=[
      *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
@@ -48,7 +48,7 @@ trait BaseControllerTrait
      * ]
      * &filter=ntd1712
      *
-     * Support the following declarations: $binds = [
+     * Support declarations: $binds = [
      *  'where' => 'Id = 1 OR Name = "ntd1712"',
      *  'where' => ['Id' => 1, 'Name' => 'ntd1712'] // aka. 'Id = 1 AND Name = "ntd1712"'
      *  'where' => ['Id' => 1, 'Name = "ntd1712"']  // aka. 'Id = 1 AND Name = "ntd1712"'
@@ -92,16 +92,16 @@ trait BaseControllerTrait
     }
 
     /**
-     * Get the sort order parameters
+     * Get sort order parameters
      *
-     * Support the following parameters:
+     * Support parameters:
      * ?sort=[
      *  {"property":"Id","direction":"desc","nulls":"first"},
      *  {"property":"Name","direction":"asc","nulls":"last"}
      * ]
      * &sort=name&direction=desc&nulls=first
      *
-     * Support the following declarations: $binds = [
+     * Support declarations: $binds = [
      *  'order' => 'Id DESC, Name',
      *  'order' => 'Id DESC NULLS FIRST, Name ASC NULLS LAST',
      *  'order' => ['Id DESC NULLS FIRST', 'Name ASC NULLS LAST'],
@@ -160,13 +160,13 @@ trait BaseControllerTrait
     }
 
     /**
-     * Get the pager parameters
+     * Get pager parameters
      *
-     * Support the following parameters:
+     * Support parameters:
      *  ?page=1&length=10
      *  ?start=0&length=10
      *
-     * Support the following declarations: $binds = [
+     * Support declarations: $binds = [
      *  'CurrentPageStart' => 0,
      *  'CurrentPageNumber' => 1,
      *  'ItemCountPerPage' => 10

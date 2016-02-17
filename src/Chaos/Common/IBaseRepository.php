@@ -67,7 +67,7 @@ interface IBaseRepository
      *
      * @param   array|\Doctrine\Common\Collections\Criteria|mixed $criteria Either a query criteria or a field value
      * @param   string $fieldName The field name; defaults to "Id"
-     * @return  bool
+     * @return  boolean
      */
     function exist($criteria, $fieldName = null);
 }

@@ -219,7 +219,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
         return $this;
     }
 
-    /** {@inheritdoc} @param bool $force */
+    /** {@inheritdoc} @param boolean $force */
     public function exchangeObject($data, $force = false)
     {
         if ($force)

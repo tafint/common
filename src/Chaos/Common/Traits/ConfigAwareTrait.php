@@ -10,22 +10,20 @@ use Chaos\Common\Classes\Config;
 trait ConfigAwareTrait
 {
     /** @var ConfigInterface */
-    private static $config;
+    private static $__config__;
 
     /**
-     * Either get a configuration setting or the <tt>Config</tt> instance
+     * Get a reference to the global configuration object. The object returned will be of type <tt>ConfigInterface</tt>
      *
-     * @param   string $key
-     * @param   mixed $default
-     * @return  mixed|ConfigInterface
+     * @return  ConfigInterface
      */
-    public function getConfig($key = null, $default = null)
+    public function getConfig()
     {
-        return isset($key) ? self::$config->get($key, $default) : self::$config;
+        return self::$__config__;
     }
 
     /**
-     * Set the <tt>Config</tt> instance
+     * Set a reference to the global configuration object if it does not exist
      *
      * @param   array|string|ConfigInterface $config
      * @return  $this
@@ -37,7 +35,7 @@ trait ConfigAwareTrait
             $config = new Config($config);
         }
 
-        self::$config = $config;
+        self::$__config__ = $config;
         return $this;
     }
 }

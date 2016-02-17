@@ -13,7 +13,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
 {
     use BaseDoctrineRepositoryTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait;
 
-    /** {@inheritdoc} @param bool $fetchJoinCollection */
+    /** {@inheritdoc} @param boolean $fetchJoinCollection */
     public function paginate($criteria = [], array $paging = [], $fetchJoinCollection = true)
     {
         $query = $this->getQueryBuilder($criteria);
@@ -51,7 +51,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         return $this->update($entity, null, $autoFlush, true);
     }
 
-    /** {@inheritdoc} @param bool $isNew The flag indicates we are creating or updating a record */
+    /** {@inheritdoc} @param boolean $isNew The flag indicates we are creating or updating a record */
     public function update($entity, $criteria = null, $autoFlush = true, $isNew = false)
     {
         if (isset($criteria))
@@ -149,8 +149,8 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     {
         $entity = parent::find($id, $lockMode, $lockVersion);
 
-        if ($this->getConfig('multitenant.enabled') &&
-            $this->getConfig('app.key') != @call_user_func([$entity, 'get' . $this->getConfig('multitenant.keymap')]))
+        if ($this->getConfig()->get('multitenant.enabled') && $this->getConfig()->get('app.key') !=
+            @call_user_func([$entity, 'get' . $this->getConfig()->get('multitenant.keymap')]))
         {
             $entity = null;
         }
@@ -161,9 +161,10 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} @override */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        if ($this->getConfig('multitenant.enabled') && !isset($criteria[$keymap = $this->getConfig('multitenant.keymap')]))
+        if ($this->getConfig()->get('multitenant.enabled') &&
+            !isset($criteria[$keymap = $this->getConfig()->get('multitenant.keymap')]))
         {
-            $criteria[$keymap] = $this->getConfig('app.key');
+            $criteria[$keymap] = $this->getConfig()->get('app.key');
         }
 
         return parent::findBy($criteria, $orderBy, $limit, $offset);
@@ -172,9 +173,10 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} @override */
     public function findOneBy(array $criteria, array $orderBy = null)
     {
-        if ($this->getConfig('multitenant.enabled') && !isset($criteria[$keymap = $this->getConfig('multitenant.keymap')]))
+        if ($this->getConfig()->get('multitenant.enabled') &&
+            !isset($criteria[$keymap = $this->getConfig()->get('multitenant.keymap')]))
         {
-            $criteria[$keymap] = $this->getConfig('app.key');
+            $criteria[$keymap] = $this->getConfig()->get('app.key');
         }
 
         return parent::findOneBy($criteria, $orderBy);
@@ -183,9 +185,10 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} @override */
     public function matching(Criteria $criteria)
     {
-        if ($this->getConfig('multitenant.enabled'))
+        if ($this->getConfig()->get('multitenant.enabled'))
         {
-            $criteria->andWhere($criteria->expr()->eq($this->getConfig('multitenant.keymap'), $this->getConfig('app.key')));
+            $criteria->andWhere($criteria->expr()->eq(
+                $this->getConfig()->get('multitenant.keymap'), $this->getConfig()->get('app.key')));
         }
 
         return parent::matching($criteria);

@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 /**
  * Class AbstractLaravelController
@@ -30,7 +29,7 @@ abstract class AbstractLaravelController extends Controller
         $configuration = $entityManager->getConfiguration();
         $configuration->setDefaultQueryHint('config', $this->getConfig());
 
-        foreach ($this->getConfig('orm.walkers') as $k => $v)
+        foreach ($this->getConfig()->get('orm.walkers') as $k => $v)
         {
             $configuration->setDefaultQueryHint($k, $v);
         }
@@ -46,30 +45,7 @@ abstract class AbstractLaravelController extends Controller
             'ModifiedAt' => 'now',
             'ModifiedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
-            'ApplicationKey' => $this->getConfig('app.key')
+            'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);
-    }
-
-    /**
-     * Get the <tt>user</tt> instance
-     *
-     * @param   string $token The JWT token; defaults to JWTAuth::getToken()
-     * @return  IBaseEntity
-     * @throws  JWTException
-     */
-    protected function getUser($token = null)
-    {
-        if (null === ($user = \Session::get('loggedUser')))
-        {
-            $payload = \JWTAuth::getPayload($token ?: \JWTAuth::getToken());
-            $user = $this->getService('User')->getRepository()->find($payload['sub']);
-
-            if (null === $user)
-            {
-                throw new JWTException('User not found', 404);
-            }
-        }
-
-        return $user;
     }
 }

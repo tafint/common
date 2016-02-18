@@ -23,9 +23,7 @@ interface IBaseService
           ON_AFTER_SAVE = 'onAfterSave',
           ON_BEFORE_DELETE = 'onBeforeDelete',
           ON_AFTER_DELETE = 'onAfterDelete',
-          ON_BEFORE_READ_ALL = 'onBeforeReadAll',
           ON_AFTER_READ_ALL = 'onAfterReadAll',
-          ON_BEFORE_READ = 'onBeforeRead',
           ON_AFTER_READ = 'onAfterRead';
     /**
      * The default "readAll" method, you can override this in derived class

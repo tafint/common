@@ -93,7 +93,7 @@ abstract class AbstractBaseService implements IBaseService
         // fire "onAfterRead" event if any
         $this->fireEvent(static::ON_AFTER_READ, $eventArgs->setData($entity));
         // prepare data for output
-        $response = ['data' => $entity, 'total' => 1, 'success' => true];
+        $response = ['data' => $entity, 'success' => true];
 
         // bye!
         return $response;

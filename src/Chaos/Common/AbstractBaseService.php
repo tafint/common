@@ -12,6 +12,10 @@ abstract class AbstractBaseService implements IBaseService
     /** {@inheritdoc} */
     public function readAll($criteria = [], $paging = false)
     {
+        // fire "onBeforeReadAll" event if any
+        $eventArgs = new Events\ReadEventArgs(func_get_args());
+        $this->fireEvent(static::ON_BEFORE_READ_ALL, $eventArgs);
+
         // get items
         if (false !== $paging)
         {
@@ -27,19 +31,10 @@ abstract class AbstractBaseService implements IBaseService
 
         if (0 !== $response['total'])
         {
-            $model = $this->getModel();
-
-            if ($model['exist'])
-            {
-                foreach ($entities as $entity)
-                {
-                    $response['data'][] = new $model['name']($entity);
-                }
-            }
-            else
-            {
-                $response['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
-            }
+            // fire "onAfterReadAll" event if any
+            $this->fireEvent(static::ON_AFTER_READ_ALL, $eventArgs->setData($entities));
+            // copy the iterator into an array
+            $response['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
         }
 
         // bye!
@@ -50,7 +45,7 @@ abstract class AbstractBaseService implements IBaseService
     public function read($criteria)
     {
         // do some checks
-        if (is_scalar($criteria))
+        if ($isScalar = is_scalar($criteria))
         {
             if (is_numeric($criteria))
             {
@@ -70,16 +65,23 @@ abstract class AbstractBaseService implements IBaseService
                     throw new Exceptions\ServiceException('Your request is invalid');
                 }
             }
+        }
+        elseif (empty($criteria))
+        {
+            throw new Exceptions\InvalidArgumentException(__METHOD__ . ' expects "$criteria" in array format');
+        }
 
+        // fire "onBeforeRead" event if any
+        $eventArgs = new Events\ReadEventArgs($criteria);
+        $this->fireEvent(static::ON_BEFORE_READ, $eventArgs);
+
+        // get item
+        if ($isScalar)
+        {
             $entity = $this->getRepository()->find($criteria);
         }
         else
         {
-            if (empty($criteria))
-            {
-                throw new Exceptions\InvalidArgumentException(__METHOD__ . ' expects "$criteria" in array format');
-            }
-
             $entity = $this->getRepository()->read($criteria);
         }
 
@@ -88,12 +90,10 @@ abstract class AbstractBaseService implements IBaseService
             throw new Exceptions\ServiceException('Your request is invalid');
         }
 
+        // fire "onAfterRead" event if any
+        $this->fireEvent(static::ON_AFTER_READ, $eventArgs->setData($entity));
         // prepare data for output
-        $model = $this->getModel();
-        $response = [
-            'data' => $model['exist'] ? new $model['name']($entity) : $entity,
-            'success' => true
-        ];
+        $response = ['data' => $entity, 'total' => 1, 'success' => true];
 
         // bye!
         return $response;

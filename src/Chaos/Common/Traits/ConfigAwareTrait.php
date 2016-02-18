@@ -23,7 +23,7 @@ trait ConfigAwareTrait
     }
 
     /**
-     * Set a reference to the global configuration object if it does not exist
+     * Set a reference to the global configuration object
      *
      * @param   array|string|ConfigInterface $config
      * @return  $this

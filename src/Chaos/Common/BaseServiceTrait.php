@@ -281,8 +281,9 @@ trait BaseServiceTrait
      */
     public function prepareOrderParams(array $binds = [])
     {
-        $orderSet = [];
         $fields = $this->getRepository()->fields;
+        $orderSet = [];
+        $count = 0;
 
         foreach ($binds as $v)
         {
@@ -299,6 +300,11 @@ trait BaseServiceTrait
             {
                 $orderSet[$v['property']] .= ' ' . (Enums\PredicateType::NULLS_FIRST === $nulls ?
                     Enums\PredicateType::NULLS_FIRST : Enums\PredicateType::NULLS_LAST);
+            }
+
+            if (CHAOS_SQL_MAX_COND <= ++$count)
+            {
+                break;
             }
         }
 
@@ -432,21 +438,5 @@ trait BaseServiceTrait
         }
 
         return false;
-    }
-
-    /**
-     * Get the model class name
-     *
-     * @param   int $options The bitmask index; defaults to DEBUG_BACKTRACE_IGNORE_ARGS
-     * @param   int $limit Limit the number of stack frames returned
-     * @return  array
-     */
-    private function getModel($options = DEBUG_BACKTRACE_IGNORE_ARGS, $limit = 3)
-    {
-        list(,, $caller) = debug_backtrace($options, $limit);
-        $className = preg_replace('/(.*)\\\\services\\\\.*service$/i', '$1\Models\\' . ucfirst($caller['function']),
-            get_called_class());
-
-        return ['name' => $className, 'exist' => class_exists($className)];
     }
 }

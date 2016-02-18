@@ -23,7 +23,7 @@ trait ContainerAwareTrait
     }
 
     /**
-     * Set a reference to the global container object if it does not exist
+     * Set a reference to the global container object
      *
      * @param   array|\ArrayAccess|ContainerInterface $container
      * @return  $this

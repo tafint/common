@@ -1,7 +1,5 @@
 <?php namespace Chaos\Common\Events;
 
-use Chaos\Common\IBaseEntity;
-
 /**
  * Class UpdateEventArgs
  * @author ntd1712
@@ -12,9 +10,9 @@ class UpdateEventArgs extends EventArgs
     private $payload;
     /** @var mixed */
     private $post;
-    /** @var IBaseEntity */
+    /** @var mixed */
     private $entity;
-    /** @var IBaseEntity */
+    /** @var mixed */
     private $master;
     /** @var boolean */
     private $isNew;
@@ -23,10 +21,10 @@ class UpdateEventArgs extends EventArgs
      * Constructor
      *
      * @param   mixed $post
-     * @param   IBaseEntity $entity
+     * @param   mixed $entity
      * @param   boolean $isNew
      */
-    public function __construct($post, IBaseEntity $entity, $isNew)
+    public function __construct($post, $entity, $isNew)
     {
         $this->isNew = $isNew;
         $this->post = $this->payload = $post;
@@ -47,7 +45,7 @@ class UpdateEventArgs extends EventArgs
     }
 
     /**
-     * @return  mixed
+     * @return  mixed|array
      */
     public function getPayload()
     {
@@ -55,7 +53,7 @@ class UpdateEventArgs extends EventArgs
     }
 
     /**
-     * @return  mixed
+     * @return  mixed|array
      */
     public function getPost()
     {
@@ -73,7 +71,7 @@ class UpdateEventArgs extends EventArgs
     }
 
     /**
-     * @return  mixed|IBaseEntity
+     * @return  mixed|\Chaos\Common\IBaseEntity
      */
     public function getEntity()
     {
@@ -81,7 +79,7 @@ class UpdateEventArgs extends EventArgs
     }
 
     /**
-     * @param   IBaseEntity $entity
+     * @param   mixed $entity
      * @return  $this
      */
     public function setEntity($entity)
@@ -91,7 +89,7 @@ class UpdateEventArgs extends EventArgs
     }
 
     /**
-     * @return  mixed|IBaseEntity
+     * @return  mixed|\Chaos\Common\IBaseEntity
      */
     public function getMaster()
     {

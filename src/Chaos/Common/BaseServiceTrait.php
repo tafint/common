@@ -427,14 +427,14 @@ trait BaseServiceTrait
      */
     public function fireEvent($name, $args = null, $instance = null)
     {
-        if (method_exists($instance ?: $this, $name))
+        if (method_exists($instance ?: $instance = $this, $name))
         {
             if (is_array($args))
             {
                 $args = (new \ReflectionClass(array_shift($args)))->newInstanceArgs($args);
             }
 
-            if (null !== ($result = call_user_func([$instance ?: $this, $name], $args)) && null !== $args)
+            if (null !== ($result = call_user_func([$instance, $name], $args)) && null !== $args)
             {
                 $args->addResult($name, $result);
             }

@@ -27,7 +27,7 @@ abstract class AbstractBaseService implements IBaseService
 
         if (0 !== $response['total'])
         {
-            // fire "onAfterReadAll" event if any
+            // fire events if any
             $this->fireEvent(static::ON_AFTER_READ_ALL, [CHAOS_READ_EVENT_ARGS, func_get_args(), $entities]);
             // copy the iterator into an array
             $response['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
@@ -79,7 +79,7 @@ abstract class AbstractBaseService implements IBaseService
             throw new Exceptions\ServiceException('Your request is invalid');
         }
 
-        // fire "onAfterRead" event if any
+        // fire events if any
         $this->fireEvent(static::ON_AFTER_READ, [CHAOS_READ_EVENT_ARGS, $criteria, $entity]);
         // prepare data for output
         $response = ['data' => $entity, 'success' => true];
@@ -159,7 +159,7 @@ abstract class AbstractBaseService implements IBaseService
         // update db
         try
         {
-            // start a transaction & fire "onBeforeSave" event if any
+            // start a transaction & fire events if any
             $this->getRepository()->beginTransaction();
             $this->fireEvent(static::ON_BEFORE_SAVE, $eventArgs);
 
@@ -178,7 +178,7 @@ abstract class AbstractBaseService implements IBaseService
                 throw new Exceptions\ServiceException('Error saving data');
             }
 
-            // fire "onAfterSave" event if any & commit current transaction
+            // commit current transaction & fire events if any
             $this->fireEvent(static::ON_AFTER_SAVE, $eventArgs);
             $this->getRepository()->flush()->commit();
 
@@ -217,7 +217,7 @@ abstract class AbstractBaseService implements IBaseService
         {
             $eventArgs = new Events\UpdateEventArgs($criteria, $entity, false);
 
-            // start a transaction & fire "onBeforeDelete" event if any
+            // start a transaction & fire events if any
             $this->getRepository()->beginTransaction();
             $this->fireEvent(static::ON_BEFORE_DELETE, $eventArgs);
 
@@ -229,7 +229,7 @@ abstract class AbstractBaseService implements IBaseService
                 throw new Exceptions\ServiceException('Error deleting data');
             }
 
-            // fire "onAfterDelete" event if any & commit current transaction
+            // commit current transaction & fire events if any
             $this->fireEvent(static::ON_AFTER_DELETE, $eventArgs);
             $this->getRepository()->flush()->commit();
 

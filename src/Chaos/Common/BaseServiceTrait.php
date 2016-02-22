@@ -421,17 +421,22 @@ trait BaseServiceTrait
      * Fire a specified event
      *
      * @param   string $name The event name
-     * @param   Events\EventArgs $eventArgs The event arguments
+     * @param   array|Events\EventArgs $args The event arguments
      * @param   object $instance
      * @return  boolean TRUE on success; FALSE otherwise
      */
-    public function fireEvent($name, Events\EventArgs $eventArgs, $instance = null)
+    public function fireEvent($name, $args = null, $instance = null)
     {
         if (method_exists($instance ?: $this, $name))
         {
-            if (null !== $eventArgs && null !== ($result = call_user_func([$instance ?: $this, $name], $eventArgs)))
+            if (is_array($args))
             {
-                $eventArgs->addResult($name, $result);
+                $args = (new \ReflectionClass(array_shift($args)))->newInstanceArgs($args);
+            }
+
+            if (null !== ($result = call_user_func([$instance ?: $this, $name], $args)) && null !== $args)
+            {
+                $args->addResult($name, $result);
             }
 
             return true;

@@ -25,6 +25,7 @@ define('CHAOS_REPLACE_COMMA_SEPARATOR', '#\s*,\s*#');
 define('CHAOS_REPLACE_SPACE_SEPARATOR', '#\s+#');
 
 // common: namespaces
+define('CHAOS_READ_EVENT_ARGS', 'Chaos\Common\Events\ReadEventArgs');
 define('DOCTRINE_ARRAY_COLLECTION', 'Doctrine\Common\Collections\ArrayCollection');
 define('DOCTRINE_PERSISTENT_COLLECTION', 'Doctrine\ORM\PersistentCollection');
 define('DOCTRINE_ENTITY_MANAGER', 'Doctrine\ORM\EntityManager');

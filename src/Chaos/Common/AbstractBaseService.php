@@ -28,7 +28,7 @@ abstract class AbstractBaseService implements IBaseService
         if (0 !== $response['total'])
         {
             // fire "onAfterReadAll" event if any
-            $this->fireEvent(static::ON_AFTER_READ_ALL, new Events\ReadEventArgs(func_get_args(), $entities));
+            $this->fireEvent(static::ON_AFTER_READ_ALL, [CHAOS_READ_EVENT_ARGS, func_get_args(), $entities]);
             // copy the iterator into an array
             $response['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
         }
@@ -54,7 +54,7 @@ abstract class AbstractBaseService implements IBaseService
             }
             else
             {
-                $criteria = $this->filter($criteria, true);
+                $criteria = $this->filter($criteria);
 
                 if (empty($criteria))
                 {
@@ -80,7 +80,7 @@ abstract class AbstractBaseService implements IBaseService
         }
 
         // fire "onAfterRead" event if any
-        $this->fireEvent(static::ON_AFTER_READ, new Events\ReadEventArgs($criteria, $entity));
+        $this->fireEvent(static::ON_AFTER_READ, [CHAOS_READ_EVENT_ARGS, $criteria, $entity]);
         // prepare data for output
         $response = ['data' => $entity, 'success' => true];
 

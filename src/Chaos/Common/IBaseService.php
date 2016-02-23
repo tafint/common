@@ -4,11 +4,12 @@
  * Interface IBaseService
  * @author ntd1712
  *
- * @property-read string $className The entity short name
- * @property-read string $entityName The entity name
- * @property-read IBaseEntity $entity The <tt>entity</tt> instance
- * @property-read array $fields The field mappings of the <tt>entity</tt>
- * @property-read array $pk The field names that are part of the identifier/primary key of the <tt>entity</tt>
+ * @property-read string $className The short class name of the entity
+ * @property-read string $entityName The qualified class name of the entity
+ * @property-read IBaseEntity $entity The entity instance
+ * @property-read array $fields The field mappings of the entity
+ * @property-read array $pk The field names that are part of the identifier/primary key of the entity
+ *
  * @property-read \Doctrine\Common\Collections\Criteria $criteria The <tt>Criteria</tt> instance
  * @property-read \Doctrine\ORM\Query\Expr $expression The <tt>Expr</tt> instance
  * @property-read \Doctrine\ORM\EntityManager $entityManager The <tt>EntityManager</tt> instance
@@ -17,14 +18,14 @@
 interface IBaseService
 {
     /** The events being trigger */
-    const ON_EXCHANGE_ARRAY = 'onExchangeArray',
+    const ON_AFTER_READ_ALL = 'onAfterReadAll',
+          ON_AFTER_READ = 'onAfterRead',
+          ON_EXCHANGE_ARRAY = 'onExchangeArray',
           ON_VALIDATE = 'onValidate',
           ON_BEFORE_SAVE = 'onBeforeSave',
           ON_AFTER_SAVE = 'onAfterSave',
           ON_BEFORE_DELETE = 'onBeforeDelete',
-          ON_AFTER_DELETE = 'onAfterDelete',
-          ON_AFTER_READ_ALL = 'onAfterReadAll',
-          ON_AFTER_READ = 'onAfterRead';
+          ON_AFTER_DELETE = 'onAfterDelete';
     /**
      * The default "readAll" method, you can override this in derived class
      *
@@ -38,7 +39,6 @@ interface IBaseService
      *
      * @param   mixed|\Doctrine\ORM\QueryBuilder|\Doctrine\Common\Collections\Criteria|array $criteria The query criteria
      * @return  array
-     * @throws  Exceptions\InvalidArgumentException
      * @throws  Exceptions\ServiceException
      */
     function read($criteria);

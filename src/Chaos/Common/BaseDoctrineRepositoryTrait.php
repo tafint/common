@@ -439,6 +439,11 @@ trait BaseDoctrineRepositoryTrait
 
                         if (!empty($matches[1]))
                         {
+                            if (!isset($this->_class->fieldMappings[$matches[1]]))
+                            {
+                                continue; // todo: update this to support '.', e.g. UserRole.IsPrimary DESC
+                            }
+
                             $option = Select::ORDER_ASCENDING;
 
                             if (isset($matches[2]) && Select::ORDER_DESCENDING === strtoupper($matches[2]))

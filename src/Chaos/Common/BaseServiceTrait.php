@@ -281,13 +281,12 @@ trait BaseServiceTrait
      */
     public function prepareOrderParams(array $binds = [])
     {
-        $fields = $this->getRepository()->fields;
         $orderSet = [];
         $count = 0;
 
         foreach ($binds as $v)
         {
-            if (!is_array($v) || empty($v['property']) || !isset($fields[$v['property']]))
+            if (!is_array($v) || empty($v['property']))
             {
                 continue;
             }
@@ -418,25 +417,25 @@ trait BaseServiceTrait
     }
 
     /**
-     * Fire a specified event
+     * Trigger a specified event
      *
-     * @param   string $name The event name
-     * @param   array|Events\EventArgs $args The event arguments
-     * @param   object $instance
+     * @param   string $eventName The event name
+     * @param   array|Events\EventArgs $eventArgs The event arguments
+     * @param   object $instance; defaults to get_called_class()
      * @return  boolean TRUE on success; FALSE otherwise
      */
-    public function fireEvent($name, $args = null, $instance = null)
+    public function trigger($eventName, $eventArgs = null, $instance = null)
     {
-        if (method_exists($instance ?: $instance = $this, $name))
+        if (method_exists($instance ?: $instance = $this, $eventName))
         {
-            if (is_array($args))
+            if (is_array($eventArgs))
             {
-                $args = (new \ReflectionClass(array_shift($args)))->newInstanceArgs($args);
+                $eventArgs = (new \ReflectionClass(array_shift($eventArgs)))->newInstanceArgs($eventArgs);
             }
 
-            if (null !== ($result = call_user_func([$instance, $name], $args)) && null !== $args)
+            if (null !== ($result = call_user_func([$instance, $eventName], $eventArgs)) && null !== $eventArgs)
             {
-                $args->addResult($name, $result);
+                $eventArgs->addResult($eventName, $result);
             }
 
             return true;

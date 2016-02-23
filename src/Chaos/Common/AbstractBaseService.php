@@ -23,18 +23,18 @@ abstract class AbstractBaseService implements IBaseService
         }
 
         // prepare data for output
-        $response = ['data' => [], 'total' => count($entities), 'success' => true];
+        $result = ['data' => [], 'total' => count($entities), 'success' => true];
 
-        if (0 !== $response['total'])
+        if (0 !== $result['total'])
         {
             // fire events if any
-            $this->fireEvent(static::ON_AFTER_READ_ALL, [CHAOS_READ_EVENT_ARGS, func_get_args(), $entities]);
+            $this->trigger(static::ON_AFTER_READ_ALL, [CHAOS_READ_EVENT_ARGS, func_get_args(), $entities]);
             // copy the iterator into an array
-            $response['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
+            $result['data'] = $entities instanceof \Traversable ? iterator_to_array($entities) : $entities;
         }
 
         // bye!
-        return $response;
+        return $result;
     }
 
     /** {@inheritdoc} */
@@ -80,12 +80,12 @@ abstract class AbstractBaseService implements IBaseService
         }
 
         // fire events if any
-        $this->fireEvent(static::ON_AFTER_READ, [CHAOS_READ_EVENT_ARGS, $criteria, $entity]);
+        $this->trigger(static::ON_AFTER_READ, [CHAOS_READ_EVENT_ARGS, $criteria, $entity]);
         // prepare data for output
-        $response = ['data' => $entity, 'success' => true];
+        $result = ['data' => $entity, 'success' => true];
 
         // bye!
-        return $response;
+        return $result;
     }
 
     /** {@inheritdoc} */
@@ -138,17 +138,17 @@ abstract class AbstractBaseService implements IBaseService
                 }
             }
 
-            $response = $this->read($criteria);
-            $entity = $response['data'];
+            $result = $this->read($criteria);
+            $entity = $result['data'];
         }
 
         $eventArgs = new Events\UpdateEventArgs($post, $entity, $isNew);
         $eventArgs->setPost(array_intersect_key($post, $entity->getReflection()->getDefaultProperties()));
 
         // exchange array & fire events if any
-        $this->fireEvent(static::ON_EXCHANGE_ARRAY, $eventArgs);
+        $this->trigger(static::ON_EXCHANGE_ARRAY, $eventArgs);
         $eventArgs->setEntity($entity->exchangeArray($eventArgs->getPost()));
-        $this->fireEvent(static::ON_VALIDATE, $eventArgs);
+        $this->trigger(static::ON_VALIDATE, $eventArgs);
 
         // validate 'em
         if (false !== ($errors = $entity->validate()))
@@ -160,8 +160,12 @@ abstract class AbstractBaseService implements IBaseService
         try
         {
             // start a transaction & fire events if any
-            $this->getRepository()->beginTransaction();
-            $this->fireEvent(static::ON_BEFORE_SAVE, $eventArgs);
+            if ($this->enableTransaction)
+            {
+                $this->getRepository()->beginTransaction();
+            }
+
+            $this->trigger(static::ON_BEFORE_SAVE, $eventArgs);
 
             // create or update entity
             if ($isNew)
@@ -179,7 +183,7 @@ abstract class AbstractBaseService implements IBaseService
             }
 
             // commit current transaction & fire events if any
-            $this->fireEvent(static::ON_AFTER_SAVE, $eventArgs);
+            $this->trigger(static::ON_AFTER_SAVE, $eventArgs);
             $this->getRepository()->flush()->commit();
 
             // bye!
@@ -209,8 +213,8 @@ abstract class AbstractBaseService implements IBaseService
     public function delete($criteria)
     {
         /** @var IBaseEntity $entity */
-        $response = $this->read($criteria);
-        $entity = $response['data'];
+        $result = $this->read($criteria);
+        $entity = $result['data'];
 
         // update db
         try
@@ -218,8 +222,12 @@ abstract class AbstractBaseService implements IBaseService
             $eventArgs = new Events\UpdateEventArgs($criteria, $entity, false);
 
             // start a transaction & fire events if any
-            $this->getRepository()->beginTransaction();
-            $this->fireEvent(static::ON_BEFORE_DELETE, $eventArgs);
+            if ($this->enableTransaction)
+            {
+                $this->getRepository()->beginTransaction();
+            }
+
+            $this->trigger(static::ON_BEFORE_DELETE, $eventArgs);
 
             // delete entity
             $affectedRows = $this->getRepository()->delete($entity, false);
@@ -230,7 +238,7 @@ abstract class AbstractBaseService implements IBaseService
             }
 
             // commit current transaction & fire events if any
-            $this->fireEvent(static::ON_AFTER_DELETE, $eventArgs);
+            $this->trigger(static::ON_AFTER_DELETE, $eventArgs);
             $this->getRepository()->flush()->commit();
 
             // bye!
@@ -243,6 +251,9 @@ abstract class AbstractBaseService implements IBaseService
             throw $ex;
         }
     }
+
+    /** @var bool A value that indicates whether the transaction is enabled */
+    public $enableTransaction = false;
 
     /** {@inheritdoc} */
     public function __get($key)

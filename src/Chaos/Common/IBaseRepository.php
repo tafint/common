@@ -6,9 +6,9 @@
  *
  * @property-read string $className The short class name of the entity
  * @property-read string $entityName The qualified class name of the entity
- * @property-read IBaseEntity $entity The <tt>entity</tt> instance
- * @property-read array $fields The field mappings of the <tt>entity</tt>
- * @property-read array $pk The field names that are part of the identifier/primary key of the <tt>entity</tt>
+ * @property-read IBaseEntity $entity The entity instance
+ * @property-read array $fields The field mappings of the entity
+ * @property-read array $pk The field names that are part of the identifier/primary key of the entity
  *
  * @method IBaseRepository beginTransaction() Start a transaction by suspending auto-commit mode
  * @method IBaseRepository commit() Commit the current transaction

@@ -20,11 +20,11 @@ abstract class AbstractLeagueServiceProvider extends AbstractServiceProvider
         {
             if (false !== strpos($v, '\\'))
             {
-                $this->getContainer()->add($v);
+                $this->container->add($v);
 
                 if (false === stripos($v, '\\events\\'))
                 {
-                    $this->getContainer()->add(shorten($v), $v);
+                    $this->container->add(shorten($v), $v);
                 }
             }
         }

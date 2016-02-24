@@ -475,6 +475,9 @@ trait BaseDoctrineRepositoryTrait
                 case Select::OFFSET:
                     $queryBuilder->setFirstResult((int)$v);
                     break;
+                case 'cacheable':
+                    $queryBuilder->setCacheable($v);
+                    break;
                 default:
             }
         }

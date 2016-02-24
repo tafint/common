@@ -70,7 +70,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         {
             $isNew ? $this->_em->persist($v) : $v = $this->_em->merge($v);
 
-            if (0 === ++$i % CHAOS_SQL_BATCH_SIZE && $autoFlush)
+            if ((0 === ++$i % CHAOS_SQL_BATCH_SIZE) && $autoFlush)
             {
                 $this->_em->flush();
             }
@@ -87,28 +87,25 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
     /** {@inheritdoc} */
     public function delete($criteria, $autoFlush = true)
     {
-        $entities = is_object($criteria) ? [$criteria] : $this->getQueryBuilder($criteria)->getQuery()->getResult();
+        $entity = is_object($criteria) ? [$criteria] : $this->getQueryBuilder($criteria)->getQuery()->getResult();
         $i = 0;
 
-        if (!empty($entities))
+        foreach ($entity as $v)
         {
-            foreach ($entities as $v)
+            if ($this->_em->contains($v))
             {
-                if ($this->_em->contains($v))
-                {
-                    $this->_em->remove($v);
+                $this->_em->remove($v);
 
-                    if (0 === ++$i % CHAOS_SQL_BATCH_SIZE && $autoFlush)
-                    {
-                        $this->_em->flush();
-                    }
+                if ((0 === ++$i % CHAOS_SQL_BATCH_SIZE) && $autoFlush)
+                {
+                    $this->_em->flush();
                 }
             }
+        }
 
-            if ($autoFlush && 0 !== $i)
-            {
-                $this->_em->flush();
-            }
+        if ($autoFlush && 0 !== $i)
+        {
+            $this->_em->flush();
         }
 
         return $i;

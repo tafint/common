@@ -174,7 +174,7 @@ abstract class AbstractBaseService implements IBaseService
             }
             else
             {
-                $affectedRows = $this->getRepository()->update($entity, $criteria, false);
+                $affectedRows = $this->getRepository()->update($entity, null, false);
             }
 
             if (1 > $affectedRows)

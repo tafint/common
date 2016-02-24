@@ -11,6 +11,9 @@ use Zend\Db\Sql\Predicate\Predicate;
  */
 trait BaseServiceTrait
 {
+    /** @var bool A value that indicates whether the transaction is enabled */
+    public $enableTransaction = false;
+
     /**
      * Prepare filter parameters
      *

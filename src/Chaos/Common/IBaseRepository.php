@@ -12,7 +12,7 @@
  *
  * @method IBaseRepository beginTransaction() Start a transaction by suspending auto-commit mode
  * @method IBaseRepository commit() Commit the current transaction
- * @method IBaseRepository rollBack() Cancel any database changes done during the current transaction
+ * @method IBaseRepository rollback() Cancel any database changes done during the current transaction
  * @method IBaseRepository flush() Flush all changes to objects
  * @method IBaseRepository close() Close the EntityManager (if any)
  */

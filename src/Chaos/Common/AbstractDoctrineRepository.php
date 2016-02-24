@@ -11,7 +11,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 abstract class AbstractDoctrineRepository extends EntityRepository implements IDoctrineRepository
 {
-    use BaseDoctrineRepositoryTrait, Traits\ConfigAwareTrait, Traits\ContainerAwareTrait;
+    use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait,
+        BaseDoctrineRepositoryTrait;
 
     /** {@inheritdoc} @param boolean $fetchJoinCollection */
     public function paginate($criteria = [], array $paging = [], $fetchJoinCollection = true)

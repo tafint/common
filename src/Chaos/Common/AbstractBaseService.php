@@ -204,7 +204,7 @@ abstract class AbstractBaseService implements IBaseService
         catch (\Exception $ex)
         {
             // roll back current transaction
-            $this->getRepository()->close()->rollBack();
+            $this->getRepository()->close()->rollback();
             throw $ex;
         }
     }
@@ -247,13 +247,10 @@ abstract class AbstractBaseService implements IBaseService
         catch (\Exception $ex)
         {
             // roll back current transaction
-            $this->getRepository()->close()->rollBack();
+            $this->getRepository()->close()->rollback();
             throw $ex;
         }
     }
-
-    /** @var bool A value that indicates whether the transaction is enabled */
-    public $enableTransaction = false;
 
     /** {@inheritdoc} */
     public function __get($key)

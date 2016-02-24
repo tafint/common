@@ -33,7 +33,7 @@ trait BaseDoctrineRepositoryTrait
     }
 
     /** {@inheritdoc} */
-    public function rollBack()
+    public function rollback()
     {
         if ($this->_em->getConnection()->isTransactionActive())
         {

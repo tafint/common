@@ -260,7 +260,7 @@ trait BaseServiceTrait
                         $predicateSet->equalTo($k, "'" . $binds . "'") :
                         $predicateSet->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
 
-                    if (CHAOS_SQL_MAX_COND <= ++$count)
+                    if (CHAOS_MAX_INPUT <= ++$count)
                     {
                         break;
                     }
@@ -304,7 +304,7 @@ trait BaseServiceTrait
                     Enums\PredicateType::NULLS_FIRST : Enums\PredicateType::NULLS_LAST);
             }
 
-            if (CHAOS_SQL_MAX_COND <= ++$count)
+            if (CHAOS_MAX_INPUT <= ++$count)
             {
                 break;
             }

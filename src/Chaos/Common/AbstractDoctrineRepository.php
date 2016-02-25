@@ -26,7 +26,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
 
         if (null === $query->getMaxResults())
         {
-            $query->setMaxResults(@$paging['ItemCountPerPage'] ?: CHAOS_SQL_BATCH_SIZE);
+            $query->setMaxResults(@$paging['ItemCountPerPage'] ?: CHAOS_MAX_QUERY);
         }
 
         return new Paginator($query, $fetchJoinCollection);
@@ -71,7 +71,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
         {
             $isNew ? $this->_em->persist($v) : $v = $this->_em->merge($v);
 
-            if ((0 === ++$i % CHAOS_SQL_BATCH_SIZE) && $autoFlush)
+            if ((0 === ++$i % CHAOS_MAX_QUERY) && $autoFlush)
             {
                 $this->_em->flush();
             }
@@ -97,7 +97,7 @@ abstract class AbstractDoctrineRepository extends EntityRepository implements ID
             {
                 $this->_em->remove($v);
 
-                if ((0 === ++$i % CHAOS_SQL_BATCH_SIZE) && $autoFlush)
+                if ((0 === ++$i % CHAOS_MAX_QUERY) && $autoFlush)
                 {
                     $this->_em->flush();
                 }

@@ -1,10 +1,10 @@
 <?php
 
-// common: repository & entity
-define('CHAOS_SQL_BATCH_SIZE', 10);
-define('CHAOS_SQL_MAX_COND', 5);
+// common: service, repository & entity
+define('CHAOS_MAX_INPUT', 5);
+define('CHAOS_MAX_QUERY', 10);
+define('CHAOS_MAX_RECURSION_DEPTH', 14);
 define('CHAOS_USE_EXTERNAL_JSON', false);
-define('CHAOS_RECURSION_MAX_DEPTH', 14);
 define('CHAOS_ANNOTATION_IGNORE', '[Ignore]');
 define('CHAOS_ANNOTATION_IGNORE_TYPE_JUGGLING', '[IgnoreTypeJuggling]');
 define('CHAOS_ANNOTATION_IGNORE_RULES', '[IgnoreRules]');

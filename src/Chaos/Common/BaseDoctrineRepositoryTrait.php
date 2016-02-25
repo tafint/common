@@ -64,7 +64,7 @@ trait BaseDoctrineRepositoryTrait
     /**
      * Get QueryBuilder instance
      *
-     * @param   QueryBuilder|Criteria|array $criteria Query criteria
+     * @param   QueryBuilder|Criteria|array $criteria The query criteria
      * @param   QueryBuilder $queryBuilder
      * @return  QueryBuilder
      * @throws  Exceptions\InvalidArgumentException

@@ -214,7 +214,7 @@ trait BaseObjectItemTrait
 
             $hash = spl_object_hash($data);
 
-            if (isset($visited[$hash]) || CHAOS_RECURSION_MAX_DEPTH < $depth)
+            if (isset($visited[$hash]) || CHAOS_MAX_RECURSION_DEPTH < $depth)
             {
                 return '*RECURSION(' . str_replace('\\', '\\\\', get_class($data)) . '#' . $depth . ')*';
             }

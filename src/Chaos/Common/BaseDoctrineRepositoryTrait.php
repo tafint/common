@@ -11,6 +11,8 @@ use Chaos\Common\Enums\JoinType;
 /**
  * Class BaseDoctrineRepositoryTrait
  * @author ntd1712
+ *
+ * @method \League\Container\ContainerInterface getContainer()
  */
 trait BaseDoctrineRepositoryTrait
 {
@@ -234,7 +236,10 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case Select::JOINS:
                 case 'join':
-                    // e.g. ['joins' => ['join' => $this->getRepository('UserRole')]]
+                    // e.g. ['joins' => [ // User INNER JOIN UserRole WITH UserRole = User.UserRole
+                    //          ['join' => $this->getRepository('UserRole'), 'condition' => '%1$s = %2$s.%1$s'],
+                    //          ['join' => $this->getRepository('Role'), 'condition' => '%3$s = %2$s.%3$s']
+                    //      ]]            // ...  INNER JOIN Role WITH Role = UserRole.Role
                     //      ['joins' => ['innerJoin' => $this->getRepository('UserRole')]]
                     //      ['joins' => ['leftJoin' => $this->getRepository('User'), 'condition' => '%3$s = %2$s.%3$s']]
                     if (!is_array($v))
@@ -420,7 +425,7 @@ trait BaseDoctrineRepositoryTrait
                     {
                         if (is_string($key))
                         {
-                            if (ctype_space($key))
+                            if ('' === $key || ctype_space($key))
                             {
                                 continue;
                             }
@@ -439,9 +444,26 @@ trait BaseDoctrineRepositoryTrait
 
                         if (!empty($matches[1]))
                         {
-                            if (!isset($this->_class->fieldMappings[$matches[1]]))
+                            if (false === strpos($matches[1], '.'))
                             {
-                                continue; // todo: update this to support '.', e.g. UserRole.IsPrimary DESC
+                                if (!isset($this->_class->fieldMappings[$matches[1]]))
+                                {
+                                    continue;
+                                }
+
+                                $matches[1] = $rootAlias . '.' . $matches[1];
+                            }
+                            elseif (false !== ($format = @vsprintf($matches[1], $aliases)))
+                            {
+                                $parts = explode('.', $format);
+
+                                if (!$this->getContainer()->has($parts[0]) ||
+                                    !property_exists($this->getContainer()->get($parts[0]), $parts[1]))
+                                {
+                                    continue;
+                                }
+
+                                $matches[1] = $format;
                             }
 
                             $option = Select::ORDER_ASCENDING;
@@ -454,15 +476,6 @@ trait BaseDoctrineRepositoryTrait
                             if (!is_blank($matches[3])) // NULLS FIRST, NULLS LAST
                             {
                                 $option .= ' ' . trim($matches[3]);
-                            }
-
-                            if (false === strpos($matches[1], '.'))
-                            {
-                                $matches[1] = $rootAlias . '.' . $matches[1];
-                            }
-                            elseif (false !== ($format = @vsprintf($matches[1], $aliases)))
-                            {
-                                $matches[1] = $format;
                             }
 
                             $queryBuilder->addOrderBy($matches[1], $option);

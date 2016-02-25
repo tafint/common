@@ -252,8 +252,8 @@ if (!function_exists('uuid'))
         elseif (function_exists('com_create_guid'))
         {
             $uuid = trim(com_create_guid(), '{}');
-            $uuid = extension_loaded('mbstring') ? mb_strtolower($uuid) :
-                preg_replace_callback('/\xC3[\x80-\x96\x98-\x9E]/', '_unicode_caseflip', strtolower($uuid));
+            $uuid = extension_loaded('mbstring') ? mb_strtolower($uuid)
+                : preg_replace_callback('/\xC3[\x80-\x96\x98-\x9E]/', '_unicode_caseflip', strtolower($uuid));
         }
         else
         {

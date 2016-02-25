@@ -5,7 +5,7 @@ use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Predicate\PredicateSet;
+use Zend\Db\Sql\Predicate\PredicateInterface;
 use Chaos\Common\Enums\JoinType;
 
 /**
@@ -277,12 +277,12 @@ trait BaseDoctrineRepositoryTrait
                         }
 
                         array_push($aliases, $join['alias']);
-                        $condition = isset($join['condition']) ? $join['condition'] : // guess JOIN condition
-                            '%1$s = %' . (array_search($join['alias'], $aliases) + 1) . '$s.%1$s';
+                        $format = isset($join['condition']) ? $join['condition']
+                            : '%1$s = %' . (array_search($join['alias'], $aliases) + 1) . '$s.%1$s'; // guess condition
 
-                        if (false !== ($condition = @vsprintf($condition, $aliases)))
+                        if (false !== ($format = @vsprintf($format, $aliases)))
                         {
-                            $join['condition'] = $condition;
+                            $join['condition'] = $format;
                         }
                         else
                         {
@@ -317,7 +317,7 @@ trait BaseDoctrineRepositoryTrait
                     //      ['where' => "Id = 1 AND Name = 'demo'"]
                     //      ['where' => ['Id' => 1, '%2$s.Name' => 'demo']]
                     //      ['where' => ['Id' => [1], '%2$s.Name' => 'demo']] // if joins exist
-                    if ($v instanceof PredicateSet)
+                    if ($v instanceof PredicateInterface)
                     {
                         $this->transformPredicate($v, $queryBuilder, $rootAlias, $aliases);
                     }
@@ -484,10 +484,10 @@ trait BaseDoctrineRepositoryTrait
                     }
                     break;
                 case Select::LIMIT:
-                    $queryBuilder->setMaxResults((int)$v);
+                    $queryBuilder->setMaxResults($v);
                     break;
                 case Select::OFFSET:
-                    $queryBuilder->setFirstResult((int)$v);
+                    $queryBuilder->setFirstResult($v);
                     break;
                 case 'cacheable':
                     $queryBuilder->setCacheable($v);
@@ -501,15 +501,15 @@ trait BaseDoctrineRepositoryTrait
     }
 
     /**
-     * Convert a <tt>Predicate</tt> to <tt>QueryBuilder</tt>
+     * Convert a <tt>Predicate</tt> to a <tt>QueryBuilder</tt>
      *
-     * @param   PredicateSet $predicateSet
+     * @param   \Zend\Db\Sql\Predicate\PredicateSet|PredicateInterface $predicateSet
      * @param   QueryBuilder $queryBuilder
      * @param   string $rootAlias
      * @param   array $aliases
      * @return  QueryBuilder
      */
-    private function transformPredicate(PredicateSet $predicateSet, QueryBuilder $queryBuilder, $rootAlias, $aliases)
+    private function transformPredicate(PredicateInterface $predicateSet, QueryBuilder $queryBuilder, $rootAlias, $aliases)
     {
         foreach ($predicateSet->getPredicates() as $value)
         {
@@ -584,7 +584,7 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 default:
                     /* @var \Zend\Db\Sql\Predicate\Operator $predicate */
-                    if (PredicateSet::TYPE_IDENTIFIER === $predicate->getLeftType())
+                    if (PredicateInterface::TYPE_IDENTIFIER === $predicate->getLeftType())
                     {
                         $left = $predicate->getLeft();
                         $right = $predicate->getRight();

@@ -31,8 +31,8 @@ class ConversionException extends \Exception implements IException
     public static function conversionFailedFormat($value, $toType, $expectedFormat)
     {
         $value = 32 < strlen($value) ? substr($value, 0, 20) . '...' : $value;
-        return new self('Could not convert value "' . $value . '" to type ' . $toType .
-            '. Expected format: ' . $expectedFormat);
+        return new self('Could not convert value "' . $value . '" to type ' . $toType
+            . '. Expected format: ' . $expectedFormat);
     }
 
     /**

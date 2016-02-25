@@ -126,8 +126,8 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                                 foreach ($value as $v)
                                 {
                                     $cls = new $types[0];
-                                    is_object($v) ? ($v instanceof $cls ? $cls = $v :
-                                        $cls->exchangeObject($v)) : $cls->exchangeArray($v, $this);
+                                    is_object($v) ? ($v instanceof $cls ? $cls = $v
+                                        : $cls->exchangeObject($v)) : $cls->exchangeArray($v, $this);
 
                                     $this->addToCollection($cls, $obj, $method);
                                 }

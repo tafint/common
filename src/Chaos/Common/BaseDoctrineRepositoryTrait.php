@@ -277,9 +277,10 @@ trait BaseDoctrineRepositoryTrait
                         }
 
                         array_push($aliases, $join['alias']);
+                        $condition = isset($join['condition']) ? $join['condition'] : // guess JOIN condition
+                            '%1$s = %' . (array_search($join['alias'], $aliases) + 1) . '$s.%1$s';
 
-                        if (false !== ($condition = @vsprintf( // guess JOIN condition
-                            isset($join['condition']) ? $join['condition'] : '%2$s = %1$s.%2$s', $aliases)))
+                        if (false !== ($condition = @vsprintf($condition, $aliases)))
                         {
                             $join['condition'] = $condition;
                         }

@@ -237,17 +237,11 @@ trait BaseServiceTrait
         }
         elseif (is_string($binds))
         {
-            if (property_exists($predicate, 'excludes'))
-            {   // just a hack!
-                foreach ($predicate->excludes as $v)
-                {
-                    unset($fields[$v]);
-                }
-            }
-
             $predicateSet = new Predicate;
             $searchable = $this->getConfig()->get('app.minSearchChars') <= strlen($binds);
             $binds = $this->filter($binds);
+            $equalValue = "'" . $binds . "'";
+            $likeValue = "'%" . str_replace('%', '%%', $binds) . "%'";
             $count = 0;
 
             foreach ($fields as $k => $v)
@@ -256,9 +250,8 @@ trait BaseServiceTrait
                    ($searchable || ($isChar = isset($v['options']) && isset($v['options']['fixed']))))
                 {
                     $predicateSet->or;
-                    isset($isChar) && $isChar ?
-                        $predicateSet->equalTo($k, "'" . $binds . "'") :
-                        $predicateSet->like($k, "'%" . str_replace('%', '%%', $binds) . "%'");
+                    isset($isChar) && $isChar
+                        ? $predicateSet->equalTo($k, $equalValue) : $predicateSet->like($k, $likeValue);
 
                     if (CHAOS_MAX_INPUT <= ++$count)
                     {

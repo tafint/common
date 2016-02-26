@@ -64,7 +64,7 @@ trait BaseDoctrineRepositoryTrait
     }
 
     /**
-     * Get QueryBuilder instance
+     * Get <tt>QueryBuilder</tt> instance
      *
      * @param   QueryBuilder|Criteria|array $criteria The query criteria
      * @param   QueryBuilder $queryBuilder
@@ -341,9 +341,7 @@ trait BaseDoctrineRepositoryTrait
                                 $key = trim($format);
                             }
 
-                            $isArray = is_array($value);
-
-                            if ($isArray && isset($value['array']) && isset($value['column_key']))
+                            if (($isArray = is_array($value)) && isset($value['array']) && isset($value['column_key']))
                             {
                                 $tmp = [];
 
@@ -375,7 +373,7 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case Select::GROUP:
                 case 'groupBy':
-                    // e.g. ['group' => '%1$s.Id, %2$s.Name'] // if joins exist
+                    // e.g. ['group' => '%1$s.Id, %2$s.Name']
                     //      ['group' => 'Id, Name']
                     //      ['group' => ['Id', 'Name']]
                     if (is_string($v))
@@ -408,8 +406,8 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case Select::ORDER:
                 case 'orderBy':
-                    // e.g. ['order' => '%1$s.Id DESC, %2$s.Name']  // if joins exist
-                    //      ['order' => 'Id DESC, Name']            // equivalent to 'Id DESC, Name ASC'
+                    // e.g. ['order' => '%1$s.Id DESC, %2$s.Name']
+                    //      ['order' => 'Id DESC, Name'] // equivalent to 'Id DESC, Name ASC'
                     //      ['order' => 'Id DESC NULLS FIRST, Name ASC NULLS LAST']
                     //      ['order' => ['Id DESC NULLS FIRST', 'Name ASC NULLS LAST']]
                     //      ['order' => ['Id' => 'DESC NULLS FIRST', 'Name' => 'ASC NULLS LAST']]
@@ -426,7 +424,7 @@ trait BaseDoctrineRepositoryTrait
                     {
                         if (is_string($key))
                         {
-                            if ('' === $key || ctype_space($key))
+                            if (ctype_space($key))
                             {
                                 continue;
                             }

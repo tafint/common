@@ -79,11 +79,9 @@ trait BaseDoctrineRepositoryTrait
             return $criteria;
         }
 
-        $rootAlias = $this->_class->reflClass->getShortName();
-
         if (null === $queryBuilder)
         {   /** @see \Doctrine\ORM\EntityRepository::createQueryBuilder */
-            $queryBuilder = $this->createQueryBuilder($rootAlias);
+            $queryBuilder = $this->createQueryBuilder($this->_class->reflClass->getShortName());
         }
 
         if ($criteria instanceof Criteria)
@@ -276,7 +274,7 @@ trait BaseDoctrineRepositoryTrait
                             $join['conditionType'] = Join::WITH;
                         }
 
-                        array_push($aliases, $join['alias']);
+                        $aliases[] = $join['alias'];
                         $format = isset($join['condition']) ? $join['condition']
                             : '%1$s = %' . (array_search($join['alias'], $aliases) + 1) . '$s.%1$s'; // guess condition
 
@@ -319,7 +317,7 @@ trait BaseDoctrineRepositoryTrait
                     //      ['where' => ['Id' => [1], '%2$s.Name' => 'demo']] // if joins exist
                     if ($v instanceof PredicateInterface)
                     {
-                        $this->transformPredicate($v, $queryBuilder, $rootAlias, $aliases);
+                        $this->transformPredicate($v, $queryBuilder, $aliases);
                     }
                     elseif (is_array($v))
                     {
@@ -334,7 +332,7 @@ trait BaseDoctrineRepositoryTrait
 
                             if (false === strpos($key, '.'))
                             {
-                                $key = $rootAlias . '.' . trim($key);
+                                $key = $aliases[0] . '.' . trim($key);
                             }
                             elseif (false !== ($format = @vsprintf($key, $aliases)))
                             {
@@ -394,7 +392,7 @@ trait BaseDoctrineRepositoryTrait
 
                         if (false === strpos($group, '.'))
                         {
-                            $group = $rootAlias . '.' . $group;
+                            $group = $aliases[0] . '.' . $group;
                         }
                         elseif (false !== ($format = @vsprintf($group, $aliases)))
                         {
@@ -450,7 +448,7 @@ trait BaseDoctrineRepositoryTrait
                                     continue;
                                 }
 
-                                $matches[1] = $rootAlias . '.' . $matches[1];
+                                $matches[1] = $aliases[0] . '.' . $matches[1];
                             }
                             elseif (false !== ($format = @vsprintf($matches[1], $aliases)))
                             {
@@ -503,36 +501,34 @@ trait BaseDoctrineRepositoryTrait
      *
      * @param   \Zend\Db\Sql\Predicate\PredicateSet|PredicateInterface $predicateSet
      * @param   QueryBuilder $queryBuilder
-     * @param   string $rootAlias
      * @param   array $aliases
      * @return  QueryBuilder
      */
-    private function transformPredicate(PredicateInterface $predicateSet, QueryBuilder $queryBuilder, $rootAlias, $aliases)
+    private function transformPredicate(PredicateInterface $predicateSet, QueryBuilder $queryBuilder, $aliases)
     {
         foreach ($predicateSet->getPredicates() as $value)
         {
             $predicate = $value[1];
-            $type = shorten(get_class($predicate));
 
             if (method_exists($predicate, 'getIdentifier'))
             {   /** @var \Zend\Db\Sql\Predicate\Between $predicate */
-                if (false === strpos($predicate->getIdentifier(), '.'))
+                if (false === strpos($identifier = $predicate->getIdentifier(), '.'))
                 {
-                    $predicate->setIdentifier($rootAlias . '.' . $predicate->getIdentifier());
+                    $predicate->setIdentifier($aliases[0] . '.' . $identifier);
                 }
-                elseif (false !== ($format = @vsprintf($predicate->getIdentifier(), $aliases)))
+                elseif (false !== ($format = @vsprintf($identifier, $aliases)))
                 {
                     $predicate->setIdentifier($format);
                 }
             }
 
-            switch ($type)
+            switch ($type = shorten(get_class($predicate)))
             {
                 case 'Predicate': // eg. nest/unnest
                     /** @var \Zend\Db\Sql\Predicate\Predicate $predicate */
-                    $expr = null;
-                    $queryBuilder->andWhere($this->transformPredicate($predicate,
-                        $this->createQueryBuilder($rootAlias), $rootAlias, $aliases)->getDQLPart('where'));
+                    $expr = $this
+                        ->transformPredicate($predicate, $this->createQueryBuilder($aliases[0]), $aliases)
+                        ->getDQLPart('where');
                     break;
                 case 'Between':
                 case 'NotBetween':
@@ -595,7 +591,7 @@ trait BaseDoctrineRepositoryTrait
 
                     if (false === strpos($left, '.'))
                     {
-                        $left = $rootAlias . '.' . $left;
+                        $left = $aliases[0] . '.' . $left;
                     }
                     elseif (false !== ($format = @vsprintf($left, $aliases)))
                     {
@@ -609,10 +605,7 @@ trait BaseDoctrineRepositoryTrait
              * @see Doctrine\ORM\QueryBuilder::orWhere
              * @see Doctrine\ORM\QueryBuilder::andHaving
              * @see Doctrine\ORM\QueryBuilder::orHaving */
-            if (isset($expr))
-            {
-                $queryBuilder->{strtolower($value[0]) . 'Where'}($expr);
-            }
+            $queryBuilder->{strtolower($value[0]) . 'Where'}($expr);
         }
 
         return $queryBuilder;

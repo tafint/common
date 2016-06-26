@@ -60,7 +60,8 @@ class Config extends \Noodlehaus\Config
                 'path' => '/',
                 'domain' => null,
                 'expires' => 120,
-                'secure' => false
+                'secure' => false,
+                'http_only' => true
             ],
             'multitenant' => [
                 'enabled' => false,

@@ -7,7 +7,7 @@
         'maxItemsPerPage' => 100,
         'minSearchChars' => 4,
         // specific
-        'copyright' => 'Copyright 2015 by My Company. All Rights Reserved.',
+        'copyright' => 'Copyright 2016 by My Company. All Rights Reserved.',
         'title' => 'Admin Panel',
         'theme' => 'homer', // homer, classic
         'defaultRoute' => 'setting.index',

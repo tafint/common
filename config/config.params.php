@@ -15,8 +15,10 @@
         'imageMaxSize' => 2097152 // 2MB
     ],
     'paths' => [
-        'apiPath' => __DIR__ . '/../public/api',
-        'uploadPath' => __DIR__ . '/../public/uploads'
+        'api' => __DIR__ . '/../public/api',
+        'upload' => __DIR__ . '/../public/uploads'
     ],
-    'urls' => null // an array of URLs
+    'urls' => [
+        'reset' => '/#/reset?k=',
+    ]
 ];

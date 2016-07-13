@@ -1,128 +1,15 @@
 <?php
 
-if (!function_exists('array_column'))
-{
-    /**
-     * @param   array $input
-     * @param   mixed $columnKey
-     * @param   mixed $indexKey
-     * @return  array
-     * @see     https://goo.gl/xov2uO
-     */
-    function array_column($input = null, $columnKey = null, $indexKey = null)
-    {
-        // using func_get_args() in order to check for proper number of
-        // parameters and trigger errors exactly as the built-in array_column()
-        // does in PHP 5.5.
-        $argc = func_num_args();
-        $params = func_get_args();
-
-        if ($argc < 2)
-        {
-            trigger_error("array_column() expects at least 2 parameters, $argc given", E_USER_WARNING);
-            return null;
-        }
-
-        if (!is_array($params[0]))
-        {
-            trigger_error(
-                'array_column() expects parameter 1 to be array, ' . gettype($params[0]) . ' given',
-                E_USER_WARNING
-            );
-            return null;
-        }
-
-        if (!(is_int($params[1]) || is_float($params[1]) || is_string($params[1])) && null !== $params[1] &&
-            !(is_object($params[1]) && method_exists($params[1], '__toString')))
-        {
-            trigger_error('array_column(): The column key should be either a string or an integer', E_USER_WARNING);
-            return false;
-        }
-
-        if (isset($params[2]) && !(is_int($params[2]) || is_float($params[2]) || is_string($params[2])) &&
-            !(is_object($params[2]) && method_exists($params[2], '__toString')))
-        {
-            trigger_error('array_column(): The index key should be either a string or an integer', E_USER_WARNING);
-            return false;
-        }
-
-        $paramsInput = $params[0];
-        $paramsColumnKey = null !== $params[1] ? (string)$params[1] : null;
-        $paramsIndexKey = null;
-
-        if (isset($params[2]))
-        {
-            if (is_float($params[2]) || is_int($params[2]))
-            {
-                $paramsIndexKey = (int)$params[2];
-            }
-            else
-            {
-                $paramsIndexKey = (string)$params[2];
-            }
-        }
-
-        $resultArray = [];
-
-        foreach ($paramsInput as $row)
-        {
-            $key = $value = null;
-            $keySet = $valueSet = false;
-
-            if (null !== $paramsIndexKey && array_key_exists($paramsIndexKey, $row))
-            {
-                $keySet = true;
-                $key = (string)$row[$paramsIndexKey];
-            }
-
-            if (null === $paramsColumnKey)
-            {
-                $valueSet = true;
-                $value = $row;
-            }
-            elseif (is_array($row) && array_key_exists($paramsColumnKey, $row))
-            {
-                $valueSet = true;
-                $value = $row[$paramsColumnKey];
-            }
-
-            if ($valueSet)
-            {
-                if ($keySet)
-                {
-                    $resultArray[$key] = $value;
-                }
-                else
-                {
-                    $resultArray[] = $value;
-                }
-            }
-
-        }
-
-        return $resultArray;
-    }
-}
-
 if (!function_exists('array_unset'))
 {
     /**
      * @param   array $array
      * @param   string $path
      * @return  array
-     * @see     http://goo.gl/wUJLoR
+     * @see     http://goo.gl/aSmCgb
      */
-    function array_unset(&$array, $path)
+    function array_unset(array &$array, $path)
     {
-        if (!is_array($array))
-        {
-            trigger_error(
-                'array_unset() expects parameter 1 to be array, ' . gettype($array) . ' given',
-                E_USER_WARNING
-            );
-            return null;
-        }
-
         $pieces = explode('.', $path);
         $count = count($pieces) - 1;
         $i = 0;
@@ -144,28 +31,6 @@ if (!function_exists('array_unset'))
         unset($array[$piece]);
 
         return $array;
-    }
-}
-
-if (!function_exists('json_last_error_msg'))
-{
-    /**
-     * @return  string
-     * @see     https://goo.gl/MK9HSY
-     */
-    function json_last_error_msg()
-    {
-        static $errors = [
-            JSON_ERROR_NONE => null,
-            JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
-            JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
-            JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
-            JSON_ERROR_SYNTAX => 'Syntax error',
-            JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
-        ];
-        $error = json_last_error();
-
-        return isset($errors[$error]) ? $errors[$error] : 'Unknown error (code ' . $error . ')';
     }
 }
 

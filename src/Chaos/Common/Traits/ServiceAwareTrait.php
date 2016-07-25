@@ -13,7 +13,7 @@ trait ServiceAwareTrait
     private static $__services__ = [];
 
     /**
-     * Get a reference to the global service object. The object returned will be of type <tt>IBaseService</tt>
+     * Get a reference to the service object. The object returned will be of type <tt>IBaseService</tt>
      *  $this->getService()->...
      *  $this->getService('User')->...
      *  $this->getService('Account\Services\UserService')->...
@@ -33,7 +33,7 @@ trait ServiceAwareTrait
             $serviceName = $name;
         }
 
-        if (isset(self::$__services__[$serviceName]) && $cache)
+        if ($cache && isset(self::$__services__[$serviceName]))
         {
             return self::$__services__[$serviceName];
         }

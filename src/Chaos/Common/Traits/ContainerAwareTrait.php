@@ -13,7 +13,7 @@ trait ContainerAwareTrait
     private static $__container__;
 
     /**
-     * Get a reference to the global container object. The object returned will be of type <tt>ContainerInterface</tt>
+     * Get a reference to the container object. The object returned will be of type <tt>ContainerInterface</tt>
      *
      * @return  ContainerInterface
      */
@@ -23,7 +23,7 @@ trait ContainerAwareTrait
     }
 
     /**
-     * Set a reference to the global container object
+     * Set a reference to the container object
      *
      * @param   array|\ArrayAccess|ContainerInterface $container
      * @return  $this

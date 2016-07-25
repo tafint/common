@@ -26,7 +26,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      */
     public function create()
     {
-        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s::%s"', get_called_class(), __FUNCTION__));
+        throw new Exceptions\BadMethodCallException('Unknown method ' . __METHOD__);
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
      */
     public function edit()
     {
-        throw new Exceptions\BadMethodCallException(sprintf('Unknown method "%s::%s"', get_called_class(), __FUNCTION__));
+        throw new Exceptions\BadMethodCallException('Unknown method ' . __METHOD__);
     }
 
     /**

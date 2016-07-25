@@ -13,7 +13,7 @@ trait ConfigAwareTrait
     private static $__config__;
 
     /**
-     * Get a reference to the global configuration object. The object returned will be of type <tt>ConfigInterface</tt>
+     * Get a reference to the configuration object. The object returned will be of type <tt>ConfigInterface</tt>
      *
      * @return  ConfigInterface
      */
@@ -23,7 +23,7 @@ trait ConfigAwareTrait
     }
 
     /**
-     * Set a reference to the global configuration object
+     * Set a reference to the configuration object
      *
      * @param   array|string|ConfigInterface $config
      * @return  $this

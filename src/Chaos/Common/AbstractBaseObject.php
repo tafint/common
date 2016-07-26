@@ -19,7 +19,7 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     {
         $message = 'JSON decoding failed: ';
 
-        if (!CHAOS_USE_EXTERNAL_JSON && function_exists('json_decode'))
+        if (CHAOS_USE_INTERNAL_JSON && function_exists('json_decode'))
         {
             $value = @call_user_func_array('json_decode', func_get_args());
 
@@ -55,7 +55,7 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     {
         $message = 'JSON encoding failed: ';
 
-        if (!CHAOS_USE_EXTERNAL_JSON && function_exists('json_encode'))
+        if (CHAOS_USE_INTERNAL_JSON && function_exists('json_encode'))
         {
             $value = @call_user_func_array('json_encode', array_merge([$this], func_get_args()));
 

@@ -4,7 +4,7 @@
 define('CHAOS_MAX_INPUT', 10);
 define('CHAOS_MAX_QUERY', 10);
 define('CHAOS_MAX_RECURSION_DEPTH', 14);
-define('CHAOS_USE_EXTERNAL_JSON', false);
+define('CHAOS_USE_INTERNAL_JSON', true);
 define('CHAOS_ANNOTATION_IGNORE', '[Ignore]');
 define('CHAOS_ANNOTATION_IGNORE_TYPE_JUGGLING', '[IgnoreTypeJuggling]');
 define('CHAOS_ANNOTATION_IGNORE_RULES', '[IgnoreRules]');

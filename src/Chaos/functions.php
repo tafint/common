@@ -3,6 +3,10 @@
 if (!function_exists('array_unset'))
 {
     /**
+     * <code>
+     * array_unset($array, 'baz.foo.boo');
+     * </code>
+     *
      * @param   array $array
      * @param   string $path
      * @return  array
@@ -37,6 +41,10 @@ if (!function_exists('array_unset'))
 if (!function_exists('is_defined'))
 {
     /**
+     * <code>
+     * is_defined('UUID_TYPE_DEFAULT', 0);
+     * </code>
+     *
      * @param   string $var
      * @return  boolean
      */

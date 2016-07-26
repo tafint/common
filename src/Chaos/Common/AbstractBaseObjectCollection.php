@@ -9,7 +9,7 @@
 abstract class AbstractBaseObjectCollection extends AbstractBaseObject
     implements \Countable, \IteratorAggregate, \ArrayAccess, IBaseObjectCollection
 {
-    /** @var array An array containing the items of this collection */
+    /** @var array An array containing the entries of this collection */
     private $items;
 
     /**
@@ -232,7 +232,7 @@ abstract class AbstractBaseObjectCollection extends AbstractBaseObject
     /** {@inheritdoc} */
     public function remove($offset)
     {
-        if ($this->offsetExists($offset))
+        if ($this->containsKey($offset))
         {
             $removed = $this->items[$offset];
             unset($this->items[$offset]);

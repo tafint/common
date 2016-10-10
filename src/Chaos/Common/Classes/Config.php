@@ -56,12 +56,11 @@ class Config extends \Noodlehaus\Config
                     ]
                 ],
             ],
-            'cookie' => [
+            'session' => [
+                'expires' => 120,
                 'path' => '/',
                 'domain' => null,
-                'expires' => 120,
-                'secure' => false,
-                'http_only' => true
+                'secure' => false
             ],
             'multitenant' => [
                 'enabled' => false,

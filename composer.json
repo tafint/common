@@ -1,7 +1,7 @@
 {
   "name": "chaos/common",
-  "type": "library",
   "description": "The Chaos Library",
+  "type": "library",
   "keywords": ["ntd1712", "chaos"],
   "homepage": "http://taingheso.com",
   "license": "ntd1712",
@@ -10,18 +10,19 @@
   ],
   "require": {
     "php": ">=5.4",
+    "ramsey/uuid": "~3.5",
     "symfony/polyfill-php55": "~1.2",
     "hassankhan/config": "~0.10",
     "league/container": "~2.2",
-    "doctrine/orm": "2.5.2",
-    "zendframework/zend-servicemanager": "2.5.1",
-    "zendframework/zend-db": "2.5.1",
-    "zendframework/zend-http": "2.5.1",
-    "zendframework/zend-json": "2.5.1",
-    "zendframework/zend-filter": "2.5.1",
-    "zendframework/zend-validator": "2.5.1",
-    "zendframework/zend-i18n": "2.5.1",
-    "zendframework/zend-mail": "2.5.1"
+    "doctrine/orm": "~2.5",
+    "zendframework/zend-servicemanager": "~2.5",
+    "zendframework/zend-db": "~2.5",
+    "zendframework/zend-http": "~2.5",
+    "zendframework/zend-json": "~2.5",
+    "zendframework/zend-filter": "~2.5",
+    "zendframework/zend-validator": "~2.5",
+    "zendframework/zend-i18n": "~2.5",
+    "zendframework/zend-mail": "~2.5"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.8",
@@ -37,9 +38,9 @@
       "Chaos\\": "src/Chaos/"
     }
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "archive": {
     "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "build.xml", "build.properties", "composer.phar"]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  }
 }

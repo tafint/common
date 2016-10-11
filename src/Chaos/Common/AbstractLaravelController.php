@@ -35,7 +35,7 @@ abstract class AbstractLaravelController extends Controller
         }
     }
 
-    /** {@inheritdoc} @return array|mixed */
+    /** {@inheritdoc} @override @return array|mixed */
     protected function getRequest($key = null, $default = null, $deep = false)
     {
         $request = $this->getRouter()->getCurrentRequest();

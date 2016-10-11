@@ -1,7 +1,6 @@
 <?php
 
 // common: service, repository & entity
-define('CHAOS_MAX_INPUT', 10);
 define('CHAOS_MAX_QUERY', 10);
 define('CHAOS_MAX_RECURSION_DEPTH', 14);
 define('CHAOS_USE_INTERNAL_JSON', true);

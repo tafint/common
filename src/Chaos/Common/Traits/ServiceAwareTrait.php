@@ -33,7 +33,7 @@ trait ServiceAwareTrait
             $serviceName = $name;
         }
 
-        if ($cache && isset(self::$__services__[$serviceName]))
+        if (isset(self::$__services__[$serviceName]) && $cache)
         {
             return self::$__services__[$serviceName];
         }

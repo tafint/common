@@ -14,7 +14,7 @@ class Config extends \Noodlehaus\Config
             : $this->data = array_replace_recursive($this->getDefaults(), $paths);
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc} @override */
     public function all(array $excludes = [])
     {
         if (!empty($excludes))
@@ -28,7 +28,7 @@ class Config extends \Noodlehaus\Config
         return $this->data;
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc} @override */
     protected function getDefaults()
     {
         return [

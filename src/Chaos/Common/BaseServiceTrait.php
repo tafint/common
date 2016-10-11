@@ -253,7 +253,7 @@ trait BaseServiceTrait
                     isset($isChar) && $isChar
                         ? $predicateSet->equalTo($k, $equalValue) : $predicateSet->like($k, $likeValue);
 
-                    if (CHAOS_MAX_INPUT <= ++$count)
+                    if (CHAOS_MAX_QUERY <= ++$count)
                     {
                         break;
                     }
@@ -297,7 +297,7 @@ trait BaseServiceTrait
                     Enums\PredicateType::NULLS_FIRST : Enums\PredicateType::NULLS_LAST);
             }
 
-            if (CHAOS_MAX_INPUT <= ++$count)
+            if (CHAOS_MAX_QUERY <= ++$count)
             {
                 break;
             }

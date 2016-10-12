@@ -2,7 +2,7 @@
 
 /**
  * Class ConversionException
- * @see Doctrine\DBAL\Types\ConversionException
+ * @see \Doctrine\DBAL\Types\ConversionException
  */
 class ConversionException extends \Exception implements IException
 {

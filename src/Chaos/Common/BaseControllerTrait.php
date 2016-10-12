@@ -174,7 +174,7 @@ trait BaseControllerTrait
      *
      * @param   array $binds A bind variable array
      * @param   array $keys The request keys; defaults to ['page', 'length']
-     * @return  array
+     * @return  bool|array
      */
     protected function getPagerParams(array $binds = [], array $keys = ['page', 'length'])
     {

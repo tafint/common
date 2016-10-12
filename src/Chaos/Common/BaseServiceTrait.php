@@ -42,6 +42,8 @@ trait BaseServiceTrait
                 if (isset($v['nesting']) &&
                    (Enums\PredicateType::NEST === $v['nesting'] || Enums\PredicateType::UNNEST === $v['nesting']))
                 {
+                    /* @see \Zend\Db\Sql\Predicate\Predicate::nest
+                     * @see \Zend\Db\Sql\Predicate\Predicate::unnest */
                     $predicate = $predicate->{$v['nesting']}();
                 }
 
@@ -128,33 +130,36 @@ trait BaseServiceTrait
                         break;
                     case Enums\PredicateType::EXPR:
                     case Enums\PredicateType::EXPRESSION:
-                        if (empty($v['expression']) || !isset($v['parameters']))
+                        if (empty($v['expression']))
                         {
                             continue;
                         }
 
-                        if (!is_array($v['parameters']))
+                        if (isset($v['parameters']))
                         {
-                            $v['parameters'] = [$v['parameters']];
+                            if (!is_array($v['parameters']))
+                            {
+                                $v['parameters'] = [$v['parameters']];
+                            }
+
+                            foreach ($v['parameters'] as $key => &$value)
+                            {
+                                if (!is_scalar($value))
+                                {
+                                    unset($v['parameters'][$key]);
+                                }
+                                elseif (!isset($fields[$value]))
+                                {
+                                    $value = "'" . str_replace('%', '%%', $this->filter($value)) . "'";
+                                }
+                            }
+
+                            unset($value);
+                            $v['parameters'] = array_values($v['parameters']);
                         }
 
-                        foreach ($v['parameters'] as $key => &$value)
-                        {
-                            if (!is_scalar($value))
-                            {
-                                unset($v['parameters'][$key]);
-                            }
-                            elseif (!isset($fields[$value]))
-                            {
-                                $value = "'" . str_replace('%', '%%', $this->filter($value)) . "'";
-                            }
-                        }
-
-                        unset($value);
-                        $v['expression'] = str_replace(['&lt;', '&gt;'], ['<', '>'],
-                            $this->filter($v['expression']));
-
-                        $predicate->expression($v['expression'], array_values($v['parameters']));
+                        $v['expression'] = str_replace(['&lt;', '&gt;'], ['<', '>'], $this->filter($v['expression']));
+                        $predicate->expression($v['expression'], @$v['parameters']);
                         break;
                     case Enums\PredicateType::IN:
                     case Enums\PredicateType::NIN:
@@ -310,7 +315,7 @@ trait BaseServiceTrait
      * Prepare pager parameters
      *
      * @param   array $binds A bind variable array
-     * @return  array
+     * @return  bool|array
      */
     public function preparePagerParams(array $binds = [])
     {

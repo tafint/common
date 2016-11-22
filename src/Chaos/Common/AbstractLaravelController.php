@@ -42,8 +42,8 @@ abstract class AbstractLaravelController extends Controller
 
         return isset($key) ? $request->get($key, $default, $deep) : (
         false === $default ? $request->all() : $request->all() + [
-            'ModifiedAt' => 'now',
-            'ModifiedBy' => \Session::get('loggedName'),
+            'EditedAt' => 'now',
+            'EditedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
             'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);

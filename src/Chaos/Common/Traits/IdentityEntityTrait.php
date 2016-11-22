@@ -16,6 +16,11 @@ trait IdentityEntityTrait
      */
     protected $Id;
     /**
+     * @Doctrine\ORM\Mapping\Column(name="uuid", type="guid", nullable=true)
+     * [IgnoreRules]
+     */
+    protected $Uuid;
+    /**
      * @Doctrine\ORM\Mapping\Column(name="application_key", type="string", nullable=true)
      * [IgnoreRules]
      */
@@ -44,6 +49,32 @@ trait IdentityEntityTrait
     public function setId($Id)
     {
         $this->Id = $Id;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuidDataType()
+    {
+        return Type::UUID_TYPE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->Uuid;
+    }
+
+    /**
+     * @param string $Uuid
+     * @return $this
+     */
+    public function setUuid($Uuid)
+    {
+        $this->Uuid = $Uuid;
         return $this;
     }
 

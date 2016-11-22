@@ -106,14 +106,14 @@ abstract class AbstractBaseService implements IBaseService
         /** @var IBaseEntity $entity */
         if ($isNew)
         {
-            if (isset($post['ModifiedAt']))
+            if (isset($post['EditedAt']))
             {
-                $post['AddedAt'] = $post['ModifiedAt'];
+                $post['AddedAt'] = $post['EditedAt'];
             }
 
-            if (isset($post['ModifiedBy']))
+            if (isset($post['EditedBy']))
             {
-                $post['AddedBy'] = $post['ModifiedBy'];
+                $post['AddedBy'] = $post['EditedBy'];
             }
 
             $entity = $this->getRepository()->entity;

@@ -19,15 +19,15 @@ trait AuditEntityTrait
      */
     private $AddedBy;
     /**
-     * @Doctrine\ORM\Mapping\Column(name="modified_at", type="datetime", nullable=true)
+     * @Doctrine\ORM\Mapping\Column(name="edited_at", type="datetime", nullable=true)
      * [IgnoreRules]
      */
-    private $ModifiedAt;
+    private $EditedAt;
     /**
-     * @Doctrine\ORM\Mapping\Column(name="modified_by", type="string", nullable=true)
+     * @Doctrine\ORM\Mapping\Column(name="edited_by", type="string", nullable=true)
      * [IgnoreRules]
      */
-    private $ModifiedBy;
+    private $EditedBy;
     /**
      * @Doctrine\ORM\Mapping\Column(name="is_deleted", type="boolean", nullable=true)
      * [IgnoreRules]
@@ -95,7 +95,7 @@ trait AuditEntityTrait
     /**
      * @return string
      */
-    public function getModifiedAtDataType()
+    public function getEditedAtDataType()
     {
         return Type::DATETIME_TYPE;
     }
@@ -103,25 +103,25 @@ trait AuditEntityTrait
     /**
      * @return \DateTime
      */
-    public function getModifiedAt()
+    public function getEditedAt()
     {
-        return $this->ModifiedAt;
+        return $this->EditedAt;
     }
 
     /**
-     * @param \DateTime $ModifiedAt
+     * @param \DateTime $EditedAt
      * @return $this
      */
-    public function setModifiedAt($ModifiedAt)
+    public function setEditedAt($EditedAt)
     {
-        $this->ModifiedAt = $ModifiedAt;
+        $this->EditedAt = $EditedAt;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getModifiedByDataType()
+    public function getEditedByDataType()
     {
         return Type::STRING_TYPE;
     }
@@ -129,18 +129,18 @@ trait AuditEntityTrait
     /**
      * @return string
      */
-    public function getModifiedBy()
+    public function getEditedBy()
     {
-        return $this->ModifiedBy;
+        return $this->EditedBy;
     }
 
     /**
-     * @param string $ModifiedBy
+     * @param string $EditedBy
      * @return $this
      */
-    public function setModifiedBy($ModifiedBy)
+    public function setEditedBy($EditedBy)
     {
-        $this->ModifiedBy = $ModifiedBy;
+        $this->EditedBy = $EditedBy;
         return $this;
     }
 

@@ -37,10 +37,10 @@ trait BaseControllerTrait
      *
      * Support parameters:
      * ?filter=[
-     *  {"predicate":"between|notBetween","identifier":"ModifiedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"AND|OR","nesting":"nest|unnest"},
+     *  {"predicate":"between|notBetween","identifier":"EditedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
      *   "left":"Name","right":"ntd1712","leftType":"identifier","rightType":"value","combine":"AND|OR","nesting":"nest|unnest"},
-     *  {"predicate":"expression","expression":"CONCAT(?0,?1) IS NOT NULL","parameters":["AddedAt","ModifiedAt"],"combine":"AND|OR","nesting":"nest|unnest"}
+     *  {"predicate":"expression","expression":"CONCAT(?0,?1) IS NOT NULL","parameters":["AddedAt","EditedAt"],"combine":"AND|OR","nesting":"nest|unnest"}
      *  {"predicate":"in|notIn","identifier":"Name","valueSet":["ntd1712","dzung",3],"combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"isNull|isNotNull","identifier":"Name","combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"like|notLike","identifier":"Name","like|notLike":"ntd1712","combine":"AND|OR","nesting":"nest|unnest"}

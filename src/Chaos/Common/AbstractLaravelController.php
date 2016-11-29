@@ -27,9 +27,9 @@ abstract class AbstractLaravelController extends Controller
 
         /** @var \Doctrine\ORM\Configuration $configuration */
         $configuration = $entityManager->getConfiguration();
-        $configuration->setDefaultQueryHint('config', $this->getConfig());
+        $configuration->setDefaultQueryHint('config', $config = $this->getConfig());
 
-        foreach ($this->getConfig()->get('orm.walkers') as $k => $v)
+        foreach ($config->get('orm.walkers') as $k => $v)
         {
             $configuration->setDefaultQueryHint($k, $v);
         }

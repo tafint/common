@@ -13,7 +13,7 @@ class CustomOutputWalker extends SqlWalker
     {
         $sql = parent::walkWhereClause($whereClause);
 
-        if ($this->getQuery()->getHint('config')->get('multitenant.enabled'))
+        if (null !== ($config = $this->getQuery()->getHint('config')) && $config->get('multitenant.enabled'))
         {
             $fromClause = $this->getQuery()->getAST()->fromClause;
             $from = $fromClause->identificationVariableDeclarations;
@@ -22,7 +22,7 @@ class CustomOutputWalker extends SqlWalker
             {   /** @var \Doctrine\ORM\Mapping\ClassMetadata $metadata */
                 $metadata = $this->getQueryComponent(
                     $from[0]->rangeVariableDeclaration->aliasIdentificationVariable)['metadata'];
-                $keymap = $this->getQuery()->getHint('config')->get('multitenant.keymap');
+                $keymap = $config->get('multitenant.keymap');
 
                 if (isset($metadata->fieldMappings[$keymap]))
                 {
@@ -31,7 +31,7 @@ class CustomOutputWalker extends SqlWalker
                     return ($sql ? $sql . ' AND ' : ' WHERE ') . strtr(":table.:column = ':value'", [
                         ':table' => end($parts),
                         ':column' => $metadata->fieldMappings[$keymap]['columnName'],
-                        ':value' => $this->getQuery()->getHint('config')->get('app.key')
+                        ':value' => $config->get('app.key')
                     ]);
                 }
             }

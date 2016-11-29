@@ -1,6 +1,23 @@
-node_modules
-vendor
+*~
+*.bak
+*.log
+*.swp
+*.tmp
+node_modules/
+vendor/
+
+####################
+# Editor #
+####################
+.idea/
+nbproject/
+.buildpath
+.project
+.settings/
+
+####################
+# OS #
+####################
+._*
 .DS_Store
-.idea
-.settings
-nbproject
+Thumbs.db

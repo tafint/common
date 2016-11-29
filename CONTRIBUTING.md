@@ -6,7 +6,9 @@
 2. Create a new branch for each feature or improvement
 3. Send a pull request from each feature branch
 
-It is very important to separate new features or improvements into separate feature branches, and to send a pull request for each branch. This allows me to review and pull in new features or improvements individually.
+It is very important to separate new features
+or improvements into separate feature branches, and to send a pull request for each branch.
+This allows me to review and pull in new features or improvements individually.
 
 ## Style Guide
 
@@ -14,6 +16,7 @@ All pull requests must adhere to the [PSR-2 standard](https://github.com/php-fig
 
 ## Unit Testing
 
-All pull requests must be accompanied by passing unit tests and complete code coverage. The CHAOS library uses phpunit for testing.
+All pull requests must be accompanied by passing unit tests and complete code coverage.
+The CHAOS library uses phpunit for testing.
 
 [Learn about PHPUnit](https://github.com/sebastianbergmann/phpunit/)

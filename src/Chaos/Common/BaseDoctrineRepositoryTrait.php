@@ -292,9 +292,9 @@ trait BaseDoctrineRepositoryTrait
                             $join['indexBy'] = null;
                         }
 
-                        /* @see Doctrine\ORM\QueryBuilder::join
-                         * @see Doctrine\ORM\QueryBuilder::innerJoin
-                         * @see Doctrine\ORM\QueryBuilder::leftJoin */
+                        /* @see \Doctrine\ORM\QueryBuilder::join
+                         * @see \Doctrine\ORM\QueryBuilder::innerJoin
+                         * @see \Doctrine\ORM\QueryBuilder::leftJoin */
                         call_user_func([$queryBuilder, $type],
                             $join[$type], $join['alias'], $join['conditionType'], $join['condition'], $join['indexBy']);
                     }
@@ -364,8 +364,8 @@ trait BaseDoctrineRepositoryTrait
                             $v = $format;
                         }
 
-                        /* @see Doctrine\ORM\QueryBuilder::where
-                         * @see Doctrine\ORM\QueryBuilder::having */
+                        /* @see \Doctrine\ORM\QueryBuilder::where
+                         * @see \Doctrine\ORM\QueryBuilder::having */
                         $queryBuilder->$k($v);
                     }
                     break;
@@ -543,24 +543,24 @@ trait BaseDoctrineRepositoryTrait
                     break;
                 case 'In':
                 case 'NotIn':
-                    /* @see Doctrine\ORM\Query\Expr::in
-                     * @see Doctrine\ORM\Query\Expr::notIn
+                    /* @see \Doctrine\ORM\Query\Expr::in
+                     * @see \Doctrine\ORM\Query\Expr::notIn
                      * @var \Zend\Db\Sql\Predicate\In $predicate */
                     $expr = $queryBuilder->expr()
                         ->{lcfirst($type)}($predicate->getIdentifier(), $predicate->getValueSet());
                     break;
                 case 'IsNotNull':
                 case 'IsNull':
-                    /* @see Doctrine\ORM\Query\Expr::isNull
-                     * @see Doctrine\ORM\Query\Expr::isNotNull
+                    /* @see \Doctrine\ORM\Query\Expr::isNull
+                     * @see \Doctrine\ORM\Query\Expr::isNotNull
                      * @var \Zend\Db\Sql\Predicate\IsNull $predicate */
                     $expr = $queryBuilder->expr()
                         ->{lcfirst($type)}($predicate->getIdentifier());
                     break;
                 case 'Like':
                 case 'NotLike':
-                    /* @see Doctrine\ORM\Query\Expr::like
-                     * @see Doctrine\ORM\Query\Expr::notLike
+                    /* @see \Doctrine\ORM\Query\Expr::like
+                     * @see \Doctrine\ORM\Query\Expr::notLike
                      * @var \Zend\Db\Sql\Predicate\Like $predicate */
                     $expr = $queryBuilder->expr()
                         ->{lcfirst($type)}($predicate->getIdentifier(), $predicate->getLike());
@@ -601,10 +601,10 @@ trait BaseDoctrineRepositoryTrait
                     $expr = new Comparison($left, $predicate->getOperator(), $right);
             }
 
-            /* @see Doctrine\ORM\QueryBuilder::andWhere
-             * @see Doctrine\ORM\QueryBuilder::orWhere
-             * @see Doctrine\ORM\QueryBuilder::andHaving
-             * @see Doctrine\ORM\QueryBuilder::orHaving */
+            /* @see \Doctrine\ORM\QueryBuilder::andWhere
+             * @see \Doctrine\ORM\QueryBuilder::orWhere
+             * @see \Doctrine\ORM\QueryBuilder::andHaving
+             * @see \Doctrine\ORM\QueryBuilder::orHaving */
             $queryBuilder->{strtolower($value[0]) . 'Where'}($expr);
         }
 

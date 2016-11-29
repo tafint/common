@@ -9,9 +9,16 @@ class Config extends \Noodlehaus\Config
     /** {@inheritdoc} */
     public function __construct($paths = [])
     {
-        !is_array($paths) || !is_string(key($paths))
-            ? parent::__construct($paths)
-            : $this->data = array_replace_recursive($this->getDefaults(), $paths);
+        if (empty($paths))
+        {
+            $this->data = $this->getDefaults();
+        }
+        else
+        {
+            !is_array($paths) || !is_string(key($paths))
+                ? parent::__construct($paths)
+                : $this->data = array_replace_recursive($this->getDefaults(), $paths);
+        }
     }
 
     /** {@inheritdoc} @override */

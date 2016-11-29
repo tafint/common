@@ -24,9 +24,13 @@ trait ServiceAwareTrait
      */
     public function getService($name = null, $cache = true)
     {
-        if (empty($name) || false === strpos($name, '\\'))
+        if (empty($name))
         {
-            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', $name ?: get_called_class()) . 'Service';
+            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', get_called_class()) . 'Service';
+        }
+        elseif (false === strpos($name, '\\'))
+        {
+            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', $name) . 'Service';
         }
         else
         {

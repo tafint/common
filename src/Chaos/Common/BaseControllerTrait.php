@@ -35,7 +35,7 @@ trait BaseControllerTrait
      *  ->and
      *  ->like('Name', '%demo%');
      *
-     * Support parameters:
+     * Allows parameters:
      * ?filter=[
      *  {"predicate":"between|notBetween","identifier":"EditedAt","minValue":"9/29/2014","maxValue":"10/29/2014","combine":"AND|OR","nesting":"nest|unnest"},
      *  {"predicate":"equalTo|notEqualTo|lessThan|greaterThan|lessThanOrEqualTo|greaterThanOrEqualTo",
@@ -48,7 +48,7 @@ trait BaseControllerTrait
      * ]
      * &filter=ntd1712
      *
-     * Support declarations: $binds = [
+     * Allows declarations: $binds = [
      *  'where' => 'Id = 1 OR Name = "ntd1712"',
      *  'where' => ['Id' => 1, 'Name' => 'ntd1712'] // aka. 'Id = 1 AND Name = "ntd1712"'
      *  'where' => ['Id' => 1, 'Name = "ntd1712"']  // aka. 'Id = 1 AND Name = "ntd1712"'
@@ -94,14 +94,14 @@ trait BaseControllerTrait
     /**
      * Get sort order parameters
      *
-     * Support parameters:
+     * Allows parameters:
      * ?sort=[
      *  {"property":"Id","direction":"desc","nulls":"first"},
      *  {"property":"Name","direction":"asc","nulls":"last"}
      * ]
      * &sort=name&direction=desc&nulls=first
      *
-     * Support declarations: $binds = [
+     * Allows declarations: $binds = [
      *  'order' => 'Id DESC, Name',
      *  'order' => 'Id DESC NULLS FIRST, Name ASC NULLS LAST',
      *  'order' => ['Id DESC NULLS FIRST', 'Name ASC NULLS LAST'],
@@ -162,11 +162,11 @@ trait BaseControllerTrait
     /**
      * Get pager parameters
      *
-     * Support parameters:
+     * Allows parameters:
      *  ?page=1&length=10
      *  ?start=0&length=10
      *
-     * Support declarations: $binds = [
+     * Allows declarations: $binds = [
      *  'CurrentPageStart' => 0,
      *  'CurrentPageNumber' => 1,
      *  'ItemCountPerPage' => 10

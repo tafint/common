@@ -1,9 +1,9 @@
 <?php namespace Chaos\Doctrine\Types;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\ConversionException;
-use Doctrine\DBAL\Types\Type;
-use Chaos\Common\Types\Type as DataType;
+use Doctrine\DBAL\Platforms\AbstractPlatform,
+    Doctrine\DBAL\Types\ConversionException,
+    Doctrine\DBAL\Types\Type,
+    Chaos\Common\Types\Type as DataType;
 
 /**
  * Class TinyIntType

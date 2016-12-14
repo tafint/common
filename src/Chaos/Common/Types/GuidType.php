@@ -4,6 +4,6 @@
  * Class GuidType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\GuidType
+ * @see \Doctrine\DBAL\Types\GuidType
  */
 class GuidType extends StringType {}

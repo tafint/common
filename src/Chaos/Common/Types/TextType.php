@@ -4,7 +4,7 @@
  * Class TextType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\TextType
+ * @see \Doctrine\DBAL\Types\TextType
  */
 class TextType extends Type
 {

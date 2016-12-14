@@ -1,7 +1,7 @@
 <?php namespace Chaos\Common\Traits;
 
-use Noodlehaus\ConfigInterface;
-use Chaos\Common\Classes\Config;
+use Noodlehaus\ConfigInterface,
+    Chaos\Common\Classes\Config;
 
 /**
  * Trait ConfigAwareTrait

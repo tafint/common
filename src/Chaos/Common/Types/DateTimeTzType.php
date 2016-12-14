@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class DateTimeTzType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\DateTimeTzType
+ * @see \Doctrine\DBAL\Types\DateTimeTzType
  */
 class DateTimeTzType extends Type
 {

@@ -1,17 +1,17 @@
 <?php namespace Chaos\Common;
 
-use Illuminate\Foundation\Bus\DispatchesCommands,
-    Illuminate\Foundation\Validation\ValidatesRequests,
-    Illuminate\Routing\Controller;
-
 /**
- * Class AbstractLaravelController
+ * Class AbstractCodeIgniterController
  * @author ntd1712
+ *
+ * @property-read object $doctrine
+ * @property-read object $input
+ * @property-read object $session
  */
-abstract class AbstractLaravelController extends Controller
+abstract class AbstractCodeIgniterController extends \CI_Controller
 {
     use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait,
-        BaseControllerTrait, DispatchesCommands, ValidatesRequests;
+        BaseControllerTrait;
 
     /**
      * Constructor
@@ -21,9 +21,12 @@ abstract class AbstractLaravelController extends Controller
      */
     public function __construct($config = [], $container = [])
     {
+        parent::__construct();
+        $this->load->library(['doctrine', 'session']);
+
         $this->setConfig($config)
              ->setContainer($container)
-             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, $entityManager = app(DOCTRINE_ENTITY_MANAGER));
+             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, $entityManager = $this->doctrine->em);
 
         /** @var \Doctrine\ORM\EntityManager $entityManager
             @var \Doctrine\ORM\Configuration $configuration */
@@ -39,12 +42,10 @@ abstract class AbstractLaravelController extends Controller
     /** {@inheritdoc} @override @return array|mixed */
     protected function getRequest($key = null, $default = null, $deep = false)
     {
-        $request = $this->getRouter()->getCurrentRequest();
-
-        return isset($key) ? $request->get($key, $default, $deep) : (
-        false === $default ? $request->all() : $request->all() + [
+        return isset($key) ? $this->input->post_get($key) : (
+        false === $default ? $this->input->post_get(null) : $this->input->post_get(null) + [
             'EditedAt' => 'now',
-            'EditedBy' => \Session::get('loggedName'),
+            'EditedBy' => $this->session->userdata('loggedName'),
             'IsDeleted' => false,
             'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);

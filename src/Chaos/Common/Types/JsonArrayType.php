@@ -1,12 +1,10 @@
 <?php namespace Chaos\Common\Types;
 
-use Chaos\Common\Exceptions\ConversionException;
-
 /**
  * Class JsonArrayType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\JsonArrayType
+ * @see \Doctrine\DBAL\Types\JsonArrayType
  */
 class JsonArrayType extends Type
 {

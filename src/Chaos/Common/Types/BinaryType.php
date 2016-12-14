@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class BinaryType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\BinaryType
+ * @see \Doctrine\DBAL\Types\BinaryType
  */
 class BinaryType extends Type
 {

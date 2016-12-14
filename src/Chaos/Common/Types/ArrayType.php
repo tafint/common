@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class ArrayType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\ArrayType
+ * @see \Doctrine\DBAL\Types\ArrayType
  */
 class ArrayType extends Type
 {

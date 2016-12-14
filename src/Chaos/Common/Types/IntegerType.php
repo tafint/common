@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class IntegerType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\IntegerType
+ * @see \Doctrine\DBAL\Types\IntegerType
  */
 class IntegerType extends Type
 {

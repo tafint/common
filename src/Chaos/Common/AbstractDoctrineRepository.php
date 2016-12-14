@@ -1,9 +1,9 @@
 <?php namespace Chaos\Common;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Common\Collections\Criteria,
+    Doctrine\ORM\AbstractQuery,
+    Doctrine\ORM\EntityRepository,
+    Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Class AbstractDoctrineRepository

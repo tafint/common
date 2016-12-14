@@ -1,7 +1,7 @@
 <?php namespace Chaos\Common\Traits;
 
-use League\Container\ContainerInterface;
-use League\Container\Container;
+use League\Container\ContainerInterface,
+    League\Container\Container;
 
 /**
  * Trait ContainerAwareTrait

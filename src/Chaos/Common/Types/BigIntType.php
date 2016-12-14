@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class BigIntType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\BigIntType
+ * @see \Doctrine\DBAL\Types\BigIntType
  */
 class BigIntType extends Type
 {

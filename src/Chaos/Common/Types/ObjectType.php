@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class ObjectType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\ObjectType
+ * @see \Doctrine\DBAL\Types\ObjectType
  */
 class ObjectType extends Type
 {

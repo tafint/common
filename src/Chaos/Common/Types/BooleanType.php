@@ -4,7 +4,7 @@
  * Class BooleanType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\BooleanType
+ * @see \Doctrine\DBAL\Types\BooleanType
  */
 class BooleanType extends Type
 {

@@ -1,12 +1,12 @@
 <?php namespace Chaos\Common;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Query\Expr\Comparison;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Predicate\PredicateInterface;
-use Chaos\Common\Enums\JoinType;
+use Doctrine\Common\Collections\Criteria,
+    Doctrine\ORM\Query\Expr\Comparison,
+    Doctrine\ORM\Query\Expr\Join,
+    Doctrine\ORM\QueryBuilder,
+    Zend\Db\Sql\Select,
+    Zend\Db\Sql\Predicate\PredicateInterface,
+    Chaos\Common\Enums\JoinType;
 
 /**
  * Class BaseDoctrineRepositoryTrait

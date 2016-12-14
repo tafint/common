@@ -1,12 +1,10 @@
 <?php namespace Chaos\Common\Types;
 
-use Chaos\Common\Exceptions\ConversionException;
-
 /**
  * Class SimpleArrayType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\SimpleArrayType
+ * @see \Doctrine\DBAL\Types\SimpleArrayType
  */
 class SimpleArrayType extends Type
 {

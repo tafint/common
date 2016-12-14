@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class Type
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\Type
+ * @see \Doctrine\DBAL\Types\Type
  */
 abstract class Type
 {

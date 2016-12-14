@@ -6,7 +6,7 @@ use Chaos\Common\Exceptions\ConversionException;
  * Class FloatType
  * @author ntd1712
  *
- * @see Doctrine\DBAL\Types\FloatType
+ * @see \Doctrine\DBAL\Types\FloatType
  */
 class FloatType extends Type
 {

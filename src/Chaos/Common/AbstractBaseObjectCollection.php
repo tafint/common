@@ -4,7 +4,7 @@
  * Class AbstractBaseObjectCollection
  * @author ntd1712
  *
- * @see Doctrine\Common\Collections\ArrayCollection
+ * @see \Doctrine\Common\Collections\ArrayCollection
  */
 abstract class AbstractBaseObjectCollection extends AbstractBaseObject
     implements \Countable, \IteratorAggregate, \ArrayAccess, IBaseObjectCollection

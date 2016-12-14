@@ -2,7 +2,7 @@
   "name": "chaos/common",
   "description": "The Chaos Library",
   "type": "library",
-  "keywords": ["ntd1712", "chaos"],
+  "keywords": ["ntd1712", "chaos", "common"],
   "homepage": "http://taingheso.com",
   "license": "ntd1712",
   "authors": [

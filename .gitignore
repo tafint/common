@@ -3,17 +3,25 @@
 *.log
 *.swp
 *.tmp
-node_modules/
+bower_components
+node_modules
 vendor/
+.tmp/
+.sass-cache/
 
 ####################
 # Editor #
 ####################
 .idea/
-nbproject/
 .buildpath
 .project
 .settings/
+nbproject/
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
 
 ####################
 # OS #

@@ -63,7 +63,12 @@ class Config extends \Noodlehaus\Config
                     ]
                 ],
             ],
+            'multitenant' => [
+                'enabled' => false,
+                'keymap' => 'ApplicationKey'
+            ],
             'session' => [
+                'cookie' => '',
                 'expires' => 120,
                 'path' => '/',
                 'domain' => null,

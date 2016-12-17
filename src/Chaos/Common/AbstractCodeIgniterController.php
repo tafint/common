@@ -9,7 +9,7 @@ use Chaos\Doctrine\EntityManagerFactory;
  * @property-read object $input
  * @property-read object $session
  */
-abstract class AbstractCodeIgniterController extends \CI_Controller
+abstract class AbstractCodeIgniterController extends \REST_Controller
 {
     use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait,
         BaseControllerTrait;

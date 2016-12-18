@@ -9,22 +9,21 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     /**
      * The default "index" action, you can override this in derived class
      *
-     * @return  array
      * @example GET /lookup?filter=&sort=&start=&length=
      */
-    public function index()
+    public function index_get()
     {
-        return $this->getService()->readAll($this->getFilterParams(), $this->getPagerParams());
+        $data = $this->getService()->readAll($this->getFilterParams(), $this->getPagerParams());
+        $this->response($data);
     }
 
     /**
      * The default "create" action, you can override this in derived class
      *
-     * @return  array
      * @throws  Exceptions\BadMethodCallException
      * @example GET /lookup/create
      */
-    public function create()
+    public function create_get()
     {
         throw new Exceptions\BadMethodCallException('Unknown method ' . __METHOD__);
     }
@@ -32,34 +31,33 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     /**
      * The default "store" action, you can override this in derived class
      *
-     * @return  array
      * @example POST /lookup
      */
-    public function store()
+    public function store_post()
     {
-        return $this->getService()->create($this->getRequest());
+        $data = $this->getService()->create($this->getRequest());
+        $this->response($data);
     }
 
     /**
      * The default "show" action, you can override this in derived class
      *
      * @param   mixed $id
-     * @return  array
      * @example GET /lookup/{lookup}
      */
-    public function show($id)
+    public function show_get($id)
     {
-        return $this->getService()->read($id);
+        $data = $this->getService()->read($id);
+        $this->response($data);
     }
 
     /**
      * The default "edit" action, you can override this in derived class
      *
-     * @return  array
      * @throws  Exceptions\BadMethodCallException
      * @example GET /lookup/{lookup}/edit
      */
-    public function edit()
+    public function edit_get()
     {
         throw new Exceptions\BadMethodCallException('Unknown method ' . __METHOD__);
     }
@@ -68,23 +66,23 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
      * The default "update" action, you can override this in derived class
      *
      * @param   mixed $id
-     * @return  array
      * @example PUT /lookup/{lookup}
      */
-    public function update($id)
+    public function update_post($id)
     {
-        return $this->getService()->update($this->getRequest(), $id);
+        $data = $this->getService()->update($this->getRequest(), $id);
+        $this->response($data);
     }
 
     /**
      * The default "destroy" action, you can override this in derived class
      *
      * @param   mixed $id
-     * @return  array
      * @example DELETE /lookup/{lookup}
      */
-    public function destroy($id)
+    public function destroy_delete($id)
     {
-        return $this->getService()->delete($id);
+        $data = $this->getService()->delete($id);
+        $this->response($data);
     }
 }

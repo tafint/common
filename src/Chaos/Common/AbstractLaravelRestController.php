@@ -20,7 +20,6 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
     /**
      * The default "create" action, you can override this in derived class
      *
-     * @return  array
      * @throws  Exceptions\BadMethodCallException
      * @example GET /lookup/create
      */
@@ -55,7 +54,6 @@ abstract class AbstractLaravelRestController extends AbstractLaravelController
     /**
      * The default "edit" action, you can override this in derived class
      *
-     * @return  array
      * @throws  Exceptions\BadMethodCallException
      * @example GET /lookup/{lookup}/edit
      */

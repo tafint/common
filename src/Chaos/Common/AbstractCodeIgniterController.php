@@ -2,6 +2,15 @@
 
 use Chaos\Doctrine\EntityManagerFactory;
 
+if (defined('REST_Controller'))
+{
+    class Controller extends \REST_Controller {}
+}
+else
+{
+    class Controller extends \CI_Controller {}
+}
+
 /**
  * Class AbstractCodeIgniterController
  * @author ntd1712
@@ -9,7 +18,7 @@ use Chaos\Doctrine\EntityManagerFactory;
  * @property-read object $input
  * @property-read object $session
  */
-abstract class AbstractCodeIgniterController extends \REST_Controller
+abstract class AbstractCodeIgniterController extends Controller
 {
     use Traits\ConfigAwareTrait, Traits\ContainerAwareTrait, Traits\ServiceAwareTrait,
         BaseControllerTrait;

@@ -52,7 +52,7 @@ class EntityManagerFactory
         {
             case 'array':
                 return new ArrayCache;
-            case 'filesystem':
+            case 'file':
                 return new FilesystemCache($config[$config['provider']]['directory'],
                     $config[$config['provider']]['extension']);
             case 'redis':

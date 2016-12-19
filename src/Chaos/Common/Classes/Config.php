@@ -40,15 +40,18 @@ class Config extends \Noodlehaus\Config
     {
         return [
             'app' => [
-                'datetimeFormat' => 'Y-m-d H:i:s',
                 'dateFormat' => 'Y-m-d',
                 'timeFormat' => 'H:i:s',
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
                 'minSearchChars' => 4,
+                // specific
                 'charset' => 'UTF-8',
                 'defaultPassword' => '******',
-                'key' => ''
+                'fallback_locale' => 'en',
+                'locale' => 'en',
+                'key' => '',
+                'url' => ''
             ],
             'auth' => [
                 'default' => 'none', // framework, oauth2, etc.
@@ -68,15 +71,8 @@ class Config extends \Noodlehaus\Config
                 'keymap' => 'ApplicationKey'
             ],
             'session' => [
-                'cookie' => '',
-                'expires' => 120,
-                'path' => '/',
-                'domain' => null,
-                'secure' => false
-            ],
-            'multitenant' => [
-                'enabled' => false,
-                'keymap' => 'ApplicationKey'
+                'cookie' => 'chaos',
+                'domain' => null
             ],
             'orm' => [
                 'walkers' => [

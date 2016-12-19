@@ -1,8 +1,10 @@
 <?php namespace Chaos\Common;
 
-use Illuminate\Foundation\Bus\DispatchesCommands,
+use Ramsey\Uuid\Uuid,
+    Illuminate\Foundation\Bus\DispatchesCommands,
     Illuminate\Foundation\Validation\ValidatesRequests,
-    Illuminate\Routing\Controller;
+    Illuminate\Routing\Controller,
+    Chaos\Doctrine\EntityManagerFactory;
 
 /**
  * Class AbstractLaravelController
@@ -23,7 +25,8 @@ abstract class AbstractLaravelController extends Controller
     {
         $this->setConfig($config)
              ->setContainer($container)
-             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER, $entityManager = app(DOCTRINE_ENTITY_MANAGER));
+             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER,
+                $entityManager = (new EntityManagerFactory())->setConfig($this->getConfig())->getEntityManager());
 
         /** @var \Doctrine\ORM\EntityManager $entityManager
             @var \Doctrine\ORM\Configuration $configuration */
@@ -46,6 +49,7 @@ abstract class AbstractLaravelController extends Controller
             'EditedAt' => 'now',
             'EditedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
+            'Uuid' => Uuid::uuid4(),
             'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);
     }

@@ -85,7 +85,7 @@ class EntityManagerFactory
     protected function getConfiguration(CacheProvider $cache = null)
     {
         $orm = $this->getConfig()->get('orm');
-        $configuration = Setup::createConfiguration($orm['is_dev_mode'], $orm['proxy']['dir'], $cache);
+        $configuration = Setup::createConfiguration($orm['debug'], $orm['proxy_classes']['directory'], $cache);
 
         $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $orm['metadata']));
         $configuration->setCustomNumericFunctions([
@@ -108,12 +108,12 @@ class EntityManagerFactory
             $configuration->setResultCacheImpl($cache);
         }
 
-        if (isset($orm['proxy']['namespace']))
+        if (isset($orm['proxy_classes']['namespace']))
         {
-            $configuration->setProxyNamespace($orm['proxy']['namespace']);
+            $configuration->setProxyNamespace($orm['proxy_classes']['namespace']);
         }
 
-        $configuration->setAutoGenerateProxyClasses($orm['proxy']['auto_generate']);
+        $configuration->setAutoGenerateProxyClasses($orm['proxy_classes']['auto_generate']);
         $configuration->setDefaultRepositoryClassName($orm['default_repository']);
         $configuration->setSQLLogger($orm['sql_logger']);
 
@@ -149,7 +149,7 @@ class EntityManagerFactory
     {
         $eventManager = new EventManager;
 
-        if ($prefix = $this->getConfig()->get('db.dbprefix'))
+        if ($prefix = $this->getConfig()->get('db.prefix'))
         {
             $eventManager->addEventListener(Events::loadClassMetadata, new TablePrefix($prefix));
         }

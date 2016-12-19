@@ -1,6 +1,7 @@
 <?php namespace Chaos\Common;
 
-use Chaos\Doctrine\EntityManagerFactory;
+use Ramsey\Uuid\Uuid,
+    Chaos\Doctrine\EntityManagerFactory;
 
 if (defined('REST_Controller'))
 {
@@ -57,6 +58,7 @@ abstract class AbstractCodeIgniterController extends Controller
             'EditedAt' => 'now',
             'EditedBy' => $this->session->userdata('loggedName'),
             'IsDeleted' => false,
+            'Uuid' => Uuid::uuid4(),
             'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);
     }

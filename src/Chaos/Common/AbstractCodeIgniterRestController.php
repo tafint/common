@@ -3,6 +3,8 @@
 /**
  * Class AbstractCodeIgniterRestController
  * @author ntd1712
+ *
+ * @method void set_response($data = null, $http_code = null)
  */
 abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterController
 {
@@ -14,7 +16,7 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     public function index_get()
     {
         $data = $this->getService()->readAll($this->getFilterParams(), $this->getPagerParams());
-        $this->response($data);
+        $this->set_response($data);
     }
 
     /**
@@ -36,7 +38,7 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     public function store_post()
     {
         $data = $this->getService()->create($this->getRequest());
-        $this->response($data);
+        $this->set_response($data);
     }
 
     /**
@@ -48,7 +50,7 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     public function show_get($id)
     {
         $data = $this->getService()->read($id);
-        $this->response($data);
+        $this->set_response($data);
     }
 
     /**
@@ -71,7 +73,7 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     public function update_post($id)
     {
         $data = $this->getService()->update($this->getRequest(), $id);
-        $this->response($data);
+        $this->set_response($data);
     }
 
     /**
@@ -83,6 +85,6 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     public function destroy_delete($id)
     {
         $data = $this->getService()->delete($id);
-        $this->response($data);
+        $this->set_response($data);
     }
 }

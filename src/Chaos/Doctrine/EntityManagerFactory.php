@@ -13,6 +13,7 @@ use Doctrine\Common\Cache\ArrayCache,
     Doctrine\ORM\Mapping\Driver\XmlDriver,
     Doctrine\ORM\Mapping\Driver\YamlDriver,
     Doctrine\ORM\Tools\Setup,
+    Chaos\Common\Exceptions\RuntimeException,
     Chaos\Common\Traits\ConfigAwareTrait,
     Chaos\Doctrine\Extensions\TablePrefix;
 
@@ -34,11 +35,47 @@ class EntityManagerFactory
     {
         if (null === self::$entityManager)
         {
-            self::$entityManager = EntityManager::create($this->getConfig()->get('db'),
+            self::$entityManager = EntityManager::create($this->getDbParams(),
                 $this->getConfiguration($this->getCacheProvider()), $this->getEventManager());
         }
 
         return self::$entityManager;
+    }
+
+    /**
+     * @return  array
+     * @throws  RuntimeException
+     */
+    protected function getDbParams()
+    {
+        $db = $this->getConfig()->get('db');
+
+        switch ($db['driver'])
+        {
+            case 'db2':
+                $db['driver'] = 'ibm_db2';
+                break;
+            case 'mssql':
+                $db['driver'] = 'pdo_sqlsrv';
+                break;
+            case 'mysql':
+            case 'mysql2':
+                $db['driver'] = 'pdo_mysql';
+                break;
+            case 'pgsql':
+            case 'postgres':
+            case 'postgresql':
+                $db['driver'] = 'pdo_pgsql';
+                break;
+            case 'sqlite':
+            case 'sqlite3':
+                $db['driver'] = 'pdo_sqlite';
+                break;
+            default:
+                throw new RuntimeException(sprintf('Unsupported driver: %s', $db['driver']));
+        }
+
+        return $db;
     }
 
     /**
@@ -124,6 +161,7 @@ class EntityManagerFactory
      * @param   Configuration $config
      * @param   array $metadata
      * @return  \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
+     * @throws  RuntimeException
      */
     protected static function getMetadataDriver(Configuration $config, $metadata)
     {
@@ -138,7 +176,7 @@ class EntityManagerFactory
             case 'static':
                 return new StaticPHPDriver($metadata['paths']);
             default:
-                throw new \RuntimeException(sprintf('Unsupported driver: %s', $metadata['driver']));
+                throw new RuntimeException(sprintf('Unsupported driver: %s', $metadata['driver']));
         }
     }
 

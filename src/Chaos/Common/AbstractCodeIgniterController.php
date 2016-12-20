@@ -53,8 +53,25 @@ abstract class AbstractCodeIgniterController extends Controller
     /** {@inheritdoc} @override @return array|mixed */
     protected function getRequest($key = null, $default = null, $deep = false)
     {
-        return isset($key) ? $this->input->post_get($key) : (
-        false === $default ? $this->input->post_get(null) : $this->input->post_get(null) + [
+        if (defined('REST_Controller'))
+        {
+            $request = [];
+
+            foreach (['get', 'delete', 'post', 'put'] as $v)
+            {
+                if ('head' !== $v)
+                {
+                    $request += $this->{'_' . $v . '_args'};
+                }
+            }
+        }
+        else
+        {
+            $request = (array)@json_decode($this->input->raw_input_stream, true) + $this->input->post_get(null);
+        }
+
+        return isset($key) ? (@$request[$key] ?: $default) : (
+        false === $default ? $request : $request + [
             'EditedAt' => 'now',
             'EditedBy' => $this->session->userdata('loggedName'),
             'IsDeleted' => false,

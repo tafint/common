@@ -5,6 +5,7 @@
  * @author ntd1712
  *
  * @method void set_response($data = null, $http_code = null)
+ * @method mixed get($key = null, $xss_clean = null)
  */
 abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterController
 {
@@ -26,14 +27,13 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
      */
     public function store_post()
     {
-        $data = $this->getService()->create($this->post() + $this->getRequest());
+        $data = $this->getService()->create($this->getRequest());
         $this->set_response($data);
     }
 
     /**
      * The default "show" action, you can override this in derived class
      *
-     * @param   mixed $id
      * @example GET /lookup/{lookup}
      */
     public function show_get()
@@ -45,19 +45,17 @@ abstract class AbstractCodeIgniterRestController extends AbstractCodeIgniterCont
     /**
      * The default "update" action, you can override this in derived class
      *
-     * @param   mixed $id
      * @example PUT /lookup/{lookup}
      */
     public function update_put()
     {
-        $data = $this->getService()->update($this->put(), $this->get('id'));
+        $data = $this->getService()->update($this->getRequest(), $this->get('id'));
         $this->set_response($data);
     }
 
     /**
      * The default "destroy" action, you can override this in derived class
      *
-     * @param   mixed $id
      * @example DELETE /lookup/{lookup}
      */
     public function destroy_delete()

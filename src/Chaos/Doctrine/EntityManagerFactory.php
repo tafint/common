@@ -1,7 +1,7 @@
 <?php namespace Chaos\Doctrine;
 
 use Doctrine\Common\Cache\ArrayCache,
-    Doctrine\Common\Cache\CacheProvider,
+    Doctrine\Common\Cache\Cache,
     Doctrine\Common\Cache\FilesystemCache,
     Doctrine\Common\Cache\MemcacheCache,
     Doctrine\Common\Cache\RedisCache,
@@ -44,42 +44,22 @@ class EntityManagerFactory
 
     /**
      * @return  array
-     * @throws  RuntimeException
      */
     protected function getDbParams()
     {
         $db = $this->getConfig()->get('db');
+        $drivers = (new \ReflectionClass(DOCTRINE_DRIVER_MANAGER))->getStaticProperties()['driverSchemeAliases'];
 
-        switch ($db['driver'])
+        if (isset($drivers[$db['driver']]))
         {
-            case 'db2':
-                $db['driver'] = 'ibm_db2';
-                break;
-            case 'mssql':
-                $db['driver'] = 'pdo_sqlsrv';
-                break;
-            case 'mysql':
-            case 'mysql2':
-                $db['driver'] = 'pdo_mysql';
-                break;
-            case 'pgsql':
-            case 'postgres':
-            case 'postgresql':
-                $db['driver'] = 'pdo_pgsql';
-                break;
-            case 'sqlite':
-            case 'sqlite3':
-                $db['driver'] = 'pdo_sqlite';
-                break;
-            default:
-                throw new RuntimeException(sprintf('Unsupported driver: %s', $db['driver']));
+            $db['driver'] = $drivers[$db['driver']];
         }
 
         return $db;
     }
 
     /**
-     * @return  CacheProvider
+     * @return  Cache
      */
     protected function getCacheProvider()
     {
@@ -116,10 +96,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param   CacheProvider $cache
+     * @param   Cache $cache
      * @return  Configuration
      */
-    protected function getConfiguration(CacheProvider $cache = null)
+    protected function getConfiguration(Cache $cache = null)
     {
         $orm = $this->getConfig()->get('orm');
         $configuration = Setup::createConfiguration($orm['debug'], $orm['proxy_classes']['directory'], $cache);

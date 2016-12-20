@@ -27,6 +27,7 @@ define('CHAOS_REPLACE_SPACE_SEPARATOR', '#\s+#');
 define('CHAOS_READ_EVENT_ARGS', 'Chaos\Common\Events\ReadEventArgs');
 define('DOCTRINE_ARRAY_COLLECTION', 'Doctrine\Common\Collections\ArrayCollection');
 define('DOCTRINE_PERSISTENT_COLLECTION', 'Doctrine\ORM\PersistentCollection');
+define('DOCTRINE_DRIVER_MANAGER', 'Doctrine\DBAL\DriverManager');
 define('DOCTRINE_ENTITY_MANAGER', 'Doctrine\ORM\EntityManager');
 define('DOCTRINE_ENTITY_REPOSITORY', 'Doctrine\ORM\EntityRepository');
 define('DOCTRINE_PROXY', 'Doctrine\ORM\Proxy\Proxy');

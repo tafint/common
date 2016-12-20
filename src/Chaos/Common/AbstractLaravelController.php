@@ -49,7 +49,7 @@ abstract class AbstractLaravelController extends Controller
             'EditedAt' => 'now',
             'EditedBy' => \Session::get('loggedName'),
             'IsDeleted' => false,
-            'Uuid' => Uuid::uuid4(),
+            'Uuid' => Uuid::uuid4()->toString(),
             'ApplicationKey' => $this->getConfig()->get('app.key')
         ]);
     }

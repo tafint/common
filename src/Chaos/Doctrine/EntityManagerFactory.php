@@ -43,6 +43,16 @@ class EntityManagerFactory
     }
 
     /**
+     * Create an instance of the class
+     *
+     * @return  $this
+     */
+    public static function create()
+    {
+        return new static;
+    }
+
+    /**
      * @return  array
      */
     protected function getDbParams()

@@ -54,8 +54,14 @@ class Config extends \Noodlehaus\Config
                 'url' => ''
             ],
             'auth' => [
-                'default' => 'none', // framework, oauth2, etc.
+                'default' => 'jwt', // jwt, oauth2, etc.
                 'drivers' => [
+                    'jwt' => [
+                        'algorithm' => 'HS256',
+                        'secret' => 'demopass',
+                        'refresh_ttl' => 1209600, // 2 weeks, in seconds
+                        'ttl' => 7200, // 2 hours, in seconds
+                    ],
                     'oauth2' => [
                         'clientId' => 'demoapp',
                         'clientSecret' => 'demopass',
@@ -64,7 +70,7 @@ class Config extends \Noodlehaus\Config
                         'urlAccessToken' => 'http://brentertainment.com/oauth2/lockdin/token',
                         'urlResourceOwnerDetails' => 'http://brentertainment.com/oauth2/lockdin/resource',
                     ]
-                ],
+                ]
             ],
             'multitenant' => [
                 'enabled' => false,

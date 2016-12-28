@@ -20,9 +20,7 @@ if (!function_exists('array_unset'))
 
         while ($i < $count)
         {
-            $piece = $pieces[$i];
-
-            if (!array_key_exists($piece, $array))
+            if (!array_key_exists($piece = $pieces[$i], $array))
             {
                 return null;
             }
@@ -77,7 +75,12 @@ if (!function_exists('is_blank'))
 if (!function_exists('is_json'))
 {
     /**
+     * <code>
+     * false !== ($decodedValue = is_json($json, false, 512, JSON_BIGINT_AS_STRING));
+     * </code>
+     *
      * @return  boolean|mixed
+     * @see     json_decode
      */
     function is_json()
     {

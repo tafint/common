@@ -1,10 +1,6 @@
 <?php namespace Chaos\Doctrine;
 
-use Doctrine\Common\Cache\ArrayCache,
-    Doctrine\Common\Cache\Cache,
-    Doctrine\Common\Cache\FilesystemCache,
-    Doctrine\Common\Cache\MemcacheCache,
-    Doctrine\Common\Cache\RedisCache,
+use Doctrine\Common\Cache,
     Doctrine\Common\EventManager,
     Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver,
     Doctrine\ORM\Configuration,
@@ -25,11 +21,11 @@ class EntityManagerFactory
 {
     use ConfigAwareTrait;
 
-    /** @var EntityManager */
+    /** @var EntityManager|\Doctrine\ORM\EntityManagerInterface */
     protected static $entityManager;
 
     /**
-     * @return  EntityManager
+     * @return  EntityManager|\Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()
     {
@@ -69,7 +65,7 @@ class EntityManagerFactory
     }
 
     /**
-     * @return  Cache
+     * @return  Cache\Cache
      */
     protected function getCacheProvider()
     {
@@ -78,16 +74,16 @@ class EntityManagerFactory
         switch ($config['provider'])
         {
             case 'array':
-                return new ArrayCache;
+                return new Cache\ArrayCache;
             case 'file':
-                return new FilesystemCache($config[$config['provider']]['directory'],
+                return new Cache\FilesystemCache($config[$config['provider']]['directory'],
                     $config[$config['provider']]['extension']);
             case 'redis':
                 $redis = new \Redis;
                 $redis->connect($config[$config['provider']]['host'], $config[$config['provider']]['port']);
                 $redis->select($config[$config['provider']]['dbindex']);
 
-                $cache = new RedisCache;
+                $cache = new Cache\RedisCache;
                 $cache->setRedis($redis);
 
                 return $cache;
@@ -96,7 +92,7 @@ class EntityManagerFactory
                 $memcache->connect($config[$config['provider']]['host'], $config[$config['provider']]['port'],
                     $config[$config['provider']]['weight']);
 
-                $cache = new MemcacheCache;
+                $cache = new Cache\MemcacheCache;
                 $cache->setMemcache($memcache);
 
                 return $cache;
@@ -106,10 +102,10 @@ class EntityManagerFactory
     }
 
     /**
-     * @param   Cache $cache
+     * @param   Cache\Cache $cache
      * @return  Configuration
      */
-    protected function getConfiguration(Cache $cache = null)
+    protected function getConfiguration(Cache\Cache $cache = null)
     {
         $orm = $this->getConfig()->get('orm');
         $configuration = Setup::createConfiguration($orm['debug'], $orm['proxy_classes']['directory'], $cache);

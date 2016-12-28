@@ -1,6 +1,7 @@
 *~
 *.bak
 *.log
+*.orig
 *.swp
 *.tmp
 

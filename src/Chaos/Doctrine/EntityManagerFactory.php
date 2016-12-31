@@ -108,7 +108,8 @@ class EntityManagerFactory
     protected function getConfiguration(Cache\Cache $cache = null)
     {
         $orm = $this->getConfig()->get('orm');
-        $configuration = Setup::createConfiguration($orm['debug'], $orm['proxy_classes']['directory'], $cache);
+        $configuration = Setup::createConfiguration($this->getConfig()->get('app.debug'),
+            $orm['proxy_classes']['directory'], $cache);
 
         $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $orm['metadata']));
         $configuration->setCustomNumericFunctions([

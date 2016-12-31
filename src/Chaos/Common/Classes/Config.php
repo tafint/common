@@ -45,8 +45,8 @@ class Config extends \Noodlehaus\Config
                 'itemsPerPage' => 10,
                 'maxItemsPerPage' => 100,
                 'minSearchChars' => 4,
-                // specific
                 'charset' => 'UTF-8',
+                'debug' => false,
                 'defaultPassword' => '******',
                 'fallback_locale' => 'en',
                 'locale' => 'en',
@@ -54,7 +54,7 @@ class Config extends \Noodlehaus\Config
                 'url' => ''
             ],
             'auth' => [
-                'default' => 'jwt', // jwt, oauth2, etc.
+                'default' => 'jwt',
                 'drivers' => [
                     'jwt' => [
                         'algorithm' => 'HS256',
@@ -65,25 +65,63 @@ class Config extends \Noodlehaus\Config
                     'oauth2' => [
                         'clientId' => 'demoapp',
                         'clientSecret' => 'demopass',
-                        'redirectUri' => 'http://example.com/your-redirect-url',
+                        'redirectUri' => 'http://localhost',
                         'urlAuthorize' => 'http://brentertainment.com/oauth2/lockdin/authorize',
                         'urlAccessToken' => 'http://brentertainment.com/oauth2/lockdin/token',
                         'urlResourceOwnerDetails' => 'http://brentertainment.com/oauth2/lockdin/resource',
                     ]
                 ]
             ],
+            'db' => [
+                'driver' => 'pdo_mysql',
+                'user' => 'forge',
+                'password' => '',
+                'host' => 'localhost',
+                'port' => 3306,
+                'dbname' => 'forge',
+                'unix_socket' => null,
+                'charset'   => 'utf8',
+                'driverOptions' => [
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                ],
+                'prefix' => 'tbl_'
+            ],
             'multitenant' => [
                 'enabled' => false,
                 'keymap' => 'ApplicationKey'
             ],
-            'session' => [
-                'cookie' => 'chaos',
-                'domain' => null
-            ],
             'orm' => [
+                'cache' => [
+                    'provider' => 'array',
+                    'file' => [
+                        'directory' => 'storage/framework/cache',
+                        'extension' => '.doctrinecache.data'
+                    ],
+                    'redis' => [
+                        'host' => '127.0.0.1',
+                        'port' => 6379,
+                        'dbindex' => 1
+                    ]
+                ],
+                'metadata' => [
+                    'driver' => 'annotation',
+                    'paths' => 'modules/doctrine.paths.php',
+                    'simple' => false
+                ],
+                'proxy_classes' => [
+                    'auto_generate' => 0,
+                    'directory' => 'storage/framework/proxies',
+                    'namespace' => null,
+                ],
+                'default_repository' => DOCTRINE_ENTITY_REPOSITORY,
+                'sql_logger' => null,
                 'walkers' => [
                     'doctrine.customOutputWalker' => 'Chaos\Doctrine\Walkers\CustomOutputWalker'
                 ]
+            ],
+            'session' => [
+                'cookie' => 'chaos',
+                'domain' => null
             ]
         ];
     }

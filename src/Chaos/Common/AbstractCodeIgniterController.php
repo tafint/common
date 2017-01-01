@@ -27,7 +27,7 @@ abstract class AbstractCodeIgniterController extends Controller
     /**
      * Constructor
      *
-     * @param   array|string $config The path to the config file
+     * @param   array|string $config
      * @param   array|\ArrayAccess $container
      */
     public function __construct($config = [], $container = [])

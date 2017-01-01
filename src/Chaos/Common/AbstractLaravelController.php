@@ -18,7 +18,7 @@ abstract class AbstractLaravelController extends Controller
     /**
      * Constructor
      *
-     * @param   array|string $config Either be a path to the config file, or an array holding the configuration
+     * @param   array|string $config
      * @param   array|\ArrayAccess $container
      */
     public function __construct($config = [], $container = [])

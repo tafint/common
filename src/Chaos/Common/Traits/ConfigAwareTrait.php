@@ -25,7 +25,8 @@ trait ConfigAwareTrait
     /**
      * Set a reference to the configuration object
      *
-     * @param   array|string|ConfigInterface $config
+     * @param   array|string|ConfigInterface $config Either be a path to the config file,
+     *          an array holding the configuration or a ConfigInterface object
      * @return  $this
      */
     public function setConfig($config)

@@ -26,11 +26,12 @@ trait ServiceAwareTrait
     {
         if (empty($name))
         {
-            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', get_called_class()) . 'Service';
+            $serviceName = str_replace(['Controller', 'Service'], '', trim(strrchr(get_called_class(), '\\'), '\\'))
+                . 'Service';
         }
         elseif (false === strpos($name, '\\'))
         {
-            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', $name) . 'Service';
+            $serviceName = str_replace('Service', '', $name) . 'Service';
         }
         else
         {

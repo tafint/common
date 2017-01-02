@@ -19,7 +19,6 @@ define('CHAOS_MATCH_RULE', '#\[\s*(.+)\s*\]#');
 define('CHAOS_MATCH_RULE_ITEM', '#^\[(\w+)\s*(\([^\)]+\))?\]$#');
 define('CHAOS_MATCH_VAR', '#@var\s+\\\?([^\s\*\(]+)\s*(?:\(\s*\\\?([^\s\*\)]+)\s*\))?#i');
 
-define('CHAOS_REPLACE_CLASS_SUFFIX', '#.*([\w]+)(?:controller|repository|service)?$#iU');
 define('CHAOS_REPLACE_COMMA_SEPARATOR', '#\s*,\s*#');
 define('CHAOS_REPLACE_SPACE_SEPARATOR', '#\s+#');
 

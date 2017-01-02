@@ -15,7 +15,7 @@ trait RepositoryAwareTrait
     private static $__repositories__ = [];
 
     /**
-     * Get a reference to the global repository object. The object returned will be of type <tt>IBaseRepository</tt>
+     * Get a reference to the repository object. The object returned will be of type <tt>IBaseRepository</tt>
      *  $this->getService()->getRepository('User')->...
      *  $this->getService('User')->getRepository('Role')->...
      *  $this->getService('Account\Services\UserService')->getRepository('Account\Entities\Role')->...
@@ -26,9 +26,9 @@ trait RepositoryAwareTrait
      */
     public function getRepository($name = null, $cache = true)
     {
-        if (empty($name) || false === strpos($name, '\\'))
+        if (empty($name))
         {
-            $name = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', $name ?: get_called_class());
+            $name = str_replace(['Repository', 'Service'], '', trim(strrchr(get_called_class(), '\\'), '\\'));
             $repositoryName = $name . 'Repository';
         }
         else

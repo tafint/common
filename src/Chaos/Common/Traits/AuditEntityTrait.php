@@ -155,7 +155,7 @@ trait AuditEntityTrait
     /**
      * @return boolean
      */
-    public function isDeleted()
+    public function getIsDeleted()
     {
         return $this->IsDeleted;
     }

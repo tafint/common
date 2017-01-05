@@ -5,6 +5,7 @@ use League\Container\ServiceProvider\AbstractServiceProvider;
 /**
  * Class AbstractLeagueServiceProvider
  * @author ntd1712
+ * @deprecated No longer use
  */
 abstract class AbstractLeagueServiceProvider extends AbstractServiceProvider
 {

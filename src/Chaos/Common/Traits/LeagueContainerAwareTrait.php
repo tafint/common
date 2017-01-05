@@ -1,13 +1,12 @@
 <?php namespace Chaos\Common\Traits;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\Config\FileLocator,
-    Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use League\Container\Container,
+    League\Container\ContainerInterface;
 
 /**
  * Trait ContainerAwareTrait
  * @author ntd1712
+ * @deprecated No longer use
  */
 trait ContainerAwareTrait
 {
@@ -17,7 +16,7 @@ trait ContainerAwareTrait
     /**
      * Get a reference to the container object. The object returned will be of type <tt>ContainerInterface</tt>
      *
-     * @return  ContainerBuilder|ContainerInterface
+     * @return  ContainerInterface
      */
     public function getContainer()
     {
@@ -35,12 +34,11 @@ trait ContainerAwareTrait
         if (!$container instanceof ContainerInterface)
         {
             $definitions = $container;
-            $container = new ContainerBuilder;
+            $container = new Container;
 
             if (is_array($definitions) || $definitions instanceof \ArrayAccess)
             {
-                $loader = new YamlFileLoader($container, new FileLocator($definitions));
-                array_walk($definitions, [$loader, 'load']);
+                array_walk($definitions, [$container, 'addServiceProvider']);
             }
         }
 

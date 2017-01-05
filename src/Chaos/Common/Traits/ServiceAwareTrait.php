@@ -5,7 +5,7 @@
  * @author ntd1712
  *
  * @method \Noodlehaus\ConfigInterface getConfig()
- * @method \League\Container\ContainerInterface getContainer()
+ * @method \Symfony\Component\DependencyInjection\ContainerBuilder getContainer()
  */
 trait ServiceAwareTrait
 {
@@ -16,7 +16,6 @@ trait ServiceAwareTrait
      * Get a reference to the service object. The object returned will be of type <tt>IBaseService</tt>
      *  $this->getService()->...
      *  $this->getService('User')->...
-     *  $this->getService('Account\Services\UserService')->...
      *
      * @param   string $name The service name; defaults to get_called_class()
      * @param   boolean $cache; defaults to TRUE

@@ -36,7 +36,7 @@ abstract class AbstractCodeIgniterController extends Controller
 
         $this->setConfig($config)
              ->setContainer($container)
-             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER,
+             ->getContainer()->set(DOCTRINE_ENTITY_MANAGER,
                 $entityManager = EntityManagerFactory::create()->setConfig($config = $this->getConfig())->getEntityManager());
 
         /** @var \Doctrine\ORM\EntityManager $entityManager

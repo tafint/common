@@ -7,7 +7,7 @@ use Doctrine\ORM\Events;
  * @author ntd1712
  *
  * @method \Noodlehaus\ConfigInterface getConfig()
- * @method \League\Container\ContainerInterface getContainer()
+ * @method \Symfony\Component\DependencyInjection\ContainerBuilder getContainer()
  */
 trait RepositoryAwareTrait
 {
@@ -18,7 +18,6 @@ trait RepositoryAwareTrait
      * Get a reference to the repository object. The object returned will be of type <tt>IBaseRepository</tt>
      *  $this->getService()->getRepository('User')->...
      *  $this->getService('User')->getRepository('Role')->...
-     *  $this->getService('Account\Services\UserService')->getRepository('Account\Entities\Role')->...
      *
      * @param   string $name The repository name; defaults to get_called_class()
      * @param   boolean $cache; defaults to TRUE

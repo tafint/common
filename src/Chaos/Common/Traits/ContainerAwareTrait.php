@@ -34,13 +34,13 @@ trait ContainerAwareTrait
     {
         if (!$container instanceof ContainerInterface)
         {
-            $definitions = $container;
+            $resources = $container;
             $container = new ContainerBuilder;
+            $loader = new YamlFileLoader($container, new FileLocator($resources));
 
-            if (is_array($definitions) || $definitions instanceof \ArrayAccess)
+            foreach ($resources as $resource)
             {
-                $loader = new YamlFileLoader($container, new FileLocator($definitions));
-                array_walk($definitions, [$loader, 'load']);
+                $loader->load($resource);
             }
         }
 

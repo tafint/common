@@ -4,11 +4,11 @@ use League\Container\Container,
     League\Container\ContainerInterface;
 
 /**
- * Trait ContainerAwareTrait
+ * Trait LeagueContainerAwareTrait
  * @author ntd1712
- * @deprecated No longer use
+ * @deprecated
  */
-trait ContainerAwareTrait
+trait LeagueContainerAwareTrait
 {
     /** @var ContainerInterface */
     private static $__container__;

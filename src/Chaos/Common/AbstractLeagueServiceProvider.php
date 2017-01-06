@@ -5,7 +5,7 @@ use League\Container\ServiceProvider\AbstractServiceProvider;
 /**
  * Class AbstractLeagueServiceProvider
  * @author ntd1712
- * @deprecated No longer use
+ * @deprecated
  */
 abstract class AbstractLeagueServiceProvider extends AbstractServiceProvider
 {
@@ -31,3 +31,31 @@ abstract class AbstractLeagueServiceProvider extends AbstractServiceProvider
         }
     }
 }
+
+// modules/Account/Module.php
+// class Module extends AbstractLeagueServiceProvider
+// {
+//    /** @var array */
+//    protected $provides = [
+//        // entities
+//        'Account\Entities\Permission',
+//        'Account\Entities\Role',
+//        'Account\Entities\User',
+//        'Account\Entities\UserRole',
+//        // events
+//        'Account\Events\PermissionListener',
+//        'Account\Events\RoleListener',
+//        'Account\Events\UserListener',
+//        'Account\Events\UserRoleListener',
+//        // services
+//        'Account\Services\PermissionService',
+//        'Account\Services\RoleService',
+//        'Account\Services\UserService',
+//        'Account\Services\UserRoleService',
+//        // aliases
+//        'PermissionService',
+//        'RoleService',
+//        'UserService',
+//        'UserRoleService'
+//    ];
+// }

@@ -4,7 +4,7 @@
  * Trait ServiceAwareTrait
  * @author ntd1712
  *
- * @method \Noodlehaus\ConfigInterface getConfig()
+ * @method \M1\Vars\Vars getConfig()
  * @method \Symfony\Component\DependencyInjection\ContainerBuilder getContainer()
  */
 trait ServiceAwareTrait

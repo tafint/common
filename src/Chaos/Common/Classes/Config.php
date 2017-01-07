@@ -3,6 +3,7 @@
 /**
  * Class Config
  * @author ntd1712
+ * @deprecated
  */
 class Config extends \Noodlehaus\Config
 {
@@ -113,7 +114,7 @@ class Config extends \Noodlehaus\Config
                     'directory' => 'storage/framework/proxies',
                     'namespace' => null,
                 ],
-                'default_repository' => DOCTRINE_ENTITY_REPOSITORY,
+                'default_repository' => 'Doctrine\ORM\EntityRepository',
                 'sql_logger' => null,
                 'walkers' => [
                     'doctrine.customOutputWalker' => 'Chaos\Doctrine\Walkers\CustomOutputWalker'

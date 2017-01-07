@@ -34,18 +34,8 @@ trait ConfigAwareTrait
             $options = isset($config['__options__']) ? $config['__options__'] : [];
             unset($config['__options__']);
 
-            array_unshift($config, __DIR__ . '/../../settings.yml');
+            array_unshift($config, __DIR__ . '/../../../../config/app.yml');
             $config = new Vars($config, $options);
-
-            if (isset($options['__framework__']))
-            {
-                foreach ($options['__framework__'] as $k => $v)
-                {
-                    is_array($v) && $config->arrayKeyExists($k)
-                        ? $config->set($k, array_replace_recursive($config->get($k), $v))
-                        : $config->set($k, $v);
-                }
-            }
         }
 
         self::$__config__ = $config;

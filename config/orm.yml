@@ -1,0 +1,29 @@
+orm:
+  cache:
+    provider: array
+    file:
+      directory: %base_path%/storage/framework/cache
+      extension: .doctrinecache.data
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      dbindex: 1
+  custom_types:
+    bool: Chaos\Doctrine\Types\BoolType
+    double: Chaos\Doctrine\Types\DoubleType
+    int: Chaos\Doctrine\Types\IntType
+    mediumint: Chaos\Doctrine\Types\MediumIntType
+    timestamp: Chaos\Doctrine\Types\TimestampType
+    tinyint: Chaos\Doctrine\Types\TinyIntType
+  metadata:
+    driver: annotation
+    paths: null
+    simple: false
+  proxy_classes:
+    auto_generate: 0
+    directory: %base_path%/storage/framework/proxies
+    namespace:
+  default_repository: Doctrine\ORM\EntityRepository
+  sql_logger:
+  walkers:
+    doctrine.customOutputWalker: Chaos\Doctrine\Walkers\CustomOutputWalker

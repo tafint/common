@@ -1,0 +1,16 @@
+app:
+  charset: UTF-8
+  debug: false
+  env: production # local, production, testing
+  key: ""
+  minSearchChars: 4
+  theme: homer # homer, inspinia
+  url: ""
+
+urls:
+  reset: %base_url%/#/reset?k=
+
+imports:
+  - { resource: auth.yml }
+  - { resource: multitenant.yml }
+  - { resource: orm.yml }

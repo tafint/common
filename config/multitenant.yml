@@ -1,0 +1,3 @@
+multitenant:
+  enabled: false
+  keymap: ApplicationKey

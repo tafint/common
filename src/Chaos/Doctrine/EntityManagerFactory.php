@@ -31,8 +31,8 @@ class EntityManagerFactory
     {
         if (null === self::$entityManager)
         {
-            self::$entityManager = EntityManager::create($this->getDbParams(),
-                $this->getConfiguration($this->getCacheProvider()), $this->getEventManager());
+            self::$entityManager = EntityManager::create($config = $this->getDbParams(),
+                $this->getConfiguration($this->getCacheProvider()), $this->getEventManager(@$config['prefix']));
         }
 
         return self::$entityManager;
@@ -53,15 +53,25 @@ class EntityManagerFactory
      */
     protected function getDbParams()
     {
-        $db = $this->getConfig()->get('db');
+        $config = $this->getConfig()->get('db.connections')[$this->getConfig()->get('db.default')];
         $drivers = (new \ReflectionClass(DOCTRINE_DRIVER_MANAGER))->getStaticProperties()['driverSchemeAliases'];
 
-        if (isset($drivers[$db['driver']]))
+        if (isset($drivers[$config['driver']]))
         {
-            $db['driver'] = $drivers[$db['driver']];
+            $config['driver'] = $drivers[$config['driver']];
         }
 
-        return $db;
+        if (!isset($config['user']) && isset($config['username']))
+        {
+            $config['user'] = $config['username'];
+        }
+
+        if (!isset($config['dbname']) && isset($config['database']))
+        {
+            $config['dbname'] = $config['database'];
+        }
+
+        return $config;
     }
 
     /**
@@ -107,11 +117,11 @@ class EntityManagerFactory
      */
     protected function getConfiguration(Cache\Cache $cache = null)
     {
-        $orm = $this->getConfig()->get('orm');
+        $config = $this->getConfig()->get('orm');
         $configuration = Setup::createConfiguration($this->getConfig()->get('app.debug'),
-            $orm['proxy_classes']['directory'], $cache);
+            $config['proxy_classes']['directory'], $cache);
 
-        $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $orm['metadata']));
+        $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $config['metadata']));
         $configuration->setCustomNumericFunctions([
             'ACOS' => 'DoctrineExtensions\Query\Mysql\Acos',
             'ASIN' => 'DoctrineExtensions\Query\Mysql\Asin',
@@ -132,14 +142,14 @@ class EntityManagerFactory
             $configuration->setResultCacheImpl($cache);
         }
 
-        if (isset($orm['proxy_classes']['namespace']))
+        if (isset($config['proxy_classes']['namespace']))
         {
-            $configuration->setProxyNamespace($orm['proxy_classes']['namespace']);
+            $configuration->setProxyNamespace($config['proxy_classes']['namespace']);
         }
 
-        $configuration->setAutoGenerateProxyClasses($orm['proxy_classes']['auto_generate']);
-        $configuration->setDefaultRepositoryClassName($orm['default_repository']);
-        $configuration->setSQLLogger($orm['sql_logger']);
+        $configuration->setAutoGenerateProxyClasses($config['proxy_classes']['auto_generate']);
+        $configuration->setDefaultRepositoryClassName($config['default_repository']);
+        $configuration->setSQLLogger($config['sql_logger']);
 
         return $configuration;
     }
@@ -168,13 +178,14 @@ class EntityManagerFactory
     }
 
     /**
+     * @param   string $prefix
      * @return  EventManager
      */
-    protected function getEventManager()
+    protected function getEventManager($prefix = null)
     {
         $eventManager = new EventManager;
 
-        if ($prefix = $this->getConfig()->get('db.prefix'))
+        if (null !== $prefix)
         {
             $eventManager->addEventListener(Events::loadClassMetadata, new TablePrefix($prefix));
         }

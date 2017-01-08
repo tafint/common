@@ -4,7 +4,7 @@
   "type": "library",
   "keywords": ["ntd1712", "chaos", "common"],
   "homepage": "https://github.com/ntd1712",
-  "license": "GPL2",
+  "license": "GPLv2",
   "authors": [
     {"name": "Dzung Nguyen", "email": "ntd1712@hotmail.com"}
   ],

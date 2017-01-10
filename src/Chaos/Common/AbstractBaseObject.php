@@ -19,9 +19,9 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     {
         $message = 'JSON decoding failed: ';
 
-        if (CHAOS_USE_INTERNAL_JSON && function_exists('json_decode'))
+        if (function_exists(CHAOS_JSON_DECODER))
         {
-            $value = @call_user_func_array('json_decode', func_get_args());
+            $value = @call_user_func_array(CHAOS_JSON_DECODER, func_get_args());
 
             switch (json_last_error())
             {
@@ -31,11 +31,11 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
                     $message .= json_last_error_msg();
             }
         }
-        elseif (class_exists(ZEND_JSON_DECODER))
+        elseif (class_exists(CHAOS_JSON_DECODER))
         {
             try
             {   // to make errors meaningful
-                return forward_static_call_array([ZEND_JSON_DECODER, 'decode'], func_get_args());
+                return forward_static_call_array([CHAOS_JSON_DECODER, 'decode'], func_get_args());
             }
             catch (\RuntimeException $ex)
             {
@@ -55,9 +55,9 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
     {
         $message = 'JSON encoding failed: ';
 
-        if (CHAOS_USE_INTERNAL_JSON && function_exists('json_encode'))
+        if (function_exists(CHAOS_JSON_ENCODER))
         {
-            $value = @call_user_func_array('json_encode', array_merge([$this], func_get_args()));
+            $value = @call_user_func_array(CHAOS_JSON_ENCODER, array_merge([$this], func_get_args()));
 
             switch (json_last_error())
             {
@@ -67,9 +67,9 @@ abstract class AbstractBaseObject implements \JsonSerializable, IBaseObject
                     $message .= json_last_error_msg();
             }
         }
-        elseif (class_exists(ZEND_JSON_ENCODER))
+        elseif (class_exists(CHAOS_JSON_ENCODER))
         {
-            return forward_static_call_array([ZEND_JSON_ENCODER, 'encode'], array_merge([$this], func_get_args()));
+            return forward_static_call_array([CHAOS_JSON_ENCODER, 'encode'], array_merge([$this], func_get_args()));
         }
         else
         {

@@ -18,20 +18,20 @@ abstract class AbstractLaravelController extends Controller
     /**
      * Constructor
      *
-     * @param   array|string $config The path to the config file
+     * @param   array|\ArrayAccess $config
      * @param   array|\ArrayAccess $container
      */
     public function __construct($config = [], $container = [])
     {
         $this->setConfig($config)
              ->setContainer($container)
-             ->getContainer()->share(DOCTRINE_ENTITY_MANAGER,
-                $entityManager = (new EntityManagerFactory())->setConfig($this->getConfig())->getEntityManager());
+             ->getContainer()->set(DOCTRINE_ENTITY_MANAGER,
+                $entityManager = EntityManagerFactory::create()->setConfig($config = $this->getConfig())->getEntityManager());
 
         /** @var \Doctrine\ORM\EntityManager $entityManager
             @var \Doctrine\ORM\Configuration $configuration */
         $configuration = $entityManager->getConfiguration();
-        $configuration->setDefaultQueryHint('config', $config = $this->getConfig());
+        $configuration->setDefaultQueryHint('config', $config);
 
         foreach ($config->get('orm.walkers') as $k => $v)
         {

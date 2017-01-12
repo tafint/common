@@ -1,0 +1,13 @@
+app:
+  charset: UTF-8
+  dateFormat: Y-m-d
+  debug: false
+  key:
+  itemsPerPage: 10
+  maxItemsPerPage: 100
+  minSearchChars: 4
+
+imports:
+  - { resource: auth.yml }
+  - { resource: multitenant.yml }
+  - { resource: orm.yml }

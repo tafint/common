@@ -3,6 +3,8 @@
 /**
  * Class AbstractBaseObjectItem
  * @author ntd1712
+ *
+ * @method array getIdentifier()
  */
 abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBaseObjectItem
 {
@@ -113,8 +115,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                         if ($isCollection)
                         {   /** @var IBaseObjectItem $cls */
                             $method = method_exists($obj, 'add') ? 'add' : 'append'; // guess supported method
-                            $firstKey = key($value);
-                            $isMulti = is_array($value[$firstKey]) || is_object($value[$firstKey]);
+                            $isMulti = is_array($value[$firstKey = key($value)]) || is_object($value[$firstKey]);
 
                             if (!$isMulti)
                             {
@@ -133,7 +134,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                                 }
                             }
                             else
-                            {
+                            {   /** @see IBaseEntity::getIdentifier */
                                 $identifier = array_flip($this->getIdentifier());
                                 $tmp = [];
 
@@ -161,7 +162,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                                         false !== ($k = array_search($v, $tmp)))
                                     {
                                         if ($obj[$k] instanceof IBaseObjectItem)
-                                        {
+                                        {   /** @var IBaseObjectItem[] $obj */
                                             $obj[$k]->exchangeArray($v, $this);
                                         }
                                         else
@@ -179,7 +180,7 @@ abstract class AbstractBaseObjectItem extends AbstractBaseObject implements IBas
                                     {
                                         $cls = new $types[0];
                                         $cls->exchangeArray($v, $this);
-
+                                        /** @var \Traversable $obj */
                                         $this->addToCollection($cls, $obj, $method);
                                     }
                                 }

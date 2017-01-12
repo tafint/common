@@ -6,7 +6,7 @@ use Zend\Db\Sql\Predicate\Predicate;
  * Class BaseServiceTrait
  * @author ntd1712
  *
- * @method \Noodlehaus\ConfigInterface getConfig()
+ * @method \M1\Vars\Vars getConfig()
  * @method IBaseRepository getRepository(string $name = null, boolean $cache = true)
  */
 trait BaseServiceTrait

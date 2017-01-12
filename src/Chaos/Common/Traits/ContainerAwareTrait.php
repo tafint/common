@@ -1,7 +1,9 @@
 <?php namespace Chaos\Common\Traits;
 
-use League\Container\ContainerInterface,
-    League\Container\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\Config\FileLocator,
+    Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Trait ContainerAwareTrait
@@ -15,7 +17,7 @@ trait ContainerAwareTrait
     /**
      * Get a reference to the container object. The object returned will be of type <tt>ContainerInterface</tt>
      *
-     * @return  ContainerInterface
+     * @return  ContainerBuilder|ContainerInterface
      */
     public function getContainer()
     {
@@ -32,12 +34,13 @@ trait ContainerAwareTrait
     {
         if (!$container instanceof ContainerInterface)
         {
-            $definitions = $container;
-            $container = new Container;
+            $resources = $container;
+            $container = new ContainerBuilder;
+            $loader = new YamlFileLoader($container, new FileLocator($resources));
 
-            if (is_array($definitions) || $definitions instanceof \ArrayAccess)
+            foreach ($resources as $resource)
             {
-                array_walk($definitions, [$container, 'addServiceProvider']);
+                $loader->load($resource);
             }
         }
 

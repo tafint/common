@@ -4,8 +4,8 @@
  * Trait ServiceAwareTrait
  * @author ntd1712
  *
- * @method \Noodlehaus\ConfigInterface getConfig()
- * @method \League\Container\ContainerInterface getContainer()
+ * @method \M1\Vars\Vars getConfig()
+ * @method \Symfony\Component\DependencyInjection\ContainerBuilder getContainer()
  */
 trait ServiceAwareTrait
 {
@@ -15,8 +15,8 @@ trait ServiceAwareTrait
     /**
      * Get a reference to the service object. The object returned will be of type <tt>IBaseService</tt>
      *  $this->getService()->...
-     *  $this->getService('User')->...
-     *  $this->getService('Account\Services\UserService')->...
+     *  $this->getService('Lookup')->...
+     *  $this->getService('System\Services\LookupService')->...
      *
      * @param   string $name The service name; defaults to get_called_class()
      * @param   boolean $cache; defaults to TRUE
@@ -26,11 +26,12 @@ trait ServiceAwareTrait
     {
         if (empty($name))
         {
-            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', get_called_class()) . 'Service';
+            $serviceName = str_replace(['Controller', 'Service'], '', trim(strrchr(get_called_class(), '\\'), '\\'))
+                . 'Service';
         }
         elseif (false === strpos($name, '\\'))
         {
-            $serviceName = preg_replace(CHAOS_REPLACE_CLASS_SUFFIX, '$1', $name) . 'Service';
+            $serviceName = str_replace('Service', '', $name) . 'Service';
         }
         else
         {

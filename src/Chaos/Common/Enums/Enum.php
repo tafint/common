@@ -16,7 +16,7 @@ abstract class Enum
      */
     public static function all()
     {
-        return static::$map;
+        return array_keys(static::$map);
     }
 
     /**
@@ -25,9 +25,9 @@ abstract class Enum
      * @param   string $name
      * @return  boolean
      */
-    public static function has($name)
+    final public static function has($name)
     {
-        return isset(static::$map[$name]);
+        return isset(static::$map[$name]) || in_array($name, static::$map, true);
     }
 
     /** Private constructor */

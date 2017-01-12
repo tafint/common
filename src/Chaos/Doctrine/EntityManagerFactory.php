@@ -1,10 +1,6 @@
 <?php namespace Chaos\Doctrine;
 
-use Doctrine\Common\Cache\ArrayCache,
-    Doctrine\Common\Cache\Cache,
-    Doctrine\Common\Cache\FilesystemCache,
-    Doctrine\Common\Cache\MemcacheCache,
-    Doctrine\Common\Cache\RedisCache,
+use Doctrine\Common\Cache,
     Doctrine\Common\EventManager,
     Doctrine\Common\Persistence\Mapping\Driver\StaticPHPDriver,
     Doctrine\ORM\Configuration,
@@ -25,21 +21,31 @@ class EntityManagerFactory
 {
     use ConfigAwareTrait;
 
-    /** @var EntityManager */
+    /** @var EntityManager|\Doctrine\ORM\EntityManagerInterface */
     protected static $entityManager;
 
     /**
-     * @return  EntityManager
+     * @return  EntityManager|\Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()
     {
         if (null === self::$entityManager)
         {
-            self::$entityManager = EntityManager::create($this->getDbParams(),
-                $this->getConfiguration($this->getCacheProvider()), $this->getEventManager());
+            self::$entityManager = EntityManager::create($config = $this->getDbParams(),
+                $this->getConfiguration($this->getCacheProvider()), $this->getEventManager(@$config['prefix']));
         }
 
         return self::$entityManager;
+    }
+
+    /**
+     * Create an instance of the class
+     *
+     * @return  $this
+     */
+    public static function create()
+    {
+        return new static;
     }
 
     /**
@@ -47,19 +53,29 @@ class EntityManagerFactory
      */
     protected function getDbParams()
     {
-        $db = $this->getConfig()->get('db');
+        $config = $this->getConfig()->get('db.connections')[$this->getConfig()->get('db.default')];
         $drivers = (new \ReflectionClass(DOCTRINE_DRIVER_MANAGER))->getStaticProperties()['driverSchemeAliases'];
 
-        if (isset($drivers[$db['driver']]))
+        if (isset($drivers[$config['driver']]))
         {
-            $db['driver'] = $drivers[$db['driver']];
+            $config['driver'] = $drivers[$config['driver']];
         }
 
-        return $db;
+        if (!isset($config['user']) && isset($config['username']))
+        {
+            $config['user'] = $config['username'];
+        }
+
+        if (!isset($config['dbname']) && isset($config['database']))
+        {
+            $config['dbname'] = $config['database'];
+        }
+
+        return $config;
     }
 
     /**
-     * @return  Cache
+     * @return  Cache\Cache
      */
     protected function getCacheProvider()
     {
@@ -68,16 +84,16 @@ class EntityManagerFactory
         switch ($config['provider'])
         {
             case 'array':
-                return new ArrayCache;
+                return new Cache\ArrayCache;
             case 'file':
-                return new FilesystemCache($config[$config['provider']]['directory'],
+                return new Cache\FilesystemCache($config[$config['provider']]['directory'],
                     $config[$config['provider']]['extension']);
             case 'redis':
                 $redis = new \Redis;
                 $redis->connect($config[$config['provider']]['host'], $config[$config['provider']]['port']);
                 $redis->select($config[$config['provider']]['dbindex']);
 
-                $cache = new RedisCache;
+                $cache = new Cache\RedisCache;
                 $cache->setRedis($redis);
 
                 return $cache;
@@ -86,7 +102,7 @@ class EntityManagerFactory
                 $memcache->connect($config[$config['provider']]['host'], $config[$config['provider']]['port'],
                     $config[$config['provider']]['weight']);
 
-                $cache = new MemcacheCache;
+                $cache = new Cache\MemcacheCache;
                 $cache->setMemcache($memcache);
 
                 return $cache;
@@ -96,15 +112,16 @@ class EntityManagerFactory
     }
 
     /**
-     * @param   Cache $cache
+     * @param   Cache\Cache $cache
      * @return  Configuration
      */
-    protected function getConfiguration(Cache $cache = null)
+    protected function getConfiguration(Cache\Cache $cache = null)
     {
-        $orm = $this->getConfig()->get('orm');
-        $configuration = Setup::createConfiguration($orm['debug'], $orm['proxy_classes']['directory'], $cache);
+        $config = $this->getConfig()->get('orm');
+        $configuration = Setup::createConfiguration($this->getConfig()->get('app.debug'),
+            $config['proxy_classes']['directory'], $cache);
 
-        $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $orm['metadata']));
+        $configuration->setMetadataDriverImpl(self::getMetadataDriver($configuration, $config['metadata']));
         $configuration->setCustomNumericFunctions([
             'ACOS' => 'DoctrineExtensions\Query\Mysql\Acos',
             'ASIN' => 'DoctrineExtensions\Query\Mysql\Asin',
@@ -125,14 +142,14 @@ class EntityManagerFactory
             $configuration->setResultCacheImpl($cache);
         }
 
-        if (isset($orm['proxy_classes']['namespace']))
+        if (isset($config['proxy_classes']['namespace']))
         {
-            $configuration->setProxyNamespace($orm['proxy_classes']['namespace']);
+            $configuration->setProxyNamespace($config['proxy_classes']['namespace']);
         }
 
-        $configuration->setAutoGenerateProxyClasses($orm['proxy_classes']['auto_generate']);
-        $configuration->setDefaultRepositoryClassName($orm['default_repository']);
-        $configuration->setSQLLogger($orm['sql_logger']);
+        $configuration->setAutoGenerateProxyClasses($config['proxy_classes']['auto_generate']);
+        $configuration->setDefaultRepositoryClassName($config['default_repository']);
+        $configuration->setSQLLogger($config['sql_logger']);
 
         return $configuration;
     }
@@ -161,13 +178,14 @@ class EntityManagerFactory
     }
 
     /**
+     * @param   string $prefix
      * @return  EventManager
      */
-    protected function getEventManager()
+    protected function getEventManager($prefix = null)
     {
         $eventManager = new EventManager;
 
-        if ($prefix = $this->getConfig()->get('db.prefix'))
+        if (null !== $prefix)
         {
             $eventManager->addEventListener(Events::loadClassMetadata, new TablePrefix($prefix));
         }

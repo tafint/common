@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Criteria,
  * Class BaseDoctrineRepositoryTrait
  * @author ntd1712
  *
- * @method \League\Container\ContainerInterface getContainer()
+ * @method \Symfony\Component\DependencyInjection\ContainerBuilder getContainer()
  */
 trait BaseDoctrineRepositoryTrait
 {

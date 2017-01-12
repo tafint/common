@@ -19,19 +19,17 @@ define('CHAOS_MATCH_RULE', '#\[\s*(.+)\s*\]#');
 define('CHAOS_MATCH_RULE_ITEM', '#^\[(\w+)\s*(\([^\)]+\))?\]$#');
 define('CHAOS_MATCH_VAR', '#@var\s+\\\?([^\s\*\(]+)\s*(?:\(\s*\\\?([^\s\*\)]+)\s*\))?#i');
 
-define('CHAOS_REPLACE_CLASS_SUFFIX', '#.*([\w]+)(?:controller|repository|service)?$#iU');
 define('CHAOS_REPLACE_COMMA_SEPARATOR', '#\s*,\s*#');
 define('CHAOS_REPLACE_SPACE_SEPARATOR', '#\s+#');
 
 // common: namespaces
+define('CHAOS_JSON_DECODER', 'json_decode'); // Zend\Json\Decoder, Symfony\Component\Serializer\Encoder\JsonDecode, yii\helpers\Json
+define('CHAOS_JSON_ENCODER', 'json_encode'); // Zend\Json\Encoder, Symfony\Component\Serializer\Encoder\JsonEncoder
 define('CHAOS_READ_EVENT_ARGS', 'Chaos\Common\Events\ReadEventArgs');
 define('DOCTRINE_ARRAY_COLLECTION', 'Doctrine\Common\Collections\ArrayCollection');
 define('DOCTRINE_PERSISTENT_COLLECTION', 'Doctrine\ORM\PersistentCollection');
 define('DOCTRINE_DRIVER_MANAGER', 'Doctrine\DBAL\DriverManager');
 define('DOCTRINE_ENTITY_MANAGER', 'Doctrine\ORM\EntityManager');
-define('DOCTRINE_ENTITY_REPOSITORY', 'Doctrine\ORM\EntityRepository');
 define('DOCTRINE_PROXY', 'Doctrine\ORM\Proxy\Proxy');
 define('ZEND_STATIC_FILTER', 'Zend\Filter\StaticFilter');
 define('ZEND_STATIC_VALIDATOR', 'Zend\Validator\StaticValidator');
-define('ZEND_JSON_DECODER', 'Zend\Json\Decoder');
-define('ZEND_JSON_ENCODER', 'Zend\Json\Encoder');

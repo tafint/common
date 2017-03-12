@@ -1,5 +1,5 @@
 {
-  "name": "chaos/common",
+  "name": "tafint/common",
   "description": "The Chaos library",
   "type": "library",
   "keywords": ["ntd1712", "chaos", "common"],
